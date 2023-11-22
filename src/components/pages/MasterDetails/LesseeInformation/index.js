@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import InputBoxComponent from "../../../atoms/InputBoxComponent";
 import DropDownComponent from "../../../atoms/DropDownComponent";
 import {
@@ -39,14 +39,11 @@ const LesseeInformation = ({
   handleAddRentContractInformationError,
 }) => {
   const [address, setAddress] = useState("");
-
   const [branchData, setBranchData] = useState([]);
-  // console.log(branchData, "branchData");
   const [branchDetails, setBranchDetails] = useState({});
-  // console.log(branchDetails, "branchDetails");
-  // const [selectedBranchDetails, setSelectedBranchDetails] = useState("");
+  console.log(branchDetails, "branchDetails");
   const [selectedValue, setSelectedValue] = useState("");
-  // console.log(selectedValue.label, "selectedValue");
+  // console.log(selectedValue, "selectedValue");
 
   const handleNext = () => {
     onSave(allNewContractDetails, type);
@@ -89,7 +86,7 @@ const LesseeInformation = ({
     { id: "GL-Hostel", label: "GL-Hostel" },
     { id: "GL-Maintenance", label: "GL-Maintenance" },
     { id: "RF-Office", label: "RF-Office" },
-    { id: " RF-Hostel", label: " RF-Hostel" },
+    { id: "RF-Hostel", label: "RF-Hostel" },
     { id: "RF-Maintenance", label: "RF-Maintenance" },
     { id: "HO-Office", label: "HO-Office" },
     { id: "HO-Maintenance", label: "HO-Maintenance" },
@@ -104,17 +101,6 @@ const LesseeInformation = ({
     },
     { id: "Others", label: "Others" },
   ];
-
-  const handleBranchType = (name, value) => {
-    console.log(value, "value");
-    setAllNewContractDetails(() => ({
-      ...allNewContractDetails,
-      [name]: value,
-    }));
-    setSelectedValue(value);
-    getAllBranchID(value);
-    getBranchIdDetails(value);
-  };
 
   let ApproverRenew = [
     { id: "DM", label: "DM" },
@@ -184,39 +170,97 @@ const LesseeInformation = ({
     setAddress(joinedAddress);
   };
 
-  const handleBranchID = (value) => {
-    // console.log(value.target.outerText, "value");
-    setBranchDetails({
-      ...branchDetails,
-      branchID: value.target.outerText,
+  const handleBranchType = (name, value) => {
+    // console.log(value, "value");
+    setAllNewContractDetails({
+      ...allNewContractDetails,
+      [name]: value,
     });
-    getBranchIdDetails(value.target.outerText);
-  };
 
-  const getAllBranchID = async () => {
-    let branchType = selectedValue.label;
-    const { data } = await getBranchIDForBranchDetails(branchType);
-    // console.log(branchType, "branchType");
-    if (data) {
-      let branchIDData = [];
-      data?.map((val) => {
-        branchIDData?.push(val);
-      });
-      setBranchData(branchIDData);
-    } else {
-      setBranchData([]);
+    setSelectedValue(value);
+    if (typeof value === "undefined") {
+      getAllBranchID(value);
+      getBranchIdDetails(value);
     }
   };
 
+  const handleBranchID = (_, value) => {
+    setBranchDetails(() => ({
+      ...branchDetails,
+      branchID: value,
+    }));
+    getBranchIdDetails(value);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (selectedValue) {
+          await getAllBranchID(selectedValue);
+          await getBranchIdDetails(branchDetails.branchID);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [selectedValue, branchDetails.branchID]);
+
+  // const getAllBranchID = async () => {
+  //   // let branchType = selectedValue.label;
+  //   const { data } = await getBranchIDForBranchDetails(selectedValue.label);
+  //   // console.log(selectedValue, "selectedValue");
+  //   // console.log(data, "IDdata");
+  //   if (data) {
+  //     let branchIDData = [];
+  //     data?.map((val) => {
+  //       branchIDData?.push(val);
+  //     });
+  //     setBranchData(branchIDData || []);
+  //   } else if (!selectedValue || !selectedValue.label) {
+  //     setBranchData([]);
+  //   }
+  // };
+
+  const getAllBranchID = async (branchType) => {
+    try {
+      const { data } = await getBranchIDForBranchDetails(branchType.label);
+      if (data) {
+        setBranchData(data || []);
+      } else {
+        setBranchData([]);
+      }
+    } catch (error) {
+      console.error("Error fetching branch IDs", error);
+    }
+  };
+
+  // const getBranchIdDetails = async () => {
+  //   let branchType = selectedValue.label;
+  //   const { data } = await getRentContractDetailsOnBranchID(
+  //     branchDetails?.branchID,
+  //     branchType
+  //   );
+  //   if (data) {
+  //     if (data) {
+  //       setAllNewContractDetails(data?.data || {});
+  //     }
+  //   }
+  // };
+
   const getBranchIdDetails = async (branchID) => {
-    let branchType = selectedValue.label;
-    const { data } = await getRentContractDetailsOnBranchID(
-      branchID,
-      branchType
-    );
-    // console.log(data?.data, "Branchdata");
-    if (data) {
-      setAllNewContractDetails(data.data);
+    try {
+      const branchType = selectedValue.label;
+      const { data } = await getRentContractDetailsOnBranchID(
+        branchID,
+        branchType
+      );
+      if (data) {
+        setAllNewContractDetails(data?.data || {});
+      }
+    } catch (error) {
+      console.error("Error fetching branch details", error);
     }
   };
 
@@ -234,11 +278,9 @@ const LesseeInformation = ({
                 sx={{ width: 300 }}
                 options={BranchType}
                 name="lesseeBranchType"
-                value={allNewContractDetails?.lesseeBranchType}
+                value={selectedValue}
                 // onSelect={handleBranchType}
-                onChange={(value) =>
-                  handleBranchType("lesseeBranchType", value)
-                }
+                onChange={(val) => handleBranchType("lesseeBranchType", val)}
               />
 
               <DropDownComponent
@@ -269,7 +311,7 @@ const LesseeInformation = ({
                 <Autocomplete
                   size="small"
                   sx={{ width: 300, ml: 1, borderRadius: 10 }}
-                  defaultValue={null}
+                  // defaultValue={null}
                   options={branchData}
                   value={
                     type === "edit"
@@ -285,6 +327,28 @@ const LesseeInformation = ({
                     />
                   )}
                 />
+                {/* <Autocomplete
+                  size="small"
+                  sx={{ width: 300, ml: 1, borderRadius: 10 }}
+                  options={branchData}
+                  value={
+                    type === "edit"
+                      ? branchDetails?.branchID
+                      : branchData.find(
+                          (branch) =>
+                            branch.id ===
+                            allNewContractDetails?.lesseeBranchType
+                        )
+                  }
+                  onChange={handleBranchID}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Branch ID"
+                      variant="outlined"
+                    />
+                  )}
+                /> */}
               </Grid>
 
               <Grid item className="d-flex m-2" lg={12}>
@@ -339,6 +403,7 @@ const LesseeInformation = ({
             </Grid>
           ) : null}
         </Box>
+
         {(selectedValue.label && selectedValue.label === "HO-Office") ||
         selectedValue.label === "HO-Maintenance" ||
         selectedValue.label === "DO / RO-Office" ||

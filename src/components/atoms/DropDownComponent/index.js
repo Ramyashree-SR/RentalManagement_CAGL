@@ -64,7 +64,6 @@ const DropDownComponent = ({
   endAdornmentLine = true,
   required = false,
   disableClearable = false,
-  // getOptionLabel = () => {},
   noOptionsText = {},
 }) => {
   const classes = useStyles();
@@ -119,7 +118,7 @@ const DropDownComponent = ({
           options={options}
           fullWidth={fullWidth}
           // getOptionLabel={(option) => (option.label ? option.label : "")}
-          // getOptionLabel={getOptionLabel}
+          // getOptionLabel={(option) => (option.id ? option.id : "")}
           isOptionEqualToValue={(option, value) =>
             value === undefined ||
             value === "" ||

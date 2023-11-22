@@ -89,10 +89,6 @@ const AgreementDetails = ({
     }
   };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
   let activationStatus = [
     { id: "1", label: "Open" },
     { id: "2", label: "Close" },
@@ -159,7 +155,7 @@ const AgreementDetails = ({
     const updatedContractDetails = { ...allNewContractDetails };
     // Create a copy of the recipients array within the object
     updatedContractDetails.recipiants =
-      updatedContractDetails.recipiants.slice();
+      updatedContractDetails.recipiants?.slice();
     // Create a copy of the specific recipient within the array
     const updatedRecipient = { ...updatedContractDetails.recipiants[index] };
     // Update the specific field for the recipient
@@ -212,9 +208,12 @@ const AgreementDetails = ({
   const tdsRates = tdsRate / 100;
   // console.log(tdsRates,"tdsRates");
   const calculateTDS = (annualRent) => {
-    return annualRent > 20000 ? (annualRent * (tdsRate / 100)).toFixed(2) : 0;
+    return annualRent > 20000 ? (annualRent * (tdsRate / 100)).toFixed(2) : "";
   };
 
+  const calculateGST = (annualRent) => {
+    return annualRent * (gstRate / 100).toFixed(2);
+  };
   const escalationRate = 0.05; // 5% annual escalation
   const calculateCurrentRent = (year) => {
     const rent = currentRent * Math.pow(1 + escalationRate, year - 1);
@@ -348,20 +347,18 @@ const AgreementDetails = ({
       [name]: value,
     }));
   };
-
-  const handleNext = () => {
-    onSave(allNewContractDetails, type);
-  };
-
   const calculateSplitAmount = () => {
-    const splitAmount = currentRent / recipientCount;
-    return splitAmount.toFixed(2); // Round to 2 decimal places
+    if (recipientCount > 1) {
+      const splitAmount = currentRent / recipientCount;
+      return splitAmount.toFixed(2); // Round to 2 decimal places
+    }
+    return currentRent;
   };
 
   useEffect(() => {
     const IFSCInformation = async () => {
       try {
-        for (let index = 0; index <= ifscCodes?.length; index++) {
+        for (let index = 0; index <= ifscCodes.length; index++) {
           const ifscCode = ifscCodes[index];
           const { data } = await IFSCCodeDetails(ifscCode);
           if (data) {
@@ -401,12 +398,22 @@ const AgreementDetails = ({
     };
   };
 
-  const calculateTenureInMonths = () => {
-    const diffInMilliseconds =
-      allNewContractDetails.agreementEndDate -
-      allNewContractDetails.agreementStartDate;
-    const diffInMonths = diffInMilliseconds / (1000 * 60 * 60 * 24 * 30.44); // Average month length
-    return Math.ceil(diffInMonths);
+  // const calculateTenureInMonths = () => {
+  //   const diffInMilliseconds =
+  //     allNewContractDetails?.agreementEndDate -
+  //     allNewContractDetails?.agreementStartDate;
+  //   const diffInMonths = diffInMilliseconds / (1000 * 60 * 60 * 24 * 30.44); // Average month length
+  //   return Math.ceil(diffInMonths);
+  // };
+
+  const calculateTenure = () => {
+    const start = allNewContractDetails?.agreementStartDate;
+    const end = allNewContractDetails?.agreementEndDate;
+
+    const timeDiff = Math.abs(end - start);
+    const tenureInMonths = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30.44)); // Approximate number of days in a month
+
+    return tenureInMonths;
   };
 
   const handleTenureChange = (e) => {
@@ -438,7 +445,7 @@ const AgreementDetails = ({
     while (currentStartDate < endDate) {
       const { startDate: nextStartDate, endDate: nextEndDate } =
         calculateNextPeriod(currentStartDate, 11);
-      periods.push({ startDate: currentStartDate, endDate: nextEndDate });
+      periods?.push({ startDate: currentStartDate, endDate: nextEndDate });
       currentStartDate = nextStartDate;
     }
 
@@ -458,6 +465,14 @@ const AgreementDetails = ({
     setGstRate(e.target.value);
   };
 
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleNext = () => {
+    onSave(allNewContractDetails, type);
+  };
+
   return (
     <>
       <Box sx={{ height: "calc(100% - 75px)", overflowY: "scroll" }}>
@@ -469,7 +484,7 @@ const AgreementDetails = ({
             <Grid item className="d-flex m-2" md={12}>
               <DatePickerComponent
                 placeholder="Select Excuetion Date"
-                label="Excuetion Date"
+                label="Execution Date"
                 size="small"
                 sx={{ width: 300 }}
                 name="agreementSignDate"
@@ -570,15 +585,16 @@ const AgreementDetails = ({
                 onChange={handleAgreementEndDate}
               />
 
+              {/* {tenure !== null && ( */}
               <InputBoxComponent
-                label="Tenure"
-                placeholder="Enter Tenure"
+                label="Tenure (in months)"
+                placeholder="Enter Tenure "
                 sx={{ width: 300, mt: -1.5, ml: 1 }}
-                // name="agreementTenure"
-                value={calculateTenureInMonths()}
-                onChange={(e) => updateChange(e)}
+                value={calculateTenure()}
+                onChange={handleTenureChange}
                 errorText={allNewContractDetailsErr?.agreementTenure}
               />
+              {/* )} */}
             </Grid>
 
             <Typography className="fs-20 fw-500 pt-4 px-4">
@@ -683,15 +699,6 @@ const AgreementDetails = ({
                   }}
                 />
 
-                {/* <UploadFileIcon
-                  onClick={() => {
-                    handleAgreementFileUpload();
-                    // handleRefresh();
-                  }}
-                  fontSize="large"
-                  sx={{ background: "#FFFFF", color: "green" }}
-                /> */}
-
                 <ColorIcon
                   sx={{
                     display: "flex",
@@ -751,9 +758,9 @@ const AgreementDetails = ({
                 label="Monthly Rent"
                 placeholder="Enter Monthly Rent"
                 sx={{ width: 300, my: -1.3 }}
-                name="rentAmount"
-                value={allNewContractDetails?.rentAmount}
-                onChange={(e) => updateChange(e)}
+                // name="currentRent"
+                value={currentRent}
+                onChange={handleRentChange}
                 errorText={allNewContractDetailsErr?.rentAmount}
               />
               <DatePickerComponent
@@ -850,260 +857,263 @@ const AgreementDetails = ({
                 </Grid>
 
                 <Grid item className="d-flex flex-column" lg={12}>
-                  {
-                    // allNewContractDetails?.recipiants?.map((recipient, index) => (
-                    Array.from({ length: recipientCount }, (_, index) => (
-                      <Grid container spacing={2} className="px-2" key={index}>
-                        <Grid item className="d-flex flex-column m-2" md={12}>
-                          <Typography>{`Recipiant - ${index + 1}`}</Typography>
-                          {type === "edit" ? (
-                            <InputBoxComponent
-                              label="Recipiants ID"
-                              placeholder={`Enter Recipiant ID ${index + 1}...`}
-                              sx={{ width: 300 }}
-                              name={`recipiantsID-${index}`}
-                              value={
-                                type === "edit"
-                                  ? allNewContractDetails?.recipiants[index]
-                                      ?.recipiantsID
-                                  : "" // Clear the value in "add" mode
-                              }
-                              onChange={(e) =>
-                                handleRecipientChange(
-                                  index,
-                                  "recipiantsID",
-                                  e.target.value
-                                )
-                              }
-                              errorText={allNewContractDetailsErr?.recipiantsID}
-                            />
-                          ) : null}
-
+                  {Array.from({ length: recipientCount }, (_, index) => (
+                    <Grid container spacing={2} className="px-2" key={index}>
+                      <Grid item className="d-flex flex-column m-2" md={12}>
+                        <Typography>{`Recipiant - ${index + 1}`}</Typography>
+                        {type === "edit" ? (
                           <InputBoxComponent
-                            label="Rent Amount"
-                            placeholder={`Enter Rent Amount ${index + 1}...`}
+                            label="Recipiants ID"
+                            placeholder={`Enter Recipiant ID ${index + 1}...`}
                             sx={{ width: 300 }}
-                            name={`lessorRentAmount-${index}`}
-                            // value={allNewContractDetails?.rentAmount}
-                            // value={
-                            //   type === "edit"
-                            //     ? allNewContractDetails?.recipiants[index]
-                            //         ?.lessorRentAmount
-                            //     : allNewContractDetails?.recipiants[index]
-                            //         ?.lessorRentAmount || "" // Clear the value in "add" mode
-                            // }
-                            value={ calculateSplitAmount()}
-                            onChange={(e) =>
-                              handleRecipientChange(
-                                index,
-                                "lessorRentAmount",
-                                e.target.value
-                              )
-                            }
-                            errorText={
-                              allNewContractDetailsErr?.lessorRentAmount
-                            }
-                          />
-                          {/* <div>
-                            <p>Each person pays: ${calculateSplitAmount()}</p>
-                          </div> */}
-                        </Grid>
-                        <Grid item className="d-flex m-2" md={12}>
-                          <InputBoxComponent
-                            label="Recipiants Name"
-                            placeholder={`Enter Recipiant Name ${index + 1}...`}
-                            sx={{ width: 300 }}
-                            name={`lessorRecipiantsName-${index}`}
+                            name={`recipiantsID-${index}`}
                             value={
                               type === "edit"
-                                ? allNewContractDetails?.recipiants[index]
-                                    ?.lessorRecipiantsName
-                                : allNewContractDetails?.recipiants[index]
-                                    ?.lessorRecipiantsName || "" // Clear the value in "add" mode
+                                ? allNewContractDetails?.recipiants?.[index] &&
+                                  allNewContractDetails?.recipiants?.[index]
+                                    ?.recipiantsID
+                                : "" // Clear the value in "add" mode
                             }
                             onChange={(e) =>
                               handleRecipientChange(
                                 index,
-                                "lessorRecipiantsName",
+                                "recipiantsID",
                                 e.target.value
                               )
                             }
-                            errorText={
-                              allNewContractDetailsErr?.lessorRecipiantsName
-                            }
+                            errorText={allNewContractDetailsErr?.recipiantsID}
                           />
-
-                          {/* {ifscCodes?.map((ifscCode, index) => ( */}
-
-                          <InputBoxComponent
-                            label="IFSC Code"
-                            sx={{ width: 300 }}
-                            placeholder={`Enter IFSC Code ${index + 1}...`}
-                            name={`lessorIfscNumber-${index}`}
-                            value={ifscCodes[index]}
-                            onChange={(e) => handleChangeIFSCCode(e, index)}
-                            errorText={allNewContractDetailsErr?.ifsc}
-                          />
-                        </Grid>
-
-                        {bankAndBranch[index] ? (
-                          <Grid item className="d-flex m-2" md={12}>
-                            <InputBoxComponent
-                              label={`Bank Name ${index + 1}`}
-                              sx={{ width: 300 }}
-                              placeholder={`Enter Bank Name ${index + 1}...`}
-                              name={`lessorBankName-${index}`}
-                              // value={
-                              //   type === "edit"
-                              //     ? bankAndBranch[index].bank
-                              //     : bankAndBranch[index].bank
-                              //   // Clear the value in "add" modelessorBankName
-                              // }
-                              value={
-                                bankAndBranch[index]
-                                  ? bankAndBranch[index].bank
-                                  : ""
-                              }
-                              onChange={(e) =>
-                                handleRecipientBankNameChange(
-                                  index,
-                                  e.target.value
-                                )
-                              }
-                              errorText={allNewContractDetailsErr?.bankName}
-                            />
-
-                            <InputBoxComponent
-                              label={`Branch Name ${index + 1}`}
-                              sx={{ width: 300 }}
-                              placeholder={`Enter Branch Name ${index + 1}...`}
-                              name={`lessorBranchName-${index}`}
-                              // value={
-                              //   type === "edit"
-                              //     ? bankAndBranch[index].branch
-                              //     : bankAndBranch[index].branch || "" // Clear the value in "add" mode
-                              // }
-                              value={
-                                bankAndBranch[index]
-                                  ? bankAndBranch[index].branch
-                                  : ""
-                              }
-                              onChange={(e) =>
-                                handleRecipientBranchNameChange(
-                                  index,
-                                  e.target.value
-                                )
-                              }
-                              errorText={
-                                allNewContractDetailsErr?.lessorBranchName
-                              }
-                            />
-                          </Grid>
                         ) : null}
 
+                        <InputBoxComponent
+                          label="Rent Amount"
+                          placeholder={`Enter Rent Amount ${index + 1}...`}
+                          sx={{ width: 300 }}
+                          name={`lessorRentAmount-${index}`}
+                          value={
+                            recipientCount && recipientCount.length > 1
+                              ? calculateSplitAmount()
+                              : calculateSplitAmount() ||
+                                (allNewContractDetails?.recipiants?.[index] &&
+                                  allNewContractDetails?.recipiants?.[index]
+                                    ?.lessorRentAmount)
+                          }
+                          onChange={(e) =>
+                            handleRecipientChange(
+                              index,
+                              "lessorRentAmount",
+                              e.target.value
+                            )
+                          }
+                          errorText={allNewContractDetailsErr?.lessorRentAmount}
+                          readOnly={false}
+                        />
+                      </Grid>
+                      <Grid item className="d-flex m-2" md={12}>
+                        <InputBoxComponent
+                          label="Recipiants Name"
+                          placeholder={`Enter Recipiant Name ${index + 1}...`}
+                          sx={{ width: 300 }}
+                          name={`lessorRecipiantsName-${index}`}
+                          value={
+                            type === "edit"
+                              ? allNewContractDetails?.recipiants?.[index] &&
+                                allNewContractDetails?.recipiants?.[index]
+                                  ?.lessorRecipiantsName
+                              : (allNewContractDetails?.recipiants?.[index] &&
+                                  allNewContractDetails?.recipiants?.[index]
+                                    ?.lessorRecipiantsName) ||
+                                "" // Clear the value in "add" mode
+                          }
+                          onChange={(e) =>
+                            handleRecipientChange(
+                              index,
+                              "lessorRecipiantsName",
+                              e.target.value
+                            )
+                          }
+                          errorText={
+                            allNewContractDetailsErr?.lessorRecipiantsName
+                          }
+                        />
+
+                        {/* {ifscCodes?.map((ifscCode, index) => ( */}
+
+                        <InputBoxComponent
+                          label="IFSC Code"
+                          sx={{ width: 300 }}
+                          placeholder={`Enter IFSC Code ${index + 1}...`}
+                          name={`lessorIfscNumber-${index}`}
+                          value={ifscCodes?.[index]}
+                          onChange={(e) => handleChangeIFSCCode(e, index)}
+                          errorText={allNewContractDetailsErr?.ifsc}
+                        />
+                      </Grid>
+
+                      {bankAndBranch?.[index] &&
+                      bankAndBranch?.[index].length > 0 ? (
                         <Grid item className="d-flex m-2" md={12}>
                           <InputBoxComponent
-                            label="A/c No."
+                            label={`Bank Name ${index + 1}`}
                             sx={{ width: 300 }}
-                            placeholder={`Enter A/c no. ${index + 1}...`}
-                            name={`lessorAccountNumber-${index}`}
+                            placeholder={`Enter Bank Name ${index + 1}...`}
+                            name={`lessorBankName-${index}`}
                             // value={
                             //   type === "edit"
-                            //     ? allNewContractDetails?.recipiants[index]
-                            //         ?.lessorAccountNumber
-                            //     : allNewContractDetails?.recipiants[index]
-                            //         ?.lessorAccountNumber || "" // Clear the value in "add" mode
+                            //     ? bankAndBranch?.[index].bank
+                            //     : bankAndBranch?.[index].bank
+                            //   // Clear the value in "add" modelessorBankName
                             // }
                             value={
-                              type === "edit"
-                                ? originalData[index]
-                                : originalData[index] || ""
+                              bankAndBranch?.[index]
+                                ? bankAndBranch?.[index].bank
+                                : ""
                             }
                             onChange={(e) =>
-                              handleRecipientAccountChange(
+                              handleRecipientBankNameChange(
                                 index,
-                                "lessorAccountNumber",
+                                e.target.value
+                              )
+                            }
+                            errorText={allNewContractDetailsErr?.bankName}
+                          />
+
+                          <InputBoxComponent
+                            label={`Branch Name ${index + 1}`}
+                            sx={{ width: 300 }}
+                            placeholder={`Enter Branch Name ${index + 1}...`}
+                            name={`lessorBranchName-${index}`}
+                            // value={
+                            //   type === "edit"
+                            //     ? bankAndBranch?.[index].branch
+                            //     : bankAndBranch?.[index].branch || "" // Clear the value in "add" mode
+                            // }
+                            value={
+                              bankAndBranch?.[index]
+                                ? bankAndBranch?.[index].branch
+                                : ""
+                            }
+                            onChange={(e) =>
+                              handleRecipientBranchNameChange(
+                                index,
                                 e.target.value
                               )
                             }
                             errorText={
-                              allNewContractDetailsErr?.lessorAccountNumber
+                              allNewContractDetailsErr?.lessorBranchName
                             }
                           />
-                          <Grid className="d-flex flex-column">
-                            <InputBoxComponent
-                              label="Re-Enter A/c No."
-                              // type="password"
-                              sx={{ width: 300 }}
-                              placeholder={`Enter Re-enter A/c no. ...`}
-                              // name={`AccountNumber-${index}`}
-                              // value={
-                              //   type === "edit"
-                              //     ? allNewContractDetails?.recipiants[index]
-                              //         ?.lessorAccountNumber
-                              //     : allNewContractDetails?.recipiants[index]
-                              //         ?.lessorAccountNumber || "" // Clear the value in "add" mode
-                              // }
-                              value={reEnteredData[index]}
-                              onChange={(e) =>
-                                handleReEnteredDataChange(e, index)
-                              }
-                            />
-                            {!dataMatch && (
-                              <Typography style={{ color: "red" }}>
-                                {" "}
-                                *Account Number Doesn't match
-                              </Typography>
-                            )}
-                          </Grid>
                         </Grid>
-                        <Grid item className="d-flex  m-2" md={12} key={index}>
+                      ) : null}
+
+                      <Grid item className="d-flex m-2" md={12}>
+                        <InputBoxComponent
+                          label="A/c No."
+                          sx={{ width: 300 }}
+                          placeholder={`Enter A/c no. ${index + 1}...`}
+                          name={`lessorAccountNumber-${index}`}
+                          // value={
+                          //   type === "edit"
+                          //     ? allNewContractDetails?.recipiants?.[index]
+                          //         ?.lessorAccountNumber
+                          //     : allNewContractDetails?.recipiants?.[index]
+                          //         ?.lessorAccountNumber || "" // Clear the value in "add" mode
+                          // }
+                          value={
+                            type === "edit"
+                              ? originalData?.[index]
+                              : originalData?.[index] || ""
+                          }
+                          onChange={(e) =>
+                            handleRecipientAccountChange(
+                              index,
+                              "lessorAccountNumber",
+                              e.target.value
+                            )
+                          }
+                          errorText={
+                            allNewContractDetailsErr?.lessorAccountNumber
+                          }
+                        />
+                        <Grid className="d-flex flex-column">
                           <InputBoxComponent
-                            label="PAN No."
+                            label="Re-Enter A/c No."
+                            // type="password"
                             sx={{ width: 300 }}
-                            placeholder={`Enter PAN No. ${index + 1}...`}
-                            name={`lessorBranchName-${index}`}
+                            placeholder={`Enter Re-enter A/c no. ...`}
+                            // name={`AccountNumber-${index}`}
                             // value={
                             //   type === "edit"
-                            //     ? bankAndBranch[index].bank
-                            //     : bankAndBranch[index].bank || "" // Clear the value in "add" mode
+                            //     ? allNewContractDetails?.recipiants?.[index]
+                            //         ?.lessorAccountNumber
+                            //     : allNewContractDetails?.recipiants?.[index]
+                            //         ?.lessorAccountNumber || "" // Clear the value in "add" mode
                             // }
+                            value={reEnteredData?.[index]}
                             onChange={(e) =>
-                              handleRecipientChange(
-                                index,
-                                "lessorBranchName",
-                                e.target.value
-                              )
-                            }
-                            errorText={
-                              allNewContractDetailsErr?.lessorBranchName
+                              handleReEnteredDataChange(e, index)
                             }
                           />
-                          <InputBoxComponent
-                            label="GST No."
-                            sx={{ width: 300 }}
-                            placeholder={`Enter GST No. ${index + 1}...`}
-                            name={`lessorBranchName-${index}`}
-                            // value={
-                            //   type === "edit"
-                            //     ? bankAndBranch[index].branch
-                            //     : bankAndBranch[index].branch || "" // Clear the value in "add" mode
-                            // }
-                            onChange={(e) =>
-                              handleRecipientChange(
-                                index,
-                                "lessorBranchName",
-                                e.target.value
-                              )
-                            }
-                            errorText={
-                              allNewContractDetailsErr?.lessorBranchName
-                            }
-                          />
+                          {!dataMatch && (
+                            <Typography style={{ color: "red" }}>
+                              {" "}
+                              *Account Number Doesn't match
+                            </Typography>
+                          )}
                         </Grid>
                       </Grid>
-                    ))
-                  }
+                      <Grid item className="d-flex  m-2" md={12} key={index}>
+                        <InputBoxComponent
+                          label="PAN No."
+                          sx={{ width: 300 }}
+                          placeholder={`Enter PAN No. ${index + 1}...`}
+                          name={`panNo-${index}`}
+                          value={
+                            type === "edit"
+                              ? allNewContractDetails?.recipiants?.[index] &&
+                                allNewContractDetails?.recipiants?.[index]
+                                  ?.panNo
+                              : (allNewContractDetails?.recipiants?.[index] &&
+                                  allNewContractDetails?.recipiants?.[index]
+                                    ?.panNo) ||
+                                "" // Clear the value in "add" mode// Clear the value in "add" mode
+                          }
+                          onChange={(e) =>
+                            handleRecipientChange(
+                              index,
+                              "panNo",
+                              e.target.value
+                            )
+                          }
+                          errorText={allNewContractDetailsErr?.panNo}
+                        />
+                        <InputBoxComponent
+                          label="GST No."
+                          sx={{ width: 300 }}
+                          placeholder={`Enter GST No. ${index + 1}...`}
+                          name={`gstNo-${index}`}
+                          value={
+                            type === "edit"
+                              ? allNewContractDetails?.recipiants?.[index] &&
+                                allNewContractDetails?.recipiants?.[index]
+                                  ?.gstNo
+                              : (allNewContractDetails?.recipiants?.[index] &&
+                                  allNewContractDetails?.recipiants?.[index]
+                                    ?.gstNo) ||
+                                "" // Clear the value in "add" mode // Clear the value in "add" mode
+                          }
+                          onChange={(e) =>
+                            handleRecipientChange(
+                              index,
+                              "gstNo",
+                              e.target.value
+                            )
+                          }
+                          errorText={allNewContractDetailsErr?.gstNo}
+                        />
+                      </Grid>
+                    </Grid>
+                  ))}
                 </Grid>
 
                 {/* <Grid item className="d-flex " lg={12}>
@@ -1136,9 +1146,9 @@ const AgreementDetails = ({
               <Grid item className="d-flex m-2" md={6}>
                 <InputBoxComponent
                   label="Enter Renewal Tenure (in months)"
-                  type="number"
-                  value={calculateTenureInMonths()}
-                  onChange={handleTenureChange}
+                  // type="number"
+                  // value={calculateTenureInMonths()}
+                  // onChange={handleTenureChange}
                   sx={{ width: 300 }}
                 />
 
@@ -1174,21 +1184,24 @@ const AgreementDetails = ({
                   ? isChecked && (
                       <InputBoxComponent
                         label="TDS (%)"
-                        // type="number"
+                        type="number"
                         value={tdsRates * 100}
                         onChange={(e) => handleTdsChange(e)}
                       />
                     )
                   : null}
+
                 <Typography>GST Applicable?</Typography>
                 <SwitchComponent
                   // checked={parseInt(currentRent) > 20000}
                   checked={checked}
                   onChange={handleGSTChange}
                 />
+
                 {checked ? (
                   <InputBoxComponent
                     label="GST % "
+                    type="number"
                     placeholder="Enter GST%"
                     value={(gstRate / 100) * 100}
                     onChange={(e) => handleGstValueChange(e)}
@@ -1196,75 +1209,66 @@ const AgreementDetails = ({
                 ) : null}
               </Grid>
 
-              <Grid className="d-flex mt-2 ml-4 flex-column align-items-center justify-content-center">
-                {/* {calculateTenureInMonths() === 60 ? (
-                  <Grid container spacing={2} className="px-2 py-2 mt-1 ">
-                    {Array.from({ length: 5 }).map((_, index) => {
-                      const year = new Date().getFullYear() + index;
-                      const annualRent = calculateCurrentRent(index + 1);
-                      const tds = calculateTDS(annualRent);
+              <Grid className="d-flex mt-2 flex-column align-items-start justify-content-center">
+                {calculateTenure() > 11 ? (
+                  <Grid container spacing={2} className=" py-2 mt-1 ">
+                    {startEndDatesList &&
+                      startEndDatesList?.length > 0 &&
+                      startEndDatesList?.map((period, index) => {
+                        if (!period) {
+                          // Handle the case where period is undefined
+                          // You can return a default component or just skip rendering
+                          return (
+                            <div key={index}>Period is undefined or null</div>
+                          );
+                        }
+                        const annualRent = parseFloat(
+                          calculateCurrentRent(index + 1)
+                        );
+                        const tds = calculateTDS(annualRent);
+                        const currentRentDeductedTds = annualRent - tds;
+                        const gstAmount = calculateGST(currentRentDeductedTds);
+                        const currentRentAddedGSt =
+                          currentRentDeductedTds + gstAmount;
+                        // const netAmount=
+                        return (
+                          <Grid
+                            item
+                            key={index}
+                            className="d-flex flex-column m-2 py-0 px-0"
+                          >
+                            <Grid className="d-flex m-2 py-0 px-5">
+                              <Typography>{index + 1}:</Typography>
+                              <DatePickerComponent
+                                label="Start Date"
+                                value={period.startDate.toLocaleDateString()}
+                                sx={{ width: 220 }}
+                                readOnly
+                              />
+                              <DatePickerComponent
+                                label="End Date"
+                                value={period.endDate.toLocaleDateString()}
+                                sx={{ width: 220 }}
+                                readOnly
+                              />
+                            </Grid>
+                            <Grid className="d-flex flex-row py-3 px-5">
+                              <InputBoxComponent
+                                label="Current Rent"
+                                value={`₹ ${calculateCurrentRent(index + 1)}`}
+                                sx={{ widh: 100, mt: -1 }}
+                              />
+                              <span>-</span>
+                              <InputBoxComponent
+                                label="TDS Amount"
+                                value={
+                                  tds > 0 ? ` ₹ ${tds}` : "Not Applicable"
+                                  //tds > 0 ? `10% (TDS: ₹ ${tds})` : "Not Applicable"
+                                }
+                                sx={{ width: 150, mt: -1 }}
+                              />
 
-                      <Grid item key={index} className="d-flex m-2 py-0 px-5">
-                        <Grid className="d-flex m-2 py-0 px-5">
-                          {index + 1}: Year {year}:({HandleData()})
-                        </Grid>
-
-                        <InputBoxComponent
-                          label="Current Rent"
-                          value={`₹ ${calculateCurrentRent(index + 1)}`}
-                          sx={{ widh: 200 }}
-                        />
-                        <InputBoxComponent
-                          label="Tds Applicability"
-                          value={
-                            tds > 0 ? ` ₹ ${tds}` : "Not Applicable"
-                            //tds > 0 ? `10% (TDS: ₹ ${tds})` : "Not Applicable"
-                          }
-                          sx={{ widh: 200 }}
-                        />
-                      </Grid>;
-                    })}
-                  </Grid>
-                ) : null} */}
-                {calculateTenureInMonths() === 60 ? (
-                  <Grid container spacing={2} className="px-2 py-2 mt-1 ">
-                    {startEndDatesList.map((period, index) => {
-                      const annualRent = parseFloat(
-                        calculateCurrentRent(index + 1)
-                      );
-                      const tds = calculateTDS(annualRent);
-                      // console.log(tds,"tds");
-                      return (
-                        <Grid item key={index} className="d-flex m-2 py-0 px-5">
-                          <Grid className="d-flex m-2 py-0 px-5">
-                            <Typography>{index + 1}:</Typography>
-                            <DatePickerComponent
-                              label="Start Date"
-                              value={period.startDate.toLocaleDateString()}
-                              sx={{ width: 200 }}
-                              readOnly
-                            />
-                            <DatePickerComponent
-                              label="End Date"
-                              value={period.endDate.toLocaleDateString()}
-                              sx={{ width: 200 }}
-                              readOnly
-                            />
-
-                            <InputBoxComponent
-                              label="Current Rent"
-                              value={`₹ ${calculateCurrentRent(index + 1)}`}
-                              sx={{ widh: 200, mt: -1 }}
-                            />
-                            <InputBoxComponent
-                              label="TDS Applicability"
-                              value={
-                                tds > 0 ? ` ₹ ${tds}` : "Not Applicable"
-                                //tds > 0 ? `10% (TDS: ₹ ${tds})` : "Not Applicable"
-                              }
-                              sx={{ widh: 200, mt: -1 }}
-                            />
-                            {/* <InputBoxComponent
+                              {/* <InputBoxComponent
                             label="Tds Applicability"
                             value={
                               tds > 20000 ? ` ₹ ${tds}` : "Not Applicable"
@@ -1272,10 +1276,27 @@ const AgreementDetails = ({
                             }
                             sx={{ widh: 200 }}
                           /> */}
+                              <span>*</span>
+                              <InputBoxComponent
+                                label="GST Amount"
+                                value={
+                                  gstAmount > 0
+                                    ? ` ₹ ${gstAmount}`
+                                    : "Not Applicable"
+                                  //tds > 0 ? `10% (TDS: ₹ ${tds})` : "Not Applicable"
+                                }
+                                sx={{ width: 150, mt: -1 }}
+                              />
+                              <span>=</span>
+                              <InputBoxComponent
+                                label="Net Amount"
+                                value={`₹ ${currentRentAddedGSt}`}
+                                sx={{ width: 150, mt: -1 }}
+                              />
+                            </Grid>
                           </Grid>
-                        </Grid>
-                      );
-                    })}
+                        );
+                      })}
                   </Grid>
                 ) : null}
               </Grid>
@@ -1294,7 +1315,7 @@ const AgreementDetails = ({
         </Button>
 
         <Button
-          disabled={activeStep && activeStep === 0}
+          // disabled={activeStep && activeStep === 0}
           onClick={handleNext}
           variant="contained"
           sx={{ m: 1, background: "#238520" }}
@@ -1334,7 +1355,7 @@ export default AgreementDetails;
                         <InputBoxComponent
                           label={`Rent Amount ${index + 1}`}
                           type="number"
-                          value={rentAmounts[index]}
+                          value={rentAmounts?.[index]}
                           onChange={(e) => handleRentChange(e, index)}
                           sx={{ width: 300 }}
                         />

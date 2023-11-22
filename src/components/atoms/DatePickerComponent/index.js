@@ -19,6 +19,7 @@ const commonStyles = {
 const DatePickerComponent = ({
   label = "",
   value = Date.now(),
+  // value = new Date(),
   onChange = () => {},
   readOnly = false,
   textLabel = "",

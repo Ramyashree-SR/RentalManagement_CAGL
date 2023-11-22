@@ -139,7 +139,7 @@ const StepperComponent = ({
                 onClick={() => {
                   setStep(ind);
                 }}
-                last={true}
+                last="true"
                 StepIconComponent={ColorlibStepIcon}
                 sx={{
                   "&.MuiStepLabel-vertical": {

@@ -70,18 +70,6 @@ const GeneralInformation = ({
   // const handleNext = () => {
   //   onSave(allNewContractDetails, type);
   // };
-  const handleSubmit = () => {
-    let err = handleAddRentContractInformationError();
-    if (err) {
-      // setAllNewContractDetails(allNewContractDetails, type);
-      AddAllNewRentContactInformation();
-      close();
-    }
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
 
   const ElectricityBillInput = useRef();
   const [electricityBillFile, setElectricityBillFile] = useState({
@@ -101,7 +89,6 @@ const GeneralInformation = ({
     if (data) {
       if (data) {
         setactive(data?.data);
-
         // addToast("File Uploaded", { appearance: "success" });
       }
     } else if (errRes) {
@@ -220,7 +207,18 @@ const GeneralInformation = ({
   //   document.body.removeChild(anchorElement);
   //   window.URL.revokeObjectURL(href);
   // };
+  const handleSubmit = () => {
+    let err = handleAddRentContractInformationError();
+    if (err) {
+      setAllNewContractDetails(allNewContractDetails, type);
+      AddAllNewRentContactInformation();
+      close();
+    }
+  };
 
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
   return (
     <>
       <Box

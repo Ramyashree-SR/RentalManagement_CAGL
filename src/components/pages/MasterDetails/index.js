@@ -49,6 +49,8 @@ let errObj = {
       lessorBranchName: "",
       lessorAccountNumber: "",
       lessorRentAmount: "",
+      panNo: "",
+      gstNo: "",
     },
   ],
   lessorDoorNumber: "",
@@ -161,6 +163,8 @@ const MasterDetails = (props) => {
         lessorBranchName: "",
         lessorAccountNumber: "",
         lessorRentAmount: "",
+        panNo: "",
+        gstNo: "",
       },
     ],
     lessorDoorNumber: "",
@@ -268,6 +272,8 @@ const MasterDetails = (props) => {
           lessorBranchName: "",
           lessorAccountNumber: "",
           lessorRentAmount: "",
+          panNo: "",
+          gstNo: "",
         },
       ],
       lessorDoorNumber: "",
@@ -372,6 +378,8 @@ const MasterDetails = (props) => {
           lessorBranchName: "",
           lessorAccountNumber: "",
           lessorRentAmount: "",
+          panNo: "",
+          gstNo: "",
         },
       ],
       lessorDoorNumber: "",
@@ -1072,6 +1080,8 @@ const MasterDetails = (props) => {
         lessorIfscNumber: recipient?.lessorIfscNumber,
         lessorAccountNumber: recipient?.lessorAccountNumber,
         lessorRentAmount: recipient?.lessorRentAmount,
+        panNo: recipient?.panNo,
+        gstNo: recipient?.gstNo,
       })),
       lessorDoorNumber: allNewContractDetails?.lessorDoorNumber,
       lessorFloorNumber: allNewContractDetails?.lessorFloorNumber,
@@ -1184,6 +1194,8 @@ const MasterDetails = (props) => {
             lessorBranchName: "",
             lessorAccountNumber: "",
             lessorRentAmount: "",
+            panNo: "",
+            gstNo: "",
           },
         ],
         lessorDoorNumber: "",
@@ -1295,6 +1307,8 @@ const MasterDetails = (props) => {
         lessorIfscNumber: recipient?.lessorIfscNumber,
         lessorAccountNumber: recipient?.lessorAccountNumber,
         lessorRentAmount: recipient?.lessorRentAmount,
+        panNo: recipient?.panNo,
+        gstNo: recipient?.gstNo,
       })),
       lessorDoorNumber: allNewContractDetails?.lessorDoorNumber,
       lessorFloorNumber: allNewContractDetails?.lessorFloorNumber,
@@ -1314,7 +1328,7 @@ const MasterDetails = (props) => {
       lesseeDivision: allNewContractDetails?.lesseeDivision,
       lesseeZone: allNewContractDetails?.lesseeZone,
       lesseeState: allNewContractDetails?.lesseeState,
-      lesseeBranchType: allNewContractDetails?.lesseeBranchType,
+      lesseeBranchType: allNewContractDetails?.lesseeBranchType.label,
       lesseeApproverrenewals: allNewContractDetails?.lesseeApproverrenewals,
       lesseeApproverRelocation: allNewContractDetails?.lesseeApproverRelocation,
       lesseeEntityDetails: allNewContractDetails?.lesseeEntityDetails,
@@ -1424,6 +1438,8 @@ const MasterDetails = (props) => {
           lessorIfscNumber: recipient?.lessorIfscNumber,
           lessorAccountNumber: recipient?.lessorAccountNumber,
           lessorRentAmount: recipient?.lessorRentAmount,
+          panNo: recipient?.panNo,
+          gstNo: recipient?.gstNo,
         })),
 
         lessorDoorNumber: props.EditLessorData?.lessorDoorNumber,
@@ -1565,8 +1581,6 @@ const MasterDetails = (props) => {
           setAllNewContractDetails={setAllNewContractDetails}
           AddAllNewRentContactInformation={AddAllNewRentContactInformation}
           type={props.type}
-          editAllNewRentContractDetails={editAllNewRentContractDetails}
-          EditLessorData={props.EditLessorData.uniqueID}
           handleAddRentContractInformationError={
             handleAddRentContractInformationError
           }
@@ -1592,6 +1606,10 @@ const MasterDetails = (props) => {
           handleAddRentContractInformationError={
             handleAddRentContractInformationError
           }
+          close={props.close}
+          AddAllNewRentContactInformation={AddAllNewRentContactInformation}
+          editAllNewRentContractDetails={editAllNewRentContractDetails}
+          EditLessorData={props.EditLessorData.uniqueID}
         />
       ),
     },

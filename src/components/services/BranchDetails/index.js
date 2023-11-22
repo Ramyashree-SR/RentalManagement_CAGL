@@ -4,7 +4,7 @@ const getBranchIDForBranchDetails = (params) => {
   return serviceUtil
     .get(`getbranchids?type=${params}`)
     .then((res) => {
-      console.log(res, "BranchDatares");
+      // console.log(res, "BranchDatares");
       const data = res.data;
       return { data };
     })
