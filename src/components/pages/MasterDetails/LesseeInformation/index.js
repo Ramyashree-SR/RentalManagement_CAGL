@@ -37,11 +37,20 @@ const LesseeInformation = ({
   setAllNewContractDetails,
   allNewContractDetailsErr,
   handleAddRentContractInformationError,
+  branchDetails,
+  setBranchDetails,
 }) => {
   const [address, setAddress] = useState("");
   const [branchData, setBranchData] = useState([]);
-  const [branchDetails, setBranchDetails] = useState({});
-  console.log(branchDetails, "branchDetails");
+  // const [branchDetails, setBranchDetails] = useState({
+  //   branchID: '',
+  //   branchName: '',
+  //   areaName: '',
+  //   region: '',
+  //   zone: '',
+  //   state: '',
+  // });
+  // console.log(branchDetails, "branchDetails");
   const [selectedValue, setSelectedValue] = useState("");
   // console.log(selectedValue, "selectedValue");
 
@@ -176,7 +185,15 @@ const LesseeInformation = ({
       ...allNewContractDetails,
       [name]: value,
     });
-
+    setBranchDetails({
+      branchID: "",
+      branchName: "",
+      areaName: "",
+      region: "",
+      zone: "",
+      state: "",
+      // ... other fields
+    });
     setSelectedValue(value);
     if (typeof value === "undefined") {
       getAllBranchID(value);
@@ -239,7 +256,7 @@ const LesseeInformation = ({
   // const getBranchIdDetails = async () => {
   //   let branchType = selectedValue.label;
   //   const { data } = await getRentContractDetailsOnBranchID(
-  //     branchDetails?.branchID,
+  //    branchDetails?.branchID,
   //     branchType
   //   );
   //   if (data) {
@@ -333,7 +350,7 @@ const LesseeInformation = ({
                   options={branchData}
                   value={
                     type === "edit"
-                      ? branchDetails?.branchID
+                      ?branchDetails?.branchID
                       : branchData.find(
                           (branch) =>
                             branch.id ===
@@ -359,7 +376,7 @@ const LesseeInformation = ({
                   name="lesseeBranchName"
                   value={allNewContractDetails?.branchName}
                   onChange={(e) => updateChange(e)}
-                  errorText={allNewContractDetailsErr?.lesseeBranchName}
+                  errorText={allNewContractDetailsErr?.branchName || ""}
                 />
                 <InputBoxComponent
                   label="Area Name"
@@ -368,7 +385,7 @@ const LesseeInformation = ({
                   name="areaName"
                   value={allNewContractDetails?.areaName}
                   onChange={(e) => updateChange(e)}
-                  errorText={allNewContractDetailsErr?.lesseeAreaName}
+                  errorText={allNewContractDetailsErr?.areaName || ""}
                 />
                 <InputBoxComponent
                   label="Division/Region"
@@ -377,7 +394,7 @@ const LesseeInformation = ({
                   name="region"
                   value={allNewContractDetails?.region}
                   onChange={(e) => updateChange(e)}
-                  errorText={allNewContractDetailsErr?.lesseeDivision}
+                  errorText={allNewContractDetailsErr?.region || ""}
                 />
               </Grid>
               <Grid item className="d-flex m-2" lg={12}>
@@ -388,16 +405,16 @@ const LesseeInformation = ({
                   name="zone"
                   value={allNewContractDetails?.zone}
                   onChange={(e) => updateChange(e)}
-                  errorText={allNewContractDetailsErr?.lesseeZone}
+                  errorText={allNewContractDetailsErr?.zone || ""}
                 />
                 <InputBoxComponent
                   label="State"
                   placeholder="Enter State ."
                   sx={{ width: 300 }}
                   name="state"
-                  value={allNewContractDetails?.state}
+                  value={allNewContractDetails?.state || ""}
                   onChange={(e) => updateChange(e)}
-                  errorText={allNewContractDetailsErr?.lesseeState}
+                  errorText={allNewContractDetailsErr?.state}
                 />
               </Grid>
             </Grid>

@@ -137,7 +137,7 @@ const AgreementDetails = ({
     } else if (newValue.id === "4") {
       setRecipientCount(4);
     } else {
-      setRecipientCount(0);
+      setRecipientCount();
     }
     setIFSCCodes(Array(newValue.id).fill(""));
     setBankAndBranch(Array(newValue.id).fill({ bank: "", branch: "" }));
@@ -155,9 +155,10 @@ const AgreementDetails = ({
     const updatedContractDetails = { ...allNewContractDetails };
     // Create a copy of the recipients array within the object
     updatedContractDetails.recipiants =
-      updatedContractDetails.recipiants?.slice();
+      updatedContractDetails.recipiants?.slice() || [];
     // Create a copy of the specific recipient within the array
-    const updatedRecipient = { ...updatedContractDetails.recipiants[index] };
+    const updatedRecipient =
+      { ...updatedContractDetails.recipiants?.[index] } || {};
     // Update the specific field for the recipient
     updatedRecipient[fieldName] = newValue;
     // Update the recipient within the array
@@ -169,11 +170,12 @@ const AgreementDetails = ({
   const handleRecipientAccountChange = (index, fieldName, newValue) => {
     // Create a copy of the allNewContractDetails object
     const updatedContractDetails = { ...allNewContractDetails };
-    // Create a copy of the recipients array within the object
+    // Create a copy of the recipients arrSay within the object
     updatedContractDetails.recipiants =
-      updatedContractDetails.recipiants.slice();
+      updatedContractDetails.recipiants.slice() || [];
     // Create a copy of the specific recipient within the array
-    const updatedRecipient = { ...updatedContractDetails.recipiants[index] };
+    const updatedRecipient =
+      { ...updatedContractDetails.recipiants?.[index] } || {};
     // Update the specific field for the recipient
     updatedRecipient[fieldName] = newValue;
     // Update the recipient within the array
@@ -505,7 +507,7 @@ const AgreementDetails = ({
                   handleActivationStatus("agreementActivationStatus", value)
                 }
               />
-              <DropDownComponent
+              {/* <DropDownComponent
                 options={ScheduleType}
                 label="Schedule Premesis"
                 placeholder="Enter Schedule Premesis"
@@ -514,7 +516,7 @@ const AgreementDetails = ({
                 value={allNewContractDetails?.agreementTenure}
                 onChange={(e) => updateChange(e)}
                 errorText={allNewContractDetailsErr?.agreementTenure}
-              />
+              /> */}
             </Grid>
           </Grid>
 
@@ -528,28 +530,28 @@ const AgreementDetails = ({
                   label="GL Name"
                   placeholder="Enter GL Name"
                   sx={{ width: 300, mt: -1.5, ml: 1 }}
-                  name="agreementTenure"
-                  value={allNewContractDetails?.agreementTenure}
+                  name="glName"
+                  value={allNewContractDetails?.glName}
                   onChange={(e) => updateChange(e)}
-                  errorText={allNewContractDetailsErr?.agreementTenure}
+                  errorText={allNewContractDetailsErr?.glName}
                 />
                 <DatePickerComponent
                   placeholder="Select Signed Date"
                   label="Signed Date"
                   size="small"
                   sx={{ width: 300 }}
-                  name="agreementSignDate"
-                  value={allNewContractDetails?.agreementSignDate}
+                  name="signedDate"
+                  value={allNewContractDetails?.signedDate}
                   onChange={handleAgreementSignDate}
                 />
                 <InputBoxComponent
                   label="GL Employee ID"
                   placeholder="Enter GL Employee ID"
                   sx={{ width: 300, mt: -1.5, ml: 1 }}
-                  name="agreementTenure"
-                  value={allNewContractDetails?.agreementTenure}
+                  name="glEmpId"
+                  value={allNewContractDetails?.glEmpId}
                   onChange={(e) => updateChange(e)}
-                  errorText={allNewContractDetailsErr?.agreementTenure}
+                  errorText={allNewContractDetailsErr?.glEmpId}
                 />
               </Grid>
             </Grid>
@@ -858,9 +860,16 @@ const AgreementDetails = ({
 
                 <Grid item className="d-flex flex-column" lg={12}>
                   {Array.from({ length: recipientCount }, (_, index) => (
-                    <Grid container spacing={2} className="px-2" key={index}>
-                      <Grid item className="d-flex flex-column m-2" md={12}>
-                        <Typography>{`Recipiant - ${index + 1}`}</Typography>
+                    <Grid
+                      container
+                      spacing={2}
+                      className="d-flex px-3"
+                      key={index}
+                    >
+                      <Typography className="px-2 py-2">{`Recipiant - ${
+                        index + 1
+                      }`}</Typography>
+                      <Grid item className="d-flex flex-row m-0" md={12}>
                         {type === "edit" ? (
                           <InputBoxComponent
                             label="Recipiants ID"
@@ -917,13 +926,10 @@ const AgreementDetails = ({
                           name={`lessorRecipiantsName-${index}`}
                           value={
                             type === "edit"
-                              ? allNewContractDetails?.recipiants?.[index] &&
-                                allNewContractDetails?.recipiants?.[index]
+                              ? allNewContractDetails?.recipiants?.[index]
                                   ?.lessorRecipiantsName
-                              : (allNewContractDetails?.recipiants?.[index] &&
-                                  allNewContractDetails?.recipiants?.[index]
-                                    ?.lessorRecipiantsName) ||
-                                "" // Clear the value in "add" mode
+                              : allNewContractDetails?.recipiants?.[index]
+                                  ?.lessorRecipiantsName || "" // Clear the value in "add" mode
                           }
                           onChange={(e) =>
                             handleRecipientChange(
@@ -950,8 +956,7 @@ const AgreementDetails = ({
                         />
                       </Grid>
 
-                      {bankAndBranch?.[index] &&
-                      bankAndBranch?.[index].length > 0 ? (
+                      {bankAndBranch[index] && bankAndBranch[index] ? (
                         <Grid item className="d-flex m-2" md={12}>
                           <InputBoxComponent
                             label={`Bank Name ${index + 1}`}
@@ -1070,13 +1075,10 @@ const AgreementDetails = ({
                           name={`panNo-${index}`}
                           value={
                             type === "edit"
-                              ? allNewContractDetails?.recipiants?.[index] &&
-                                allNewContractDetails?.recipiants?.[index]
+                              ? allNewContractDetails?.recipiants?.[index]
                                   ?.panNo
-                              : (allNewContractDetails?.recipiants?.[index] &&
-                                  allNewContractDetails?.recipiants?.[index]
-                                    ?.panNo) ||
-                                "" // Clear the value in "add" mode// Clear the value in "add" mode
+                              : allNewContractDetails?.recipiants?.[index]
+                                  ?.panNo || "" // Clear the value in "add" mode// Clear the value in "add" mode
                           }
                           onChange={(e) =>
                             handleRecipientChange(
@@ -1147,8 +1149,8 @@ const AgreementDetails = ({
                 <InputBoxComponent
                   label="Enter Renewal Tenure (in months)"
                   // type="number"
-                  // value={calculateTenureInMonths()}
-                  // onChange={handleTenureChange}
+                  value={calculateTenure()}
+                  onChange={handleTenureChange}
                   sx={{ width: 300 }}
                 />
 

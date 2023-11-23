@@ -249,7 +249,14 @@ const MasterDetails = (props) => {
   const handleClick = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
-
+  const [branchDetails, setBranchDetails] = useState({
+    branchID: "",
+    branchName: "",
+    areaName: "",
+    region: "",
+    zone: "",
+    state: "",
+  });
   useEffect(() => {
     let errObj = {
       // uniqueID: "",
@@ -1072,7 +1079,7 @@ const MasterDetails = (props) => {
       lessorPanNumber: allNewContractDetails?.lessorPanNumber,
       lessorGstNumber: allNewContractDetails?.lessorGstNumber,
       // lessorTdsNumber: allNewContractDetails?.lessorTdsNumber,
-      paymentMode: allNewContractDetails?.paymentMode.label,
+      paymentMode: allNewContractDetails?.paymentMode,
       recipiants: allNewContractDetails.recipiants.map((recipient) => ({
         lessorRecipiantsName: recipient?.lessorRecipiantsName,
         lessorBankName: recipient?.lessorBankName,
@@ -1101,14 +1108,12 @@ const MasterDetails = (props) => {
       lesseeDivision: allNewContractDetails?.lesseeDivision,
       lesseeZone: allNewContractDetails?.lesseeZone,
       lesseeState: allNewContractDetails?.lesseeState,
-      lesseeBranchType: allNewContractDetails?.lesseeBranchType.label,
-      lesseeApproverrenewals:
-        allNewContractDetails?.lesseeApproverrenewals.label,
-      lesseeApproverRelocation:
-        allNewContractDetails?.lesseeApproverRelocation.label,
-      lesseeEntityDetails: allNewContractDetails?.lesseeEntityDetails.label,
+      lesseeBranchType: allNewContractDetails?.lesseeBranchType,
+      lesseeApproverrenewals: allNewContractDetails?.lesseeApproverrenewals,
+      lesseeApproverRelocation: allNewContractDetails?.lesseeApproverRelocation,
+      lesseeEntityDetails: allNewContractDetails?.lesseeEntityDetails,
 
-      premesisLocation: allNewContractDetails?.premesisLocation.label,
+      premesisLocation: allNewContractDetails?.premesisLocation,
       premesisDoorNumber: allNewContractDetails?.premesisDoorNumber,
       premesisFloorNumber: allNewContractDetails?.premesisFloorNumber,
       premesisWardNo: allNewContractDetails?.premesisWardNo,
@@ -1123,12 +1128,12 @@ const MasterDetails = (props) => {
       southPremesis: allNewContractDetails?.southPremesis,
       eastPremesis: allNewContractDetails?.eastPremesis,
       westPremesis: allNewContractDetails?.westPremesis,
-      premesisBuildingType: allNewContractDetails?.premesisBuildingType.label,
+      premesisBuildingType: allNewContractDetails?.premesisBuildingType,
 
       agreementSignDate: allNewContractDetails?.agreementSignDate,
       agreementTenure: allNewContractDetails?.agreementTenure,
       agreementActivationStatus:
-        allNewContractDetails?.agreementActivationStatus.label,
+        allNewContractDetails?.agreementActivationStatus,
       agreementStartDate: allNewContractDetails?.agreementStartDate,
       agreementEndDate: allNewContractDetails?.agreementEndDate,
       rentStartDate: allNewContractDetails?.rentStartDate,
@@ -1137,7 +1142,7 @@ const MasterDetails = (props) => {
       maintaineneCharge: allNewContractDetails?.maintaineneCharge,
       waterCharge: allNewContractDetails?.waterCharge,
       electricity: allNewContractDetails?.electricity,
-      documentType: allNewContractDetails?.documentType.label,
+      documentType: allNewContractDetails?.documentType,
       securityDepositAmount: allNewContractDetails?.securityDepositAmount,
       securityDepositPaymentDate:
         allNewContractDetails?.securityDepositPaymentDate,
@@ -1145,11 +1150,10 @@ const MasterDetails = (props) => {
         allNewContractDetails?.securityDepositPaymentMode,
       securityDepositUtr: allNewContractDetails?.securityDepositUtr,
       securityDepositLockinPeriod:
-        allNewContractDetails?.securityDepositLockinPeriod.label,
+        allNewContractDetails?.securityDepositLockinPeriod,
       securityDepositnoticePeriod:
-        allNewContractDetails?.securityDepositnoticePeriod.label,
-      securityDepositExitTerm:
-        allNewContractDetails?.securityDepositExitTerm.label,
+        allNewContractDetails?.securityDepositnoticePeriod,
+      securityDepositExitTerm: allNewContractDetails?.securityDepositExitTerm,
       standardDeducition: allNewContractDetails?.standardDeducition,
       firstMonthvalue: allNewContractDetails?.firstMonthvalue,
       exittermlastMonthvalues: allNewContractDetails?.lastMonthvalue,
@@ -1169,10 +1173,19 @@ const MasterDetails = (props) => {
       lastRentDate: allNewContractDetails?.lastRentDate,
       plotNumber: allNewContractDetails?.plotNumber,
       builtupArea: allNewContractDetails?.builtupArea,
-      renewalStatus: allNewContractDetails?.renewalStatus.label,
+      renewalStatus: allNewContractDetails?.renewalStatus,
     };
     const { data } = await AddRentContractDetails(payload);
     if (data?.data) {
+      setBranchDetails({
+        branchID: allNewContractDetails?.branchID,
+        branchName: allNewContractDetails?.lesseeBranchName,
+        areaName: allNewContractDetails?.lesseeAreaName,
+        region: allNewContractDetails?.lesseeDivision,
+        zone: allNewContractDetails?.lesseeZone,
+        state: allNewContractDetails?.lesseeState,
+        // ... other fields
+      });
       setAllNewContractDetails({
         lessorName: "",
         lessorContactNumber: "",
@@ -1274,6 +1287,17 @@ const MasterDetails = (props) => {
         builtupArea: "",
         renewalStatus: "",
       });
+
+      setAllNewContractDetails({
+        branchID: "",
+        lesseeBranchName: "",
+        lesseeAreaName: "",
+        lesseeDivision: "",
+        lesseeZone: "",
+        lesseeState: "",
+        lesseeBranchType: "",
+        // ... other fields
+      });
       props.getContractDetails();
     }
   };
@@ -1298,7 +1322,7 @@ const MasterDetails = (props) => {
       lessorEmailAddress: allNewContractDetails?.lessorEmailAddress,
       lessorPanNumber: allNewContractDetails?.lessorPanNumber,
       lessorGstNumber: allNewContractDetails?.lessorGstNumber,
-      paymentMode: allNewContractDetails?.paymentMode.label,
+      paymentMode: allNewContractDetails?.paymentMode,
       recipiants: allNewContractDetails.recipiants.map((recipient) => ({
         recipiantsID: recipient?.recipiantsID,
         lessorRecipiantsName: recipient?.lessorRecipiantsName,
@@ -1328,7 +1352,7 @@ const MasterDetails = (props) => {
       lesseeDivision: allNewContractDetails?.lesseeDivision,
       lesseeZone: allNewContractDetails?.lesseeZone,
       lesseeState: allNewContractDetails?.lesseeState,
-      lesseeBranchType: allNewContractDetails?.lesseeBranchType.label,
+      lesseeBranchType: allNewContractDetails?.lesseeBranchType,
       lesseeApproverrenewals: allNewContractDetails?.lesseeApproverrenewals,
       lesseeApproverRelocation: allNewContractDetails?.lesseeApproverRelocation,
       lesseeEntityDetails: allNewContractDetails?.lesseeEntityDetails,
@@ -1343,7 +1367,7 @@ const MasterDetails = (props) => {
       premesisTaluka: allNewContractDetails?.premesisTaluka,
       premesisDistrict: allNewContractDetails?.premesisDistrict,
       premesisState: allNewContractDetails?.lesseeState,
-      premesisBuildingType: allNewContractDetails?.premesisBuildingType.label,
+      premesisBuildingType: allNewContractDetails?.premesisBuildingType,
       northPremesis: allNewContractDetails?.northPremesis,
       southPremesis: allNewContractDetails?.southPremesis,
       eastPremesis: allNewContractDetails?.eastPremesis,
@@ -1354,7 +1378,7 @@ const MasterDetails = (props) => {
       // agreementSignDate: allNewContractDetails?.agreementSignDate,
       agreementTenure: allNewContractDetails?.agreementTenure,
       agreementActivationStatus:
-        allNewContractDetails?.agreementActivationStatus.label,
+        allNewContractDetails?.agreementActivationStatus,
       agreementStartDate: formatDateToBackEndReqirement(
         allNewContractDetails?.agreementStartDate
       ),
@@ -1403,7 +1427,7 @@ const MasterDetails = (props) => {
       lastRentDate: allNewContractDetails?.lastRentDate,
       plotNumber: allNewContractDetails?.plotNumber,
       builtupArea: allNewContractDetails?.builtupArea,
-      renewalStatus: allNewContractDetails?.renewalStatus.label,
+      renewalStatus: allNewContractDetails?.renewalStatus,
       tds: allNewContractDetails.tds,
       gst: allNewContractDetails.gst,
     };
@@ -1561,6 +1585,8 @@ const MasterDetails = (props) => {
           handleAddRentContractInformationError={
             handleAddRentContractInformationError
           }
+          branchDetails={branchDetails}
+          setBranchDetails={setBranchDetails}
         />
       ),
     },

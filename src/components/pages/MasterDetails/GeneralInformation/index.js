@@ -208,12 +208,12 @@ const GeneralInformation = ({
   //   window.URL.revokeObjectURL(href);
   // };
   const handleSubmit = () => {
-    let err = handleAddRentContractInformationError();
-    if (err) {
+    // let err = handleAddRentContractInformationError();
+    // if (err) {
       setAllNewContractDetails(allNewContractDetails, type);
       AddAllNewRentContactInformation();
       close();
-    }
+    // }
   };
 
   const handleBack = () => {

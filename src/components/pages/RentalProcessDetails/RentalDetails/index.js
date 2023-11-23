@@ -348,7 +348,7 @@ const RentalDetails = (props) => {
               show={openLessorModal}
               close={() => setOpenLessorModal(false)}
               openLessorModal={openLessorModal}
-              // getContractDetails={getContractDetails}
+              getContractDetails={getContractDetails}
               fullscreen={fullscreen}
               setFullscreen={setFullscreen}
               type={openEditLessorModal && modalType ? "edit" : "add"}
