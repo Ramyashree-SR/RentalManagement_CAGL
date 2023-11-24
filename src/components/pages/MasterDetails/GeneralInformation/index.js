@@ -210,9 +210,9 @@ const GeneralInformation = ({
   const handleSubmit = () => {
     // let err = handleAddRentContractInformationError();
     // if (err) {
-      setAllNewContractDetails(allNewContractDetails, type);
-      AddAllNewRentContactInformation();
-      close();
+    setAllNewContractDetails(allNewContractDetails, type);
+    AddAllNewRentContactInformation();
+    close();
     // }
   };
 
@@ -560,6 +560,7 @@ const GeneralInformation = ({
                   sx={{ width: 200 }}
                   value={anyOtherFile?.filename}
                 />
+
                 <form
                   action="/action_page.php"
                   style={{
@@ -578,11 +579,16 @@ const GeneralInformation = ({
                   <input
                     ref={AnyOtherFileInput}
                     type="file"
+                    multiple
                     style={{
                       display: "none",
                       background: anyOtherFile.file ? "green" : "blue",
                     }}
                     onChange={(e) => {
+                      const files = e.target.files;
+                      for (const file of files) {
+                        console.log(file.name);
+                      }
                       setAnyOtherFile({
                         file: e.target.files[0],
                         filename: e.target.files[0].name,

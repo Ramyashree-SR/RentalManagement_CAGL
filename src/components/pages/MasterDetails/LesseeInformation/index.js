@@ -299,18 +299,6 @@ const LesseeInformation = ({
                 // onSelect={handleBranchType}
                 onChange={(val) => handleBranchType("lesseeBranchType", val)}
               />
-
-              <DropDownComponent
-                label="Entity Details "
-                sx={{ width: 300 }}
-                options={EntityDetails}
-                name="lesseeEntityDetails"
-                value={allNewContractDetails?.lesseeEntityDetails}
-                // onSelect={handleEntityDetails}
-                onChange={(val) =>
-                  handleEntityDetails("lesseeEntityDetails", val)
-                }
-              />
             </Grid>
           </Grid>
 
@@ -373,7 +361,7 @@ const LesseeInformation = ({
                   label="Branch Name"
                   placeholder="Enter Branch Name."
                   sx={{ width: 300 }}
-                  name="lesseeBranchName"
+                  name="branchName"
                   value={allNewContractDetails?.branchName}
                   onChange={(e) => updateChange(e)}
                   errorText={allNewContractDetailsErr?.branchName || ""}
@@ -454,6 +442,17 @@ const LesseeInformation = ({
             </Typography>
             <Grid container spacing={2} className="px-2 py-2 mt-1">
               <Grid item className="d-flex m-2" lg={12}>
+                <DropDownComponent
+                  label="Entity Details "
+                  sx={{ width: 300 }}
+                  options={EntityDetails}
+                  name="lesseeEntityDetails"
+                  value={allNewContractDetails?.lesseeEntityDetails}
+                  // onSelect={handleEntityDetails}
+                  onChange={(val) =>
+                    handleEntityDetails("lesseeEntityDetails", val)
+                  }
+                />
                 <DropDownComponent
                   label="Location"
                   sx={{ width: 300 }}

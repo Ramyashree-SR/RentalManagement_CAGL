@@ -39,24 +39,30 @@ const AgreementDetails = ({
   allNewContractDetailsErr,
   handleAddRentContractInformationError,
   uniqueID,
+  ifscCodes,
+  setIFSCCodes,
+  bankAndBranch,
+  setBankAndBranch,
+  recipientCount,
+  setRecipientCount
 }) => {
   const [checked, setChecked] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [isConditionChecked, setisConditionChecked] = useState(false);
   const [active, setactive] = useState(null);
-  const [recipientCount, setRecipientCount] = useState(1);
+  // const [recipientCount, setRecipientCount] = useState(1);
   const [tenure, setTenure] = useState(allNewContractDetails.renewalTenure);
   const [currentRent, setCurrentRent] = useState(
     allNewContractDetails.rentAmount
   );
-  const [ifscCodes, setIFSCCodes] = useState(Array(recipientCount).fill(""));
-  // console.log(ifscCodes, "ifscCodes");
-  const [bankAndBranch, setBankAndBranch] = useState(
-    Array(recipientCount).fill({
-      bank: "",
-      branch: "",
-    })
-  );
+  // const [ifscCodes, setIFSCCodes] = useState(Array(recipientCount).fill(""));
+  // // console.log(ifscCodes, "ifscCodes");
+  // const [bankAndBranch, setBankAndBranch] = useState(
+  //   Array(recipientCount).fill({
+  //     bank: "",
+  //     branch: "",
+  //   })
+  // );
   const [tdsRate, setTdsRate] = useState(allNewContractDetails.tds);
 
   const [gstRate, setGstRate] = useState(allNewContractDetails.gst);
