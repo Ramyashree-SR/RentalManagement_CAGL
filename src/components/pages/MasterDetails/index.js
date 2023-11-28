@@ -247,7 +247,7 @@ const MasterDetails = (props) => {
     useState(errObj);
   const [recipientCount, setRecipientCount] = useState(1);
   const [ifscCodes, setIFSCCodes] = useState(Array(recipientCount).fill(""));
-  // console.log(ifscCodes, "ifscCodes");
+  console.log(ifscCodes, "ifscCodes");
   const [bankAndBranch, setBankAndBranch] = useState(
     Array(recipientCount).fill({
       bank: "",
@@ -1088,13 +1088,13 @@ const MasterDetails = (props) => {
       lessorPanNumber: allNewContractDetails?.lessorPanNumber,
       lessorGstNumber: allNewContractDetails?.lessorGstNumber,
       // lessorTdsNumber: allNewContractDetails?.lessorTdsNumber,
-      paymentMode: allNewContractDetails?.paymentMode,
+      paymentMode: allNewContractDetails?.paymentMode.label,
       recipiants: allNewContractDetails?.recipiants?.map(
         (recipient, index) => ({
           lessorRecipiantsName: recipient?.lessorRecipiantsName,
-          lessorIfscNumber: ifscCodes?.[index] || "",
-          lessorBankName: bankAndBranch?.[index]?.bank || "", // Use bank name from state
-          lessorBranchName: bankAndBranch?.[index]?.branch || "", // Use branch name from state
+          ifscCodes: recipient?.lessorIfscNumber || "",
+          lessorBankName: recipient?.lessorBankName || "", // Use bank name from state
+          lessorBranchName: recipient?.lessorBranchName || "", // Use branch name from state
           // Use IFSC code from state
           lessorAccountNumber: recipient?.lessorAccountNumber,
           lessorRentAmount: recipient?.lessorRentAmount,
@@ -1116,6 +1116,7 @@ const MasterDetails = (props) => {
       lessorState: allNewContractDetails?.lessorState,
 
       lesseeBranchType: allNewContractDetails?.lesseeBranchType,
+
       lesseeBranchName: allNewContractDetails?.lesseeBranchName,
       lesseeAreaName: allNewContractDetails?.lesseeAreaName,
       lesseeDivision: allNewContractDetails?.lesseeDivision,
@@ -1124,9 +1125,9 @@ const MasterDetails = (props) => {
 
       lesseeApproverrenewals: allNewContractDetails?.lesseeApproverrenewals,
       lesseeApproverRelocation: allNewContractDetails?.lesseeApproverRelocation,
-      lesseeEntityDetails: allNewContractDetails?.lesseeEntityDetails,
+      lesseeEntityDetails: allNewContractDetails?.lesseeEntityDetails.label,
 
-      premesisLocation: allNewContractDetails?.premesisLocation,
+      premesisLocation: allNewContractDetails?.premesisLocation.label,
       premesisDoorNumber: allNewContractDetails?.premesisDoorNumber,
       premesisFloorNumber: allNewContractDetails?.premesisFloorNumber,
       premesisWardNo: allNewContractDetails?.premesisWardNo,
@@ -1141,12 +1142,12 @@ const MasterDetails = (props) => {
       southPremesis: allNewContractDetails?.southPremesis,
       eastPremesis: allNewContractDetails?.eastPremesis,
       westPremesis: allNewContractDetails?.westPremesis,
-      premesisBuildingType: allNewContractDetails?.premesisBuildingType,
+      premesisBuildingType: allNewContractDetails?.premesisBuildingType.label,
 
       agreementSignDate: allNewContractDetails?.agreementSignDate,
       agreementTenure: allNewContractDetails?.agreementTenure,
       agreementActivationStatus:
-        allNewContractDetails?.agreementActivationStatus,
+        allNewContractDetails?.agreementActivationStatus.label,
       agreementStartDate: allNewContractDetails?.agreementStartDate,
       agreementEndDate: allNewContractDetails?.agreementEndDate,
       rentStartDate: allNewContractDetails?.rentStartDate,
@@ -1303,32 +1304,11 @@ const MasterDetails = (props) => {
         renewalStatus: "",
       });
 
-      // setAllNewContractDetails({
-      //   branchID: "",
-      //   lesseeBranchName: "",
-      //   lesseeAreaName: "",
-      //   lesseeDivision: "",
-      //   lesseeZone: "",
-      //   lesseeState: "",
-      //   lesseeBranchType: "",
-      //   // ... other fields
-      // });
       setIFSCCodes(Array(recipientCount).fill(""));
       setBankAndBranch(Array(recipientCount).fill({ bank: "", branch: "" }));
       props.getContractDetails();
     }
   };
-
-  // console.log(props.EditLessorData, "props.EditLessorData");
-  // console.log(props.EditLessorData.uniqueID, "props.EditLessorData.uniqueID");
-  // console.log(
-  //   props.EditLessorData?.lessorName,
-  //   "props.EditLessorData.lessorName,"
-  // );
-  // console.log(
-  //   props.EditLessorData?.agreementSignDate,
-  //   "props.EditLessorData.agreementSignDate,"
-  // );
 
   const editAllNewRentContractDetails = async () => {
     // if (props.type === "edit") {
@@ -1340,12 +1320,12 @@ const MasterDetails = (props) => {
       lessorPanNumber: allNewContractDetails?.lessorPanNumber,
       lessorGstNumber: allNewContractDetails?.lessorGstNumber,
       paymentMode: allNewContractDetails?.paymentMode,
-      recipiants: allNewContractDetails.recipiants.map((recipient) => ({
+      recipiants: allNewContractDetails.recipiants.map((recipient, index) => ({
         recipiantsID: recipient?.recipiantsID,
         lessorRecipiantsName: recipient?.lessorRecipiantsName,
-        lessorBankName: recipient?.lessorBankName,
-        lessorBranchName: recipient?.lessorBranchName,
-        lessorIfscNumber: recipient?.lessorIfscNumber,
+        lessorIfscNumber: ifscCodes?.[index] || "",
+        lessorBankName: bankAndBranch?.[index]?.bank || "", // Use bank name from state
+        lessorBranchName: bankAndBranch?.[index]?.branch || "",
         lessorAccountNumber: recipient?.lessorAccountNumber,
         lessorRentAmount: recipient?.lessorRentAmount,
         panNo: recipient?.panNo,
@@ -1453,7 +1433,10 @@ const MasterDetails = (props) => {
     // console.log(props.uniqueID, "props.uniqueID");
     // console.log(data, "data");
     if (data) {
+      setIFSCCodes(Array(recipientCount).fill(""));
+      setBankAndBranch(Array(recipientCount).fill({ bank: "", branch: "" }));
       props.getContractDetails();
+
       props.close();
       window.location.reload();
     }
@@ -1471,17 +1454,24 @@ const MasterDetails = (props) => {
         lessorPanNumber: props.EditLessorData?.lessorPanNumber,
         lessorGstNumber: props.EditLessorData?.lessorGstNumber,
         paymentMode: props.EditLessorData?.paymentMode,
-        recipiants: props.EditLessorData?.recipiants.map((recipient) => ({
-          recipiantsID: recipient?.recipiantsID,
-          lessorRecipiantsName: recipient?.lessorRecipiantsName,
-          lessorBankName: recipient?.lessorBankName,
-          lessorBranchName: recipient?.lessorBranchName,
-          lessorIfscNumber: recipient?.lessorIfscNumber,
-          lessorAccountNumber: recipient?.lessorAccountNumber,
-          lessorRentAmount: recipient?.lessorRentAmount,
-          panNo: recipient?.panNo,
-          gstNo: recipient?.gstNo,
-        })),
+        recipiants: props.EditLessorData?.recipiants.map(
+          (recipient, index) => ({
+            recipiantsID: recipient?.recipiantsID,
+            lessorRecipiantsName: recipient?.lessorRecipiantsName,
+            lessorIfscNumber: (ifscCodes?.[index] && ifscCodes?.[index]) || "",
+            lessorBankName:
+              (bankAndBranch?.[index]?.bank && bankAndBranch?.[index]?.bank) ||
+              "", // Use bank name from state
+            lessorBranchName:
+              (bankAndBranch?.[index]?.branch &&
+                bankAndBranch?.[index]?.branch) ||
+              "",
+            lessorAccountNumber: recipient?.lessorAccountNumber,
+            lessorRentAmount: recipient?.lessorRentAmount,
+            panNo: recipient?.panNo,
+            gstNo: recipient?.gstNo,
+          })
+        ),
 
         lessorDoorNumber: props.EditLessorData?.lessorDoorNumber,
         lessorFloorNumber: props.EditLessorData?.lessorFloorNumber,
@@ -1579,6 +1569,8 @@ const MasterDetails = (props) => {
         tds: props.EditLessorData?.tds,
         gst: props.EditLessorData?.gst,
       });
+      setIFSCCodes(Array(recipientCount).fill(""));
+      setBankAndBranch(Array(recipientCount).fill({ bank: "", branch: "" }));
     }
   }, [props.EditLessorData]);
 

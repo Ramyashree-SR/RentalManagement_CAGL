@@ -179,12 +179,9 @@ const LesseeInformation = ({
     setAddress(joinedAddress);
   };
 
-  const handleBranchType = (name, value) => {
+  const handleBranchType = (value) => {
     // console.log(value, "value");
-    setAllNewContractDetails({
-      ...allNewContractDetails,
-      [name]: value,
-    });
+    console.log(value, "value");
     setBranchDetails({
       branchID: "",
       branchName: "",
@@ -294,10 +291,10 @@ const LesseeInformation = ({
                 label="Premesis Type"
                 sx={{ width: 300 }}
                 options={BranchType}
-                name="lesseeBranchType"
+                // name="selectedValue"
                 value={selectedValue}
                 // onSelect={handleBranchType}
-                onChange={(val) => handleBranchType("lesseeBranchType", val)}
+                onChange={handleBranchType}
               />
             </Grid>
           </Grid>
@@ -362,7 +359,7 @@ const LesseeInformation = ({
                   placeholder="Enter Branch Name."
                   sx={{ width: 300 }}
                   name="branchName"
-                  value={allNewContractDetails?.branchName}
+                  value={allNewContractDetails?.branchName || ""}
                   onChange={(e) => updateChange(e)}
                   errorText={allNewContractDetailsErr?.branchName || ""}
                 />
@@ -371,7 +368,7 @@ const LesseeInformation = ({
                   placeholder="Enter Area Name ."
                   sx={{ width: 300 }}
                   name="areaName"
-                  value={allNewContractDetails?.areaName}
+                  value={allNewContractDetails?.areaName || ""}
                   onChange={(e) => updateChange(e)}
                   errorText={allNewContractDetailsErr?.areaName || ""}
                 />
@@ -380,7 +377,7 @@ const LesseeInformation = ({
                   placeholder="Enter Div/Reg No."
                   sx={{ width: 300 }}
                   name="region"
-                  value={allNewContractDetails?.region}
+                  value={allNewContractDetails?.region || ""}
                   onChange={(e) => updateChange(e)}
                   errorText={allNewContractDetailsErr?.region || ""}
                 />
@@ -391,7 +388,7 @@ const LesseeInformation = ({
                   placeholder="Enter Zone ."
                   sx={{ width: 300 }}
                   name="zone"
-                  value={allNewContractDetails?.zone}
+                  value={allNewContractDetails?.zone || ""}
                   onChange={(e) => updateChange(e)}
                   errorText={allNewContractDetailsErr?.zone || ""}
                 />

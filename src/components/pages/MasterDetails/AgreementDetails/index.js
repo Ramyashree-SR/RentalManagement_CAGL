@@ -44,7 +44,7 @@ const AgreementDetails = ({
   bankAndBranch,
   setBankAndBranch,
   recipientCount,
-  setRecipientCount
+  setRecipientCount,
 }) => {
   const [checked, setChecked] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -67,7 +67,9 @@ const AgreementDetails = ({
 
   const [gstRate, setGstRate] = useState(allNewContractDetails.gst);
 
-  const [originalData, setOriginalData] = useState([]);
+  const [originalData, setOriginalData] = useState([
+    allNewContractDetails?.recipiants?.lessorAccountNumber,
+  ]);
   // console.log(originalData, "originalData");
   const [reEnteredData, setReEnteredData] = useState([]);
   // console.log(reEnteredData, "reEnteredData");
@@ -154,6 +156,7 @@ const AgreementDetails = ({
     // console.log(newIFSCCodes, "newIFSCCodes");
     newIFSCCodes[index] = event.target.value;
     setIFSCCodes(newIFSCCodes);
+    // setAllNewContractDetails(newIFSCCodes);
   };
 
   const handleRecipientChange = (index, fieldName, newValue) => {
@@ -369,6 +372,7 @@ const AgreementDetails = ({
         for (let index = 0; index <= ifscCodes.length; index++) {
           const ifscCode = ifscCodes[index];
           const { data } = await IFSCCodeDetails(ifscCode);
+          console.log(data, "IFSCdata");
           if (data) {
             if (data) {
               const newBankAndBranch = [...bankAndBranch];
@@ -377,6 +381,7 @@ const AgreementDetails = ({
                 branch: data?.data.branchName,
               };
               setBankAndBranch(newBankAndBranch);
+              // setAllNewContractDetails(...newBankAndBranch);
             }
           }
         }
@@ -387,22 +392,51 @@ const AgreementDetails = ({
     IFSCInformation();
   }, [ifscCodes, recipientCount]);
 
-  const handleRecipientBranchNameChange = (index, value) => {
+  const handleRecipientBranchNameChange = (index, fieldName, value) => {
+    // Create a copy of the allNewContractDetails object
+    const updatedContractDetails = { ...allNewContractDetails };
+    // Create a copy of the recipients array within the object
+    updatedContractDetails.recipiants =
+      updatedContractDetails.recipiants?.slice() || [];
+    // Create a copy of the specific recipient within the array
+    const updatedRecipient =
+      { ...updatedContractDetails.recipiants?.[index] } || {};
+    // Update the specific field for the recipient
+    updatedRecipient[fieldName] = value;
+    // Update the recipient within the array
+    updatedContractDetails.recipiants[index] = updatedRecipient;
+    // Update the state with the modified object
+    setAllNewContractDetails(updatedContractDetails);
     const updatedBankAndBranch = [...bankAndBranch];
 
-    // Update the bank name for the recipient at the specified index.
-    updatedBankAndBranch[index] = {
-      ...updatedBankAndBranch[index],
-      branch: value,
-    };
-  };
-
-  const handleRecipientBankNameChange = (index, value) => {
-    const updatedBankAndBranch = [...bankAndBranch];
     // Update the bank name for the recipient at the specified index.
     updatedBankAndBranch[index] = {
       ...updatedBankAndBranch[index],
       bank: value,
+    };
+  };
+
+  const handleRecipientBankNameChange = (index, fieldName, value) => {
+    // Create a copy of the allNewContractDetails object
+    const updatedContractDetails = { ...allNewContractDetails };
+    // Create a copy of the recipients array within the object
+    updatedContractDetails.recipiants =
+      updatedContractDetails.recipiants?.slice() || [];
+    // Create a copy of the specific recipient within the array
+    const updatedRecipient =
+      { ...updatedContractDetails.recipiants?.[index] } || {};
+    // Update the specific field for the recipient
+    updatedRecipient[fieldName] = value;
+    // Update the recipient within the array
+    updatedContractDetails.recipiants[index] = updatedRecipient;
+    // Update the state with the modified object
+    setAllNewContractDetails(updatedContractDetails);
+
+    const updatedBankAndBranch = [...bankAndBranch];
+    // Update the bank name for the recipient at the specified index.
+    updatedBankAndBranch[index] = {
+      ...updatedBankAndBranch[index],
+      branch: value,
     };
   };
 
@@ -955,10 +989,19 @@ const AgreementDetails = ({
                           label="IFSC Code"
                           sx={{ width: 300 }}
                           placeholder={`Enter IFSC Code ${index + 1}...`}
-                          name={`lessorIfscNumber-${index}`}
-                          value={ifscCodes?.[index]}
+                          // name={`lessorIfscNumber-${index}`}
+                          value={
+                            type === "edit"
+                              ? ifscCodes?.[index]  &&  ifscCodes?.[index] ||
+                                allNewContractDetails?.recipiants?.[index]
+                                  .lessorIfscNumber
+                              : ifscCodes?.[index] ||
+                                allNewContractDetails?.recipiants?.[index]
+                                  .lessorIfscNumber ||
+                                ""
+                          }
                           onChange={(e) => handleChangeIFSCCode(e, index)}
-                          errorText={allNewContractDetailsErr?.ifsc}
+                          errorText={allNewContractDetailsErr?.lessorIfscNumber}
                         />
                       </Grid>
 
@@ -968,21 +1011,26 @@ const AgreementDetails = ({
                             label={`Bank Name ${index + 1}`}
                             sx={{ width: 300 }}
                             placeholder={`Enter Bank Name ${index + 1}...`}
-                            name={`lessorBankName-${index}`}
+                            // name={`lessorBankName-${index}`}
+                            value={
+                              type === "edit"
+                                ? allNewContractDetails.recipiants?.[index]
+                                    .lessorBankName ||
+                                  bankAndBranch?.[index]?.bank
+                                : allNewContractDetails.recipiants?.[index]
+                                    .lessorBankName ||
+                                  bankAndBranch?.[index]?.bank
+                              // Clear the value in "add" modelessorBankName
+                            }
                             // value={
                             //   type === "edit"
                             //     ? bankAndBranch?.[index].bank
                             //     : bankAndBranch?.[index].bank
-                            //   // Clear the value in "add" modelessorBankName
                             // }
-                            value={
-                              bankAndBranch?.[index]
-                                ? bankAndBranch?.[index].bank
-                                : ""
-                            }
                             onChange={(e) =>
                               handleRecipientBankNameChange(
                                 index,
+                                "lessorBankName",
                                 e.target.value
                               )
                             }
@@ -993,20 +1041,26 @@ const AgreementDetails = ({
                             label={`Branch Name ${index + 1}`}
                             sx={{ width: 300 }}
                             placeholder={`Enter Branch Name ${index + 1}...`}
-                            name={`lessorBranchName-${index}`}
+                            // name={`lessorBranchName-${index}`}
+                            value={
+                              type === "edit"
+                                ? allNewContractDetails.recipiants?.[index]
+                                    .lessorBranchName ||
+                                  bankAndBranch?.[index]?.branch
+                                : allNewContractDetails.recipiants?.[index]
+                                    .lessorBranchName ||
+                                  bankAndBranch?.[index]?.branch ||
+                                  "" // Clear the value in "add" mode
+                            }
                             // value={
                             //   type === "edit"
                             //     ? bankAndBranch?.[index].branch
-                            //     : bankAndBranch?.[index].branch || "" // Clear the value in "add" mode
+                            //     : bankAndBranch?.[index].branch
                             // }
-                            value={
-                              bankAndBranch?.[index]
-                                ? bankAndBranch?.[index].branch
-                                : ""
-                            }
                             onChange={(e) =>
                               handleRecipientBranchNameChange(
                                 index,
+                                "lessorBranchName",
                                 e.target.value
                               )
                             }
@@ -1023,18 +1077,18 @@ const AgreementDetails = ({
                           sx={{ width: 300 }}
                           placeholder={`Enter A/c no. ${index + 1}...`}
                           name={`lessorAccountNumber-${index}`}
-                          // value={
-                          //   type === "edit"
-                          //     ? allNewContractDetails?.recipiants?.[index]
-                          //         ?.lessorAccountNumber
-                          //     : allNewContractDetails?.recipiants?.[index]
-                          //         ?.lessorAccountNumber || "" // Clear the value in "add" mode
-                          // }
                           value={
                             type === "edit"
-                              ? originalData?.[index]
-                              : originalData?.[index] || ""
+                              ? allNewContractDetails?.recipiants?.[index]
+                                  ?.lessorAccountNumber
+                              : allNewContractDetails?.recipiants?.[index]
+                                  ?.lessorAccountNumber || "" // Clear the value in "add" mode
                           }
+                          // value={
+                          //   type === "edit"
+                          //     ? allNewContractDetails.recipiants?.[index].originalData?.[index]
+                          //     : originalData?.[index] || ""
+                          // }
                           onChange={(e) =>
                             handleRecipientAccountChange(
                               index,
@@ -1060,7 +1114,11 @@ const AgreementDetails = ({
                             //     : allNewContractDetails?.recipiants?.[index]
                             //         ?.lessorAccountNumber || "" // Clear the value in "add" mode
                             // }
-                            value={reEnteredData?.[index]}
+                            value={
+                              reEnteredData?.[index] ||
+                              allNewContractDetails?.recipiants?.[index]
+                                ?.lessorAccountNumber
+                            }
                             onChange={(e) =>
                               handleReEnteredDataChange(e, index)
                             }

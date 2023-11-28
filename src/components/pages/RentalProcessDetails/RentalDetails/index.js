@@ -57,11 +57,15 @@ const RentalDetails = (props) => {
   const [uniqueID, setUniqueID] = useState(null);
   const [rentContractDetails, setRentContractDetails] = useState([]);
 
+  // const [stateFilter, setStateFilter] = useState(
+  //   ...new Set(rentContractDetails?.map((item) => item.lesseeState))
+  // );
   const [stateFilter, setStateFilter] = useState([]);
   // console.log(stateFilter, "stateFilter");
-  const [districtFilter, setDistrictFilter] = useState([
-    ...new Set(rentContractDetails?.map((item) => item.premesisDistrict)),
-  ]);
+  // const [districtFilter, setDistrictFilter] = useState([
+  //   ...new Set(rentContractDetails?.map((item) => item.premesisDistrict)),
+  // ]);
+  const [districtFilter, setDistrictFilter] = useState([]);
   const [filterState, setFilterState] = useState({});
   const [filterDistrict, setFilterDistrict] = useState({});
   const [filterBranch, setFilterBranch] = useState([]);
@@ -89,7 +93,7 @@ const RentalDetails = (props) => {
       if (data) {
         let stateData = [];
         data?.data.map((val) => {
-          stateData?.push(val);
+          stateData?.push([val]);
         });
         setStateFilter(stateData);
       } else {
@@ -105,7 +109,7 @@ const RentalDetails = (props) => {
       // if (data) {
       let districtData = [];
       data?.data.map((val) => {
-        districtData?.push(val);
+        districtData?.push([val]);
       });
       setDistrictFilter(districtData);
     } else {
@@ -237,8 +241,8 @@ const RentalDetails = (props) => {
     setActivationStatusFilter(e.target.value);
   };
 
-  console.log(branchTypeFilter, "branchTypeFilter");
-  console.log(activationStatusFilter, "activationStatusFilter");
+  // console.log(branchTypeFilter, "branchTypeFilter");
+  // console.log(activationStatusFilter, "activationStatusFilter");
 
   return (
     <Box>
@@ -428,9 +432,7 @@ const RentalDetails = (props) => {
         <Grid className="d-flex flex-row align-items-center justify-content-between ">
           <Autocomplete
             size="small"
-            // sx={{ width: 200, background: "#E4E7EB", borderRadius: 22}}
             sx={{
-              // backgroundColor: "#FAFAFA",
               background: "#E4E7EB",
               borderRadius: "100px",
               "& .MuiOutlinedInput-root:hover": {
@@ -452,15 +454,9 @@ const RentalDetails = (props) => {
                 width: 200,
               },
             }}
-            defaultValue={null}
             options={stateFilter}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="State"
-                variant="outlined"
-                // sx={{ width: 200, background: "#E4E7EB", borderRadius: 22 }}
-              />
+              <TextField {...params} label="State" variant="outlined" />
             )}
             value={filterState?.lesseeState}
             onChange={handleStateChange}
@@ -493,7 +489,7 @@ const RentalDetails = (props) => {
                 width: 200,
               },
             }}
-            defaultValue={null}
+            // defaultValue={null}
             options={districtFilter}
             value={filterDistrict?.premesisDistrict}
             onChange={handleDistrictChange}
@@ -529,7 +525,7 @@ const RentalDetails = (props) => {
                 width: 200,
               },
             }}
-            defaultValue={null}
+            // defaultValue={null}
             // options={[
             //   ...new Set(rentContractDetails?.map((item) => item.branchID)),
             // ]}
