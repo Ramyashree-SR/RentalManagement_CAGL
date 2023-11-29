@@ -52,7 +52,7 @@ const LesseeInformation = ({
   // });
   // console.log(branchDetails, "branchDetails");
   const [selectedValue, setSelectedValue] = useState("");
-  // console.log(selectedValue, "selectedValue");
+  console.log(selectedValue, "selectedValue");
 
   const handleNext = () => {
     onSave(allNewContractDetails, type);
@@ -180,8 +180,6 @@ const LesseeInformation = ({
   };
 
   const handleBranchType = (value) => {
-    // console.log(value, "value");
-    console.log(value, "value");
     setBranchDetails({
       branchID: "",
       branchName: "",
@@ -190,6 +188,10 @@ const LesseeInformation = ({
       zone: "",
       state: "",
       // ... other fields
+    });
+    setAllNewContractDetails({
+      ...allNewContractDetails,
+      lesseeBranchType: value,
     });
     setSelectedValue(value);
     if (typeof value === "undefined") {
@@ -292,22 +294,28 @@ const LesseeInformation = ({
                 sx={{ width: 300 }}
                 options={BranchType}
                 // name="selectedValue"
-                value={selectedValue}
+                value={
+                  type === "edit"
+                    ? allNewContractDetails.lesseeBranchType ||
+                      selectedValue?.label
+                    : selectedValue?.label || ""
+                }
                 // onSelect={handleBranchType}
-                onChange={handleBranchType}
+                onChange={(val) => handleBranchType(val)}
               />
             </Grid>
           </Grid>
 
-          {selectedValue.label &&
-          selectedValue.label !== "HO-Office" &&
-          selectedValue.label !== "HO-Maintenance" &&
-          selectedValue.label !== "DO / RO-Office" &&
-          selectedValue.label !== "DO / RO-Maintenance" &&
-          selectedValue.label !== "StoreRoom-Office" &&
-          selectedValue.label !== "StoreRoom-Maintenance" &&
-          selectedValue.label !== "Training Center" &&
-          selectedValue.label !== "Training Center-Maintainence" ? (
+          {(selectedValue.label &&
+            selectedValue.label !== "HO-Office" &&
+            selectedValue.label !== "HO-Maintenance" &&
+            selectedValue.label !== "DO / RO-Office" &&
+            selectedValue.label !== "DO / RO-Maintenance" &&
+            selectedValue.label !== "StoreRoom-Office" &&
+            selectedValue.label !== "StoreRoom-Maintenance" &&
+            selectedValue.label !== "Training Center" &&
+            selectedValue.label !== "Training Center-Maintainence") ||
+          type === "edit" ? (
             <Grid container spacing={2} className="px-2 py-2 mt-1">
               <Grid item className="d-flex m-2" lg={12}>
                 <Autocomplete
@@ -317,8 +325,8 @@ const LesseeInformation = ({
                   options={branchData}
                   value={
                     type === "edit"
-                      ? branchDetails?.branchID
-                      : branchDetails?.branchID
+                      ? allNewContractDetails?.branchID
+                      : allNewContractDetails?.branchID
                   }
                   onChange={handleBranchID}
                   renderInput={(params) => (
@@ -358,28 +366,43 @@ const LesseeInformation = ({
                   label="Branch Name"
                   placeholder="Enter Branch Name."
                   sx={{ width: 300 }}
-                  name="branchName"
-                  value={allNewContractDetails?.branchName || ""}
+                  name="lesseeBranchName"
+                  value={
+                    type === "edit"
+                      ? allNewContractDetails?.lesseeBranchName
+                      : allNewContractDetails?.branchName
+                  }
                   onChange={(e) => updateChange(e)}
-                  errorText={allNewContractDetailsErr?.branchName || ""}
+                  errorText={allNewContractDetailsErr?.lesseeBranchName || ""}
+                  readOnly
                 />
                 <InputBoxComponent
                   label="Area Name"
                   placeholder="Enter Area Name ."
                   sx={{ width: 300 }}
                   name="areaName"
-                  value={allNewContractDetails?.areaName || ""}
+                  value={
+                    type === "edit"
+                      ? allNewContractDetails?.lesseeAreaName
+                      : allNewContractDetails?.areaName || ""
+                  }
                   onChange={(e) => updateChange(e)}
                   errorText={allNewContractDetailsErr?.areaName || ""}
+                  readOnly
                 />
                 <InputBoxComponent
                   label="Division/Region"
                   placeholder="Enter Div/Reg No."
                   sx={{ width: 300 }}
                   name="region"
-                  value={allNewContractDetails?.region || ""}
+                  value={
+                    type === "edit"
+                      ? allNewContractDetails?.lesseeDivision
+                      : allNewContractDetails?.region || ""
+                  }
                   onChange={(e) => updateChange(e)}
                   errorText={allNewContractDetailsErr?.region || ""}
+                  readOnly
                 />
               </Grid>
               <Grid item className="d-flex m-2" lg={12}>
@@ -388,16 +411,25 @@ const LesseeInformation = ({
                   placeholder="Enter Zone ."
                   sx={{ width: 300 }}
                   name="zone"
-                  value={allNewContractDetails?.zone || ""}
+                  value={
+                    type === "edit"
+                      ? allNewContractDetails?.lesseeZone
+                      : allNewContractDetails?.zone || ""
+                  }
                   onChange={(e) => updateChange(e)}
                   errorText={allNewContractDetailsErr?.zone || ""}
+                  readOnly
                 />
                 <InputBoxComponent
                   label="State"
                   placeholder="Enter State ."
                   sx={{ width: 300 }}
                   name="state"
-                  value={allNewContractDetails?.state || ""}
+                  value={
+                    type === "edit"
+                      ? allNewContractDetails?.lesseeState
+                      : allNewContractDetails?.state || ""
+                  }
                   onChange={(e) => updateChange(e)}
                   errorText={allNewContractDetailsErr?.state}
                 />

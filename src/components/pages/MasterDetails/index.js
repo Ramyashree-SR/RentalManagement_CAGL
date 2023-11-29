@@ -149,7 +149,7 @@ const MasterDetails = (props) => {
     lessorPanNumber: "",
     lessorGstNumber: "",
     lessorTdsNumber: "",
-    paymentMode: "",
+    paymentMode: { label: "" },
     lessorElectricityBillNumber: "",
     lessorTaxNumber: "",
     lessorBankPassBookNumber: "",
@@ -247,7 +247,7 @@ const MasterDetails = (props) => {
     useState(errObj);
   const [recipientCount, setRecipientCount] = useState(1);
   const [ifscCodes, setIFSCCodes] = useState(Array(recipientCount).fill(""));
-  console.log(ifscCodes, "ifscCodes");
+  // console.log(ifscCodes, "ifscCodes");
   const [bankAndBranch, setBankAndBranch] = useState(
     Array(recipientCount).fill({
       bank: "",
@@ -1088,20 +1088,20 @@ const MasterDetails = (props) => {
       lessorPanNumber: allNewContractDetails?.lessorPanNumber,
       lessorGstNumber: allNewContractDetails?.lessorGstNumber,
       // lessorTdsNumber: allNewContractDetails?.lessorTdsNumber,
-      paymentMode: allNewContractDetails?.paymentMode.label,
-      recipiants: allNewContractDetails?.recipiants?.map(
-        (recipient, index) => ({
-          lessorRecipiantsName: recipient?.lessorRecipiantsName,
-          ifscCodes: recipient?.lessorIfscNumber || "",
-          lessorBankName: recipient?.lessorBankName || "", // Use bank name from state
-          lessorBranchName: recipient?.lessorBranchName || "", // Use branch name from state
-          // Use IFSC code from state
-          lessorAccountNumber: recipient?.lessorAccountNumber,
-          lessorRentAmount: recipient?.lessorRentAmount,
-          panNo: recipient?.panNo,
-          gstNo: recipient?.gstNo,
-        })
-      ),
+      paymentMode: allNewContractDetails?.paymentMode?.label,
+      recipiants: allNewContractDetails.recipiants?.map((recipient, index) => ({
+        lessorRecipiantsName: recipient?.lessorRecipiantsName,
+        lessorIfscNumber: recipient?.lessorIfscNumber || ifscCodes?.[index],
+        lessorBankName:
+          recipient?.lessorBankName || bankAndBranch?.[index].bank, // Use bank name from state
+        lessorBranchName:
+          recipient?.lessorBankName || bankAndBranch?.[index].branch, // Use branch name from state
+        // Use IFSC code from state
+        lessorAccountNumber: recipient?.lessorAccountNumber,
+        lessorRentAmount: recipient?.lessorRentAmount,
+        panNo: recipient?.panNo,
+        gstNo: recipient?.gstNo,
+      })),
       lessorDoorNumber: allNewContractDetails?.lessorDoorNumber,
       lessorFloorNumber: allNewContractDetails?.lessorFloorNumber,
       lessorWardNo: allNewContractDetails?.lessorWardNo,
@@ -1115,19 +1115,19 @@ const MasterDetails = (props) => {
       lessorDistrict: allNewContractDetails?.lessorDistrict,
       lessorState: allNewContractDetails?.lessorState,
 
-      lesseeBranchType: allNewContractDetails?.lesseeBranchType,
+      lesseeBranchType: allNewContractDetails?.lesseeBranchType?.label,
 
-      lesseeBranchName: allNewContractDetails?.lesseeBranchName,
-      lesseeAreaName: allNewContractDetails?.lesseeAreaName,
-      lesseeDivision: allNewContractDetails?.lesseeDivision,
-      lesseeZone: allNewContractDetails?.lesseeZone,
-      lesseeState: allNewContractDetails?.lesseeState,
+      lesseeBranchName: allNewContractDetails?.branchName,
+      lesseeAreaName: allNewContractDetails?.areaName,
+      lesseeDivision: allNewContractDetails?.region,
+      lesseeZone: allNewContractDetails?.zone,
+      lesseeState: allNewContractDetails?.state,
 
       lesseeApproverrenewals: allNewContractDetails?.lesseeApproverrenewals,
       lesseeApproverRelocation: allNewContractDetails?.lesseeApproverRelocation,
-      lesseeEntityDetails: allNewContractDetails?.lesseeEntityDetails.label,
+      lesseeEntityDetails: allNewContractDetails?.lesseeEntityDetails?.label,
 
-      premesisLocation: allNewContractDetails?.premesisLocation.label,
+      premesisLocation: allNewContractDetails?.premesisLocation?.label,
       premesisDoorNumber: allNewContractDetails?.premesisDoorNumber,
       premesisFloorNumber: allNewContractDetails?.premesisFloorNumber,
       premesisWardNo: allNewContractDetails?.premesisWardNo,
@@ -1142,12 +1142,11 @@ const MasterDetails = (props) => {
       southPremesis: allNewContractDetails?.southPremesis,
       eastPremesis: allNewContractDetails?.eastPremesis,
       westPremesis: allNewContractDetails?.westPremesis,
-      premesisBuildingType: allNewContractDetails?.premesisBuildingType.label,
-
+      premesisBuildingType: allNewContractDetails?.premesisBuildingType?.label,
       agreementSignDate: allNewContractDetails?.agreementSignDate,
       agreementTenure: allNewContractDetails?.agreementTenure,
       agreementActivationStatus:
-        allNewContractDetails?.agreementActivationStatus.label,
+        allNewContractDetails?.agreementActivationStatus?.label,
       agreementStartDate: allNewContractDetails?.agreementStartDate,
       agreementEndDate: allNewContractDetails?.agreementEndDate,
       rentStartDate: allNewContractDetails?.rentStartDate,
@@ -1164,7 +1163,7 @@ const MasterDetails = (props) => {
         allNewContractDetails?.securityDepositPaymentMode,
       securityDepositUtr: allNewContractDetails?.securityDepositUtr,
       securityDepositLockinPeriod:
-        allNewContractDetails?.securityDepositLockinPeriod,
+        allNewContractDetails?.securityDepositLockinPeriod.label,
       securityDepositnoticePeriod:
         allNewContractDetails?.securityDepositnoticePeriod,
       securityDepositExitTerm: allNewContractDetails?.securityDepositExitTerm,
@@ -1323,9 +1322,11 @@ const MasterDetails = (props) => {
       recipiants: allNewContractDetails.recipiants.map((recipient, index) => ({
         recipiantsID: recipient?.recipiantsID,
         lessorRecipiantsName: recipient?.lessorRecipiantsName,
-        lessorIfscNumber: ifscCodes?.[index] || "",
-        lessorBankName: bankAndBranch?.[index]?.bank || "", // Use bank name from state
-        lessorBranchName: bankAndBranch?.[index]?.branch || "",
+        lessorIfscNumber: recipient?.lessorIfscNumber || ifscCodes?.[index],
+        lessorBankName:
+          recipient?.lessorBankName || bankAndBranch?.[index].bank, // Use bank name from state
+        lessorBranchName:
+          recipient?.lessorBankName || bankAndBranch?.[index].branch,
         lessorAccountNumber: recipient?.lessorAccountNumber,
         lessorRentAmount: recipient?.lessorRentAmount,
         panNo: recipient?.panNo,
@@ -1375,7 +1376,7 @@ const MasterDetails = (props) => {
       // agreementSignDate: allNewContractDetails?.agreementSignDate,
       agreementTenure: allNewContractDetails?.agreementTenure,
       agreementActivationStatus:
-        allNewContractDetails?.agreementActivationStatus,
+        allNewContractDetails?.agreementActivationStatus.label,
       agreementStartDate: formatDateToBackEndReqirement(
         allNewContractDetails?.agreementStartDate
       ),
@@ -1438,7 +1439,7 @@ const MasterDetails = (props) => {
       props.getContractDetails();
 
       props.close();
-      window.location.reload();
+      // window.location.reload();
     }
   };
   // console.log(props.uniqueID,"uniqueID");
@@ -1458,14 +1459,11 @@ const MasterDetails = (props) => {
           (recipient, index) => ({
             recipiantsID: recipient?.recipiantsID,
             lessorRecipiantsName: recipient?.lessorRecipiantsName,
-            lessorIfscNumber: (ifscCodes?.[index] && ifscCodes?.[index]) || "",
+            lessorIfscNumber: recipient?.lessorIfscNumber || ifscCodes?.[index],
             lessorBankName:
-              (bankAndBranch?.[index]?.bank && bankAndBranch?.[index]?.bank) ||
-              "", // Use bank name from state
+              recipient?.lessorBankName || bankAndBranch?.[index].bank, // Use bank name from state
             lessorBranchName:
-              (bankAndBranch?.[index]?.branch &&
-                bankAndBranch?.[index]?.branch) ||
-              "",
+              recipient?.lessorBankName || bankAndBranch?.[index].branch,
             lessorAccountNumber: recipient?.lessorAccountNumber,
             lessorRentAmount: recipient?.lessorRentAmount,
             panNo: recipient?.panNo,
