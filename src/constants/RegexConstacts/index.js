@@ -7,7 +7,9 @@ const nameWithSpaces = /^[a-zA-Z ]*$/;
 const nameWithSpacesAndNumbers = /^[a-zA-Z0-9 ]*$/;
 const panCardRegex = /^[A-Z]{3}[G|A|F|C|T|H|P]{1}[A-Z]{1}\d{4}[A-Z]{1}$/;
 const gstRegex = /\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}/;
-const pincodeRegex = /^\d{3}\s?\d{3}$/;
+const pincodeRegex = /^\d{3}\s?\d{3}$/;   
+const numbersWithSpecialChatracters=  /^-?\d+\.\d+$/;
+const numbersWithSpecialChatractersAndSeparated= /^-?\d+\.\d+,\s*-?\d+\.\d+$/
 export {
   nameRegex,
   mobileRegex,
@@ -19,4 +21,6 @@ export {
   gstRegex,
   numbersRegex,
   pincodeRegex,
+  numbersWithSpecialChatracters,
+  numbersWithSpecialChatractersAndSeparated
 };

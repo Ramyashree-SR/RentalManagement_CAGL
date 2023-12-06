@@ -42,6 +42,7 @@ const LesseeInformation = ({
 }) => {
   const [address, setAddress] = useState("");
   const [branchData, setBranchData] = useState([]);
+  // console.log(branchDetails,"branchData");
   // const [branchDetails, setBranchDetails] = useState({
   //   branchID: '',
   //   branchName: '',
@@ -52,10 +53,17 @@ const LesseeInformation = ({
   // });
   // console.log(branchDetails, "branchDetails");
   const [selectedValue, setSelectedValue] = useState("");
-  console.log(selectedValue, "selectedValue");
+  console.log(
+    allNewContractDetails.lesseeBranchType?.label,
+    "allNewContractDetails.lesseeBranchType"
+  );
 
   const handleNext = () => {
-    onSave(allNewContractDetails, type);
+    const ValidateError = handleAddRentContractInformationError();
+    if (ValidateError) {
+      // setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      onSave(allNewContractDetails, type);
+    }
   };
 
   const handleBack = () => {
@@ -63,6 +71,7 @@ const LesseeInformation = ({
   };
 
   const updateChange = (e) => {
+    // console.log(e,"e");
     setAllNewContractDetails({
       ...allNewContractDetails,
       [e.target.name]: e.target.value,
@@ -84,10 +93,10 @@ const LesseeInformation = ({
   };
 
   const handleEntityDetails = (name, value) => {
-    setAllNewContractDetails(() => ({
+    setAllNewContractDetails({
       ...allNewContractDetails,
       [name]: value,
-    }));
+    });
   };
 
   let BranchType = [
@@ -179,25 +188,15 @@ const LesseeInformation = ({
     setAddress(joinedAddress);
   };
 
-  const handleBranchType = (value) => {
-    setBranchDetails({
-      branchID: "",
-      branchName: "",
-      areaName: "",
-      region: "",
-      zone: "",
-      state: "",
-      // ... other fields
-    });
-    setAllNewContractDetails({
-      ...allNewContractDetails,
-      lesseeBranchType: value,
-    });
+  const handleBranchType = (name, value) => {
+    // console.log(value, "value");
+    setAllNewContractDetails((prevDetails) => ({
+      ...prevDetails,
+      [name]: value,
+    }));
     setSelectedValue(value);
-    if (typeof value === "undefined") {
-      getAllBranchID(value);
-      getBranchIdDetails(value);
-    }
+    getAllBranchID(value);
+    getBranchIdDetails(value);
   };
 
   const handleBranchID = (_, value) => {
@@ -211,9 +210,9 @@ const LesseeInformation = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (selectedValue) {
-          await getAllBranchID(selectedValue);
-          await getBranchIdDetails(branchDetails.branchID);
+        if (selectedValue?.label) {
+          await getAllBranchID(selectedValue?.label);
+          await getBranchIdDetails(branchDetails?.branchID);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -221,27 +220,13 @@ const LesseeInformation = ({
     };
 
     fetchData();
-  }, [selectedValue, branchDetails.branchID]);
-
-  // const getAllBranchID = async () => {
-  //   // let branchType = selectedValue.label;
-  //   const { data } = await getBranchIDForBranchDetails(selectedValue.label);
-  //   // console.log(selectedValue, "selectedValue");
-  //   // console.log(data, "IDdata");
-  //   if (data) {
-  //     let branchIDData = [];
-  //     data?.map((val) => {
-  //       branchIDData?.push(val);
-  //     });
-  //     setBranchData(branchIDData || []);
-  //   } else if (!selectedValue || !selectedValue.label) {
-  //     setBranchData([]);
-  //   }
-  // };
+  }, [selectedValue?.label, branchDetails?.branchID]);
 
   const getAllBranchID = async (branchType) => {
     try {
-      const { data } = await getBranchIDForBranchDetails(branchType.label);
+      const branchType = selectedValue?.label;
+      const { data } = await getBranchIDForBranchDetails(branchType);
+      // console.log(data?.data, "branchTDdata");
       if (data) {
         setBranchData(data || []);
       } else {
@@ -253,7 +238,7 @@ const LesseeInformation = ({
   };
 
   // const getBranchIdDetails = async () => {
-  //   let branchType = selectedValue.label;
+  //   let branchType =  allNewContractDetails?.lesseeBranchType;
   //   const { data } = await getRentContractDetailsOnBranchID(
   //    branchDetails?.branchID,
   //     branchType
@@ -265,13 +250,14 @@ const LesseeInformation = ({
   //   }
   // };
 
-  const getBranchIdDetails = async (branchID) => {
+  const getBranchIdDetails = async (branchID, branchType) => {
     try {
-      const branchType = selectedValue.label;
+      const branchType = selectedValue?.label;
       const { data } = await getRentContractDetailsOnBranchID(
         branchID,
         branchType
       );
+
       if (data) {
         setAllNewContractDetails(data?.data || {});
       }
@@ -293,28 +279,24 @@ const LesseeInformation = ({
                 label="Premesis Type"
                 sx={{ width: 300 }}
                 options={BranchType}
-                // name="selectedValue"
-                value={
-                  type === "edit"
-                    ? allNewContractDetails.lesseeBranchType ||
-                      selectedValue?.label
-                    : selectedValue?.label || ""
-                }
-                // onSelect={handleBranchType}
-                onChange={(val) => handleBranchType(val)}
+                name="lesseeBranchType"
+                value={allNewContractDetails?.lesseeBranchType || ""}
+                onChange={(val) => {
+                  handleBranchType("lesseeBranchType", val);
+                }}
               />
             </Grid>
           </Grid>
 
-          {(selectedValue.label &&
-            selectedValue.label !== "HO-Office" &&
-            selectedValue.label !== "HO-Maintenance" &&
-            selectedValue.label !== "DO / RO-Office" &&
-            selectedValue.label !== "DO / RO-Maintenance" &&
-            selectedValue.label !== "StoreRoom-Office" &&
-            selectedValue.label !== "StoreRoom-Maintenance" &&
-            selectedValue.label !== "Training Center" &&
-            selectedValue.label !== "Training Center-Maintainence") ||
+          {(selectedValue &&
+            selectedValue?.label !== "HO-Office" &&
+            selectedValue?.label !== "HO-Maintenance" &&
+            selectedValue?.label !== "DO / RO-Office" &&
+            selectedValue?.label !== "DO / RO-Maintenance" &&
+            selectedValue?.label !== "StoreRoom-Office" &&
+            selectedValue?.label !== "StoreRoom-Maintenance" &&
+            selectedValue?.label !== "Training Center" &&
+            selectedValue?.label !== "Training Center-Maintainence") ||
           type === "edit" ? (
             <Grid container spacing={2} className="px-2 py-2 mt-1">
               <Grid item className="d-flex m-2" lg={12}>
@@ -323,11 +305,7 @@ const LesseeInformation = ({
                   sx={{ width: 300, ml: 1, borderRadius: 10 }}
                   // defaultValue={null}
                   options={branchData}
-                  value={
-                    type === "edit"
-                      ? allNewContractDetails?.branchID
-                      : allNewContractDetails?.branchID
-                  }
+                  value={allNewContractDetails?.branchID}
                   onChange={handleBranchID}
                   renderInput={(params) => (
                     <TextField
@@ -337,28 +315,6 @@ const LesseeInformation = ({
                     />
                   )}
                 />
-                {/* <Autocomplete
-                  size="small"
-                  sx={{ width: 300, ml: 1, borderRadius: 10 }}
-                  options={branchData}
-                  value={
-                    type === "edit"
-                      ?branchDetails?.branchID
-                      : branchData.find(
-                          (branch) =>
-                            branch.id ===
-                            allNewContractDetails?.lesseeBranchType
-                        )
-                  }
-                  onChange={handleBranchID}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Branch ID"
-                      variant="outlined"
-                    />
-                  )}
-                /> */}
               </Grid>
 
               <Grid item className="d-flex m-2" lg={12}>
@@ -369,7 +325,8 @@ const LesseeInformation = ({
                   name="lesseeBranchName"
                   value={
                     type === "edit"
-                      ? allNewContractDetails?.lesseeBranchName
+                      ? allNewContractDetails?.lesseeBranchName ||
+                        allNewContractDetails?.branchName
                       : allNewContractDetails?.branchName
                   }
                   onChange={(e) => updateChange(e)}
@@ -383,7 +340,8 @@ const LesseeInformation = ({
                   name="areaName"
                   value={
                     type === "edit"
-                      ? allNewContractDetails?.lesseeAreaName
+                      ? allNewContractDetails?.lesseeAreaName ||
+                        allNewContractDetails?.areaName
                       : allNewContractDetails?.areaName || ""
                   }
                   onChange={(e) => updateChange(e)}
@@ -397,7 +355,8 @@ const LesseeInformation = ({
                   name="region"
                   value={
                     type === "edit"
-                      ? allNewContractDetails?.lesseeDivision
+                      ? allNewContractDetails?.lesseeDivision ||
+                        allNewContractDetails?.region
                       : allNewContractDetails?.region || ""
                   }
                   onChange={(e) => updateChange(e)}
@@ -413,7 +372,8 @@ const LesseeInformation = ({
                   name="zone"
                   value={
                     type === "edit"
-                      ? allNewContractDetails?.lesseeZone
+                      ? allNewContractDetails?.lesseeZone ||
+                        allNewContractDetails?.zone
                       : allNewContractDetails?.zone || ""
                   }
                   onChange={(e) => updateChange(e)}
@@ -427,7 +387,8 @@ const LesseeInformation = ({
                   name="state"
                   value={
                     type === "edit"
-                      ? allNewContractDetails?.lesseeState
+                      ? allNewContractDetails?.lesseeState ||
+                        allNewContractDetails?.state
                       : allNewContractDetails?.state || ""
                   }
                   onChange={(e) => updateChange(e)}
@@ -438,14 +399,14 @@ const LesseeInformation = ({
           ) : null}
         </Box>
 
-        {(selectedValue.label && selectedValue.label === "HO-Office") ||
-        selectedValue.label === "HO-Maintenance" ||
-        selectedValue.label === "DO / RO-Office" ||
-        selectedValue.label === "DO / RO-Maintenance" ||
-        selectedValue.label === "StoreRoom-Office" ||
-        selectedValue.label === "StoreRoom-Maintenance" ||
-        selectedValue.label === "Training Center" ||
-        selectedValue.label === "Training Center-Maintainence" ? (
+        {(selectedValue && selectedValue?.label === "HO-Office") ||
+        selectedValue?.label === "HO-Maintenance" ||
+        selectedValue?.label === "DO / RO-Office" ||
+        selectedValue?.label === "DO / RO-Maintenance" ||
+        selectedValue?.label === "StoreRoom-Office" ||
+        selectedValue?.label === "StoreRoom-Maintenance" ||
+        selectedValue?.label === "Training Center" ||
+        selectedValue?.label === "Training Center-Maintainence" ? (
           <Grid container spacing={2} className="px-2 py-2 mt-1">
             <Grid item className="d-flex m-2" lg={12}>
               <DropDownComponent
@@ -476,7 +437,11 @@ const LesseeInformation = ({
                   sx={{ width: 300 }}
                   options={EntityDetails}
                   name="lesseeEntityDetails"
-                  value={allNewContractDetails?.lesseeEntityDetails}
+                  value={
+                    type === "edit"
+                      ? allNewContractDetails?.lesseeEntityDetails
+                      : allNewContractDetails?.lesseeEntityDetails || ""
+                  }
                   // onSelect={handleEntityDetails}
                   onChange={(val) =>
                     handleEntityDetails("lesseeEntityDetails", val)
@@ -488,7 +453,11 @@ const LesseeInformation = ({
                   options={location}
                   name="premesisLocation"
                   // onSelect={handleLocationChange}
-                  value={allNewContractDetails?.premesisLocation}
+                  value={
+                    type === "edit"
+                      ? allNewContractDetails?.premesisLocation
+                      : allNewContractDetails?.premesisLocation
+                  }
                   onChange={(val) =>
                     handleLocationChange("premesisLocation", val)
                   }
@@ -497,8 +466,12 @@ const LesseeInformation = ({
                   label="Building Type"
                   sx={{ width: 300 }}
                   options={typeOfBuliding}
-                  name="branchName"
-                  value={allNewContractDetails?.premesisBuildingType}
+                  name="premesisBuildingType"
+                  value={
+                    type === "edit"
+                      ? allNewContractDetails?.premesisBuildingType
+                      : allNewContractDetails?.premesisBuildingType
+                  }
                   // onSelect={handleBulidingType}
                   onChange={(val) =>
                     handleBulidingType("premesisBuildingType", val)

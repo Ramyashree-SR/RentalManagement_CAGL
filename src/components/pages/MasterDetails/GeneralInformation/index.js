@@ -53,10 +53,10 @@ const GeneralInformation = ({
 
   const handlePaymentChange = (name, value) => {
     // console.log(name, value, "value");
-    setAllNewContractDetails(() => ({
+    setAllNewContractDetails({
       ...allNewContractDetails,
       [name]: value,
-    }));
+    });
     // setAllNewContractDetails(value);
   };
 

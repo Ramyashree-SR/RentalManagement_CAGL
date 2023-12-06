@@ -71,7 +71,7 @@ const RentalDetails = (props) => {
   const [filterBranch, setFilterBranch] = useState([]);
   const [branchTypeFilter, setBranchTypeFilter] = useState("All"); // Specify the filter for 'Name'
   const [activationStatusFilter, setActivationStatusFilter] = useState("All");
-
+  const [branchFilter, setBranchFilter] = useState("");
   const handleStateChange = (value) => {
     // console.log(value.target.outerText, "newValue");
     setFilterState({
@@ -184,8 +184,6 @@ const RentalDetails = (props) => {
     }
   };
 
-  const [branchFilter, setBranchFilter] = useState("");
-
   const filteredData =
     branchFilter === ""
       ? rentContractDetails
@@ -213,7 +211,7 @@ const RentalDetails = (props) => {
       if (data) {
         let branchIDData = [];
         data?.data?.map((val) => {
-          branchIDData.push({ id: val, label: val });
+          branchIDData.push([val]);
         });
 
         setBranchFilter(branchIDData);
@@ -529,7 +527,7 @@ const RentalDetails = (props) => {
             // options={[
             //   ...new Set(rentContractDetails?.map((item) => item.branchID)),
             // ]}
-            options={branchFilter}
+            options={Array.isArray(branchFilter) ? branchFilter : []}
             value={filterBranch?.branchID}
             onChange={handleBranchID}
             renderInput={(params) => (

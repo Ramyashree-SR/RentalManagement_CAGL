@@ -117,13 +117,9 @@ const DropDownComponent = ({
           multiple={multiple}
           options={options}
           fullWidth={fullWidth}
-          // getOptionLabel={(option) => (option.label ? option.label : "")}
-          // getOptionLabel={(option) => (option.id ? option.id : "")}
+          // getOptionLabel={(option) => option?.label || ""}
           isOptionEqualToValue={(option, value) =>
-            value === undefined ||
-            value === "" ||
-            option.label === value.label ||
-            option.value === value.value
+            value === undefined || value === "" || option.id === value.label
           }
           disabled={disabled}
           renderOption={(props, option) => renderOption(props, option)}

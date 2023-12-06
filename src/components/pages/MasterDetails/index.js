@@ -19,6 +19,9 @@ import {
   nameWithSpacesAndNumbers,
   numbers,
   numbersRegex,
+  numbersWithDots,
+  numbersWithSpecialChatracters,
+  numbersWithSpecialChatractersAndSeparated,
   panCardRegex,
   pincodeRegex,
 } from "../../../constants/RegexConstacts";
@@ -65,13 +68,14 @@ let errObj = {
   lessorTaluka: "",
   lessorDistrict: "",
   lessorState: "",
+  lesseeBranchType: "",
   branchID: "",
   lesseeBranchName: "",
   lesseeAreaName: "",
   lesseeDivision: "",
   lesseeZone: "",
   lesseeState: "",
-  lesseeBranchType: "",
+
   lesseeApproverrenewals: "",
   lesseeApproverRelocation: "",
   lesseeEntityDetails: "",
@@ -128,6 +132,9 @@ let errObj = {
   plotNumber: "",
   builtupArea: "",
   renewalStatus: "",
+  glName: "",
+  glEmpId: "",
+  signedDate: "",
 };
 
 const MasterDetails = (props) => {
@@ -179,13 +186,14 @@ const MasterDetails = (props) => {
     lessorTaluka: "",
     lessorDistrict: "",
     lessorState: "",
+    lesseeBranchType: "",
     branchID: "",
     lesseeBranchName: "",
     lesseeAreaName: "",
     lesseeDivision: "",
     lesseeZone: "",
     lesseeState: "",
-    lesseeBranchType: "",
+
     lesseeApproverrenewals: "",
     lesseeApproverRelocation: "",
     lesseeEntityDetails: "",
@@ -240,6 +248,9 @@ const MasterDetails = (props) => {
     plotNumber: "",
     builtupArea: "",
     renewalStatus: "",
+    glName: "",
+    glEmpId: "",
+    signedDate: "",
   });
 
   // console.log("allNewContractDetails", allNewContractDetails);
@@ -367,6 +378,9 @@ const MasterDetails = (props) => {
       renewalStatus: "",
       tds: "",
       gst: "",
+      glName: "",
+      glEmpId: "",
+      signedDate: "",
     };
     setAllNewContractDetailsErr(errObj);
   }, []);
@@ -468,7 +482,11 @@ const MasterDetails = (props) => {
       gpsCoordinates: "",
       tds: "",
       gst: "",
+      glName: "",
+      glEmpId: "",
+      signedDate: "",
     };
+
     if (allNewContractDetails.lessorName === "") {
       errObj.lessorName = "*This field is required";
       errorInForm = true;
@@ -528,7 +546,9 @@ const MasterDetails = (props) => {
       errorInForm = true;
       errObj.lessorDoorNumber = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails.lessorDoorNumber) &&
+      !numbersWithSpecialChatracters.test(
+        allNewContractDetails.lessorDoorNumber
+      ) &&
       allNewContractDetails.lessorDoorNumber !== ""
     ) {
       errorInForm = true;
@@ -539,7 +559,9 @@ const MasterDetails = (props) => {
       errorInForm = true;
       errObj.lessorFloorNumber = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.lessorFloorNumber) &&
+      !nameWithSpacesAndNumbers.test(
+        allNewContractDetails?.lessorFloorNumber
+      ) &&
       allNewContractDetails.lessorFloorNumber !== ""
     ) {
       errorInForm = true;
@@ -700,22 +722,26 @@ const MasterDetails = (props) => {
       errObj.premesisLocation = "*Invalid Location";
     }
 
-    if (allNewContractDetails.premesisDoorNumber === "") {
+    if (allNewContractDetails?.premesisDoorNumber === "") {
       errorInForm = true;
       errObj.premesisDoorNumber = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.premesisDoorNumber) &&
+      !numbersWithSpecialChatracters.test(
+        allNewContractDetails?.premesisDoorNumber
+      ) &&
       allNewContractDetails.premesisDoorNumber !== ""
     ) {
       errorInForm = true;
       errObj.premesisDoorNumber = "*Invalid Door Number";
     }
 
-    if (allNewContractDetails.premesisFloorNumber === "") {
+    if (allNewContractDetails?.premesisFloorNumber === "") {
       errorInForm = true;
       errObj.premesisFloorNumber = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.premesisFloorNumber) &&
+      !nameWithSpacesAndNumbers.test(
+        allNewContractDetails?.premesisFloorNumber
+      ) &&
       allNewContractDetails.premesisFloorNumber !== ""
     ) {
       errorInForm = true;
@@ -737,7 +763,7 @@ const MasterDetails = (props) => {
       errorInForm = true;
       errObj.premesisLandMark = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.premesisLandMark === "") &&
+      !nameWithSpaces.test(allNewContractDetails?.premesisLandMark === "") &&
       allNewContractDetails.premesisLandMark !== ""
     ) {
       errorInForm = true;
@@ -748,7 +774,7 @@ const MasterDetails = (props) => {
       errorInForm = true;
       errObj.premesisStreet = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.premesisStreet) &&
+      !nameWithSpacesAndNumbers.test(allNewContractDetails?.premesisStreet) &&
       allNewContractDetails.premesisStreet !== ""
     ) {
       errorInForm = true;
@@ -759,7 +785,7 @@ const MasterDetails = (props) => {
       errorInForm = true;
       errObj.premesisCity = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.premesisCity) &&
+      !nameWithSpaces.test(allNewContractDetails?.premesisCity) &&
       allNewContractDetails.premesisCity !== ""
     ) {
       errorInForm = true;
@@ -770,7 +796,7 @@ const MasterDetails = (props) => {
       errorInForm = true;
       errObj.premesisPinCode = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.premesisPinCode) &&
+      !pincodeRegex.test(allNewContractDetails?.premesisPinCode) &&
       allNewContractDetails.premesisPinCode !== ""
     ) {
       errorInForm = true;
@@ -781,7 +807,7 @@ const MasterDetails = (props) => {
       errorInForm = true;
       errObj.premesisTaluka = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.premesisTaluka) &&
+      !nameWithSpaces.test(allNewContractDetails?.premesisTaluka) &&
       allNewContractDetails.premesisTaluka !== ""
     ) {
       errorInForm = true;
@@ -792,235 +818,95 @@ const MasterDetails = (props) => {
       errorInForm = true;
       errObj.premesisDistrict = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.premesisDistrict) &&
+      !nameWithSpaces.test(allNewContractDetails?.premesisDistrict) &&
       allNewContractDetails.premesisDistrict !== ""
     ) {
       errorInForm = true;
-      errObj.premesisDistrict = "*Invalid District";
+      errObj.premesisDistrict = "*Invalid District Name";
     }
 
-    if (allNewContractDetails.premesisBranchName === "") {
+    if (allNewContractDetails.premesisState === "") {
       errorInForm = true;
-      errObj.premesisBranchName = "*This field is required";
+      errObj.premesisState = "*This field is required";
     } else if (
-      !nameWithSpaces.test(allNewContractDetails?.premesisBranchName) &&
-      allNewContractDetails.premesisBranchName !== ""
+      !nameWithSpaces.test(allNewContractDetails?.premesisState) &&
+      allNewContractDetails.premesisState !== ""
     ) {
       errorInForm = true;
-      errObj.premesisBranchName = "*Invalid Branch Name";
+      errObj.premesisState = "*Invalid State Name";
     }
 
-    if (allNewContractDetails.premesisAreaName === "") {
+    if (allNewContractDetails.lesseeBranchName === "") {
       errorInForm = true;
-      errObj.premesisAreaName = "*This field is required";
+      errObj.lesseeBranchName = "*This field is required";
     } else if (
-      !nameWithSpaces.test(allNewContractDetails?.premesisAreaName) &&
-      allNewContractDetails.premesisAreaName !== ""
+      !nameWithSpaces.test(allNewContractDetails?.lesseeBranchName) &&
+      allNewContractDetails.lesseeBranchName !== ""
     ) {
       errorInForm = true;
-      errObj.premesisAreaName = "*Invalid Area Name";
+      errObj.lesseeBranchName = "*Invalid Branch Name";
     }
 
-    if (allNewContractDetails.premesisDivision === "") {
+    if (allNewContractDetails.lesseeAreaName === "") {
       errorInForm = true;
-      errObj.premesisDivision = "*This field is required";
+      errObj.lesseeAreaName = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.premesisDivision) &&
-      allNewContractDetails.premesisDivision !== ""
+      !nameWithSpaces.test(allNewContractDetails?.lesseeAreaName) &&
+      allNewContractDetails.lesseeAreaName !== ""
     ) {
       errorInForm = true;
-      errObj.premesisDivision = "*Invalid Division";
+      errObj.lesseeAreaName = "*Invalid Area Name";
     }
 
-    if (allNewContractDetails.premesisZone === "") {
+    if (allNewContractDetails.lesseeDivision === "") {
       errorInForm = true;
-      errObj.premesisZone = "*This field is required";
+      errObj.lesseeDivision = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.premesisZone) &&
-      allNewContractDetails.premesisZone !== ""
+      !numbersRegex.test(allNewContractDetails?.lesseeDivision) &&
+      allNewContractDetails.lesseeDivision !== ""
     ) {
       errorInForm = true;
-      errObj.premesisZone = "*Invalid Zone";
+      errObj.lesseeDivision = "*Invalid Division";
     }
 
-    // if (allNewContractDetails.premesisState === "") {
-    //   errorInForm = true;
-    //   errObj.premesisState = "*This field is required";
-    // } else if (
-    //   !numbersRegex.test(allNewContractDetails?.premesisState) &&
-    //   allNewContractDetails.premesisState !== ""
-    // ) {
-    //   errorInForm = true;
-    //   errObj.renewalTenure = "*Invalid State";
-    // }
-
-    // if (allNewContractDetails.premesisBuildingType) {
-    //   errorInForm = true;
-    //   errObj.premesisBuildingType = "*This field is required";
-    // }
-    if (allNewContractDetails.agreementSignDate === "") {
+    if (allNewContractDetails.lesseeZone === "") {
       errorInForm = true;
-      errObj.agreementSignDate = "*This field is required";
-    }
-    if (allNewContractDetails.agreementTenure === "") {
-      errorInForm = true;
-      errObj.agreementTenure = "*This field is required";
-    }
-    if (allNewContractDetails.agreementStartDate === "") {
-      errorInForm = true;
-      errObj.agreementStartDate = "*This field is required";
-    }
-    if (allNewContractDetails.agreementActivationStatus === "") {
-      errorInForm = true;
-      errObj.agreementActivationStatus = "*This field is required";
-    }
-    if (allNewContractDetails.agreementStartDate === "") {
-      errorInForm = true;
-      errObj.agreementStartDate = "*This field is required";
-    }
-    if (allNewContractDetails.agreementEndDate === "") {
-      errorInForm = true;
-      errObj.agreementEndDate = "*This field is required";
-    }
-    if (allNewContractDetails.rentStartDate === "") {
-      errorInForm = true;
-      errObj.rentStartDate = "*This field is required";
-    }
-    if (allNewContractDetails.rentEndDate === "") {
-      errorInForm = true;
-      errObj.rentEndDate = "*This field is required";
-    }
-    if (allNewContractDetails.maintaineneCharge === "") {
-      errorInForm = true;
-      errObj.maintaineneCharge = "*This field is required";
+      errObj.lesseeZone = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.maintaineneCharge) &&
-      allNewContractDetails.maintaineneCharge !== ""
+      !numbersRegex.test(allNewContractDetails?.lesseeZone) &&
+      allNewContractDetails.lesseeZone !== ""
     ) {
       errorInForm = true;
-      errObj.maintaineneCharge = "*Invalid Charges";
+      errObj.lesseeZone = "*Invalid Zone";
     }
 
-    if (allNewContractDetails.waterCharge === "") {
+    if (allNewContractDetails.lesseeState === "") {
       errorInForm = true;
-      errObj.waterCharge = "*This field is required";
+      errObj.lesseeState = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.waterCharge) &&
-      allNewContractDetails.waterCharge !== ""
+      !numbersRegex.test(allNewContractDetails?.lesseeState) &&
+      allNewContractDetails.lesseeState !== ""
     ) {
       errorInForm = true;
-      errObj.waterCharge = "*Invalid Charges";
+      errObj.lesseeState = "*Invalid Zone";
     }
 
-    if (allNewContractDetails.electricity === "") {
+    if (allNewContractDetails.premesisState === "") {
       errorInForm = true;
-      errObj.electricity = "*This field is required";
+      errObj.premesisState = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.electricity) &&
-      allNewContractDetails.electricity !== ""
+      !numbersRegex.test(allNewContractDetails?.premesisState) &&
+      allNewContractDetails.premesisState !== ""
     ) {
       errorInForm = true;
-      errObj.electricity = "*Invalid Charges";
-    }
-
-    if (allNewContractDetails.documentType === "") {
-      errorInForm = true;
-      errObj.documentType = "*This field is required";
-    }
-
-    if (allNewContractDetails.securityDepositAmount === "") {
-      errorInForm = true;
-      errObj.securityDepositAmount = "*This field is required";
-    } else if (
-      !numbersRegex.test(allNewContractDetails?.securityDepositAmount) &&
-      allNewContractDetails.securityDepositAmount !== ""
-    ) {
-      errorInForm = true;
-      errObj.securityDepositAmount = "*Invalid Amount Data";
-    }
-
-    if (allNewContractDetails.securityDepositUtr === "") {
-      errorInForm = true;
-      errObj.securityDepositUtr = "*This field is required";
-    } else if (
-      !numbersRegex.test(allNewContractDetails?.securityDepositUtr) &&
-      allNewContractDetails.securityDepositUtr !== ""
-    ) {
-      errorInForm = true;
-      errObj.securityDepositUtr = "*Invalid Utr Details";
-    }
-
-    if (allNewContractDetails.standardDeducition === "") {
-      errorInForm = true;
-      errObj.standardDeducition = "*This  field is required";
-    } else if (
-      !numbersRegex.test(allNewContractDetails?.standardDeducition) &&
-      allNewContractDetails.standardDeducition !== ""
-    ) {
-      errorInForm = true;
-      errObj.standardDeducition = "*Invalid Amount ";
-    }
-
-    if (allNewContractDetails.firstMonthvalue === "") {
-      errorInForm = true;
-      errObj.firstMonthvalue = "*This field is required";
-    } else if (
-      !numbersRegex.test(allNewContractDetails?.firstMonthvalue) &&
-      allNewContractDetails.firstMonthvalue !== ""
-    ) {
-      errorInForm = true;
-      errObj.firstMonthvalue = "*Invalid value";
-    }
-
-    if (allNewContractDetails.lastMonthvalue === "") {
-      errorInForm = true;
-      errObj.lastMonthvalue = "*This field is required";
-    } else if (
-      !numbersRegex.test(allNewContractDetails?.lastMonthvalue) &&
-      allNewContractDetails.lastMonthvalue !== ""
-    ) {
-      errorInForm = true;
-      errObj.lastMonthvalue = "*Invalid value";
-    }
-
-    if (allNewContractDetails.rentAmount === "") {
-      errorInForm = true;
-      errObj.rentAmount = "*This field is required";
-    } else if (
-      !numbersRegex.test(allNewContractDetails?.rentAmount) &&
-      allNewContractDetails.rentAmount !== ""
-    ) {
-      errorInForm = true;
-      errObj.rentAmount = "*Invalid value";
-    }
-
-    if (allNewContractDetails.escalation === "") {
-      errorInForm = true;
-      errObj.escalation = "*This field is required";
-    } else if (
-      !numbersRegex.test(allNewContractDetails?.escalation) &&
-      allNewContractDetails.escalation !== ""
-    ) {
-      errorInForm = true;
-      errObj.escalation = "*Invalid value";
-    }
-
-    if (allNewContractDetails.renewalTenure === "") {
-      errorInForm = true;
-      errObj.renewalTenure = "*This field is required";
-    } else if (
-      !numbersRegex.test(allNewContractDetails?.renewalTenure) &&
-      allNewContractDetails.renewalTenure !== ""
-    ) {
-      errorInForm = true;
-      errObj.renewalTenure = "*Invalid value";
+      errObj.renewalTenure = "*Invalid State";
     }
 
     if (allNewContractDetails.lattitude === "") {
       errorInForm = true;
       errObj.lattitude = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.lattitude) &&
+      !numbersWithSpecialChatracters.test(allNewContractDetails?.lattitude) &&
       allNewContractDetails.lattitude !== ""
     ) {
       errorInForm = true;
@@ -1031,7 +917,7 @@ const MasterDetails = (props) => {
       errorInForm = true;
       errObj.longitude = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.longitude) &&
+      !numbersWithSpecialChatracters.test(allNewContractDetails?.longitude) &&
       allNewContractDetails.longitude !== ""
     ) {
       errorInForm = true;
@@ -1042,7 +928,9 @@ const MasterDetails = (props) => {
       errorInForm = true;
       errObj.gpsCoordinates = "*This field is required";
     } else if (
-      !numbersRegex.test(allNewContractDetails?.gpsCoordinates) &&
+      !numbersWithSpecialChatractersAndSeparated.test(
+        allNewContractDetails?.gpsCoordinates
+      ) &&
       allNewContractDetails.gpsCoordinates !== ""
     ) {
       errorInForm = true;
@@ -1053,7 +941,6 @@ const MasterDetails = (props) => {
   };
 
   const handleSaveData = (stepData) => {
-    // Update the state for the current step
     switch (activeStep) {
       case 0:
         setStepData1(stepData);
@@ -1076,7 +963,10 @@ const MasterDetails = (props) => {
       default:
         break;
     }
+    // const validateFields = handleAddRentContractInformationError(stepData);
+    // if (validateFields) {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    // }
   };
 
   const AddAllNewRentContactInformation = async () => {
@@ -1089,19 +979,21 @@ const MasterDetails = (props) => {
       lessorGstNumber: allNewContractDetails?.lessorGstNumber,
       // lessorTdsNumber: allNewContractDetails?.lessorTdsNumber,
       paymentMode: allNewContractDetails?.paymentMode?.label,
-      recipiants: allNewContractDetails.recipiants?.map((recipient, index) => ({
-        lessorRecipiantsName: recipient?.lessorRecipiantsName,
-        lessorIfscNumber: recipient?.lessorIfscNumber || ifscCodes?.[index],
-        lessorBankName:
-          recipient?.lessorBankName || bankAndBranch?.[index].bank, // Use bank name from state
-        lessorBranchName:
-          recipient?.lessorBankName || bankAndBranch?.[index].branch, // Use branch name from state
-        // Use IFSC code from state
-        lessorAccountNumber: recipient?.lessorAccountNumber,
-        lessorRentAmount: recipient?.lessorRentAmount,
-        panNo: recipient?.panNo,
-        gstNo: recipient?.gstNo,
-      })),
+      recipiants: allNewContractDetails?.recipiants?.map(
+        (recipient, index) => ({
+          lessorRecipiantsName: recipient?.lessorRecipiantsName,
+          lessorIfscNumber: recipient?.lessorIfscNumber || ifscCodes?.[index],
+          lessorBankName:
+            recipient?.lessorBankName || bankAndBranch?.[index].bank, // Use bank name from state
+          lessorBranchName:
+            recipient?.lessorBranchName || bankAndBranch?.[index].branch, // Use branch name from state
+          // Use IFSC code from state
+          lessorAccountNumber: recipient?.lessorAccountNumber,
+          lessorRentAmount: recipient?.lessorRentAmount,
+          panNo: recipient?.panNo,
+          gstNo: recipient?.gstNo,
+        })
+      ),
       lessorDoorNumber: allNewContractDetails?.lessorDoorNumber,
       lessorFloorNumber: allNewContractDetails?.lessorFloorNumber,
       lessorWardNo: allNewContractDetails?.lessorWardNo,
@@ -1116,7 +1008,6 @@ const MasterDetails = (props) => {
       lessorState: allNewContractDetails?.lessorState,
 
       lesseeBranchType: allNewContractDetails?.lesseeBranchType?.label,
-
       lesseeBranchName: allNewContractDetails?.branchName,
       lesseeAreaName: allNewContractDetails?.areaName,
       lesseeDivision: allNewContractDetails?.region,
@@ -1135,6 +1026,7 @@ const MasterDetails = (props) => {
       premesisStreet: allNewContractDetails?.premesisStreet,
       premesisCity: allNewContractDetails?.premesisCity,
       premesisTaluka: allNewContractDetails?.premesisTaluka,
+      premesisPinCode: allNewContractDetails?.premesisPinCode,
       premesisDistrict: allNewContractDetails?.premesisDistrict,
       premesisState: allNewContractDetails?.lesseeState,
       district: allNewContractDetails?.premesisDistrict,
@@ -1155,7 +1047,7 @@ const MasterDetails = (props) => {
       maintaineneCharge: allNewContractDetails?.maintaineneCharge,
       waterCharge: allNewContractDetails?.waterCharge,
       electricity: allNewContractDetails?.electricity,
-      documentType: allNewContractDetails?.documentType,
+      documentType: allNewContractDetails?.documentType?.label,
       securityDepositAmount: allNewContractDetails?.securityDepositAmount,
       securityDepositPaymentDate:
         allNewContractDetails?.securityDepositPaymentDate,
@@ -1163,9 +1055,9 @@ const MasterDetails = (props) => {
         allNewContractDetails?.securityDepositPaymentMode,
       securityDepositUtr: allNewContractDetails?.securityDepositUtr,
       securityDepositLockinPeriod:
-        allNewContractDetails?.securityDepositLockinPeriod.label,
+        allNewContractDetails?.securityDepositLockinPeriod?.label,
       securityDepositnoticePeriod:
-        allNewContractDetails?.securityDepositnoticePeriod,
+        allNewContractDetails?.securityDepositnoticePeriod?.label,
       securityDepositExitTerm: allNewContractDetails?.securityDepositExitTerm,
       standardDeducition: allNewContractDetails?.standardDeducition,
       firstMonthvalue: allNewContractDetails?.firstMonthvalue,
@@ -1182,13 +1074,18 @@ const MasterDetails = (props) => {
       longitude: allNewContractDetails?.longitude,
       gpsCoordinates: allNewContractDetails?.gpsCoordinates,
 
-      firstRentDate: allNewContractDetails?.firstRentDate,
+      firstRentDate: allNewContractDetails?.rentStartDate,
       lastRentDate: allNewContractDetails?.lastRentDate,
       plotNumber: allNewContractDetails?.plotNumber,
       builtupArea: allNewContractDetails?.builtupArea,
       renewalStatus: allNewContractDetails?.renewalStatus,
+
+      glName: allNewContractDetails?.glName,
+      glEmpId: allNewContractDetails?.glEmpId,
+      signedDate: allNewContractDetails?.signedDate,
     };
     const { data } = await AddRentContractDetails(payload);
+    // console.log(data,"addData");
     if (data?.data) {
       setBranchDetails({
         branchID: allNewContractDetails?.branchID,
@@ -1301,8 +1198,16 @@ const MasterDetails = (props) => {
         plotNumber: "",
         builtupArea: "",
         renewalStatus: "",
+        glName: "",
+        glEmpId: "",
+        signedDate: "",
       });
 
+      // setAllNewContractDetails((prevDetails) => ({
+      //   ...prevDetails,
+      //   lesseeBranchType: prevDetails?.lesseeBranchType || "default-value", // Set a default value if lesseeBranchType is empty
+      // }));
+      // console.log(allNewContractDetails?.lesseeBranchType, "lesseeBranchType");
       setIFSCCodes(Array(recipientCount).fill(""));
       setBankAndBranch(Array(recipientCount).fill({ bank: "", branch: "" }));
       props.getContractDetails();
@@ -1345,12 +1250,13 @@ const MasterDetails = (props) => {
       lessorDistrict: allNewContractDetails?.lessorDistrict,
       lessorState: allNewContractDetails?.lessorState,
 
+      lesseeBranchType: allNewContractDetails?.lesseeBranchType?.label,
       lesseeBranchName: allNewContractDetails?.lesseeBranchName,
       lesseeAreaName: allNewContractDetails?.lesseeAreaName,
       lesseeDivision: allNewContractDetails?.lesseeDivision,
       lesseeZone: allNewContractDetails?.lesseeZone,
       lesseeState: allNewContractDetails?.lesseeState,
-      lesseeBranchType: allNewContractDetails?.lesseeBranchType,
+
       lesseeApproverrenewals: allNewContractDetails?.lesseeApproverrenewals,
       lesseeApproverRelocation: allNewContractDetails?.lesseeApproverRelocation,
       lesseeEntityDetails: allNewContractDetails?.lesseeEntityDetails,
@@ -1365,6 +1271,7 @@ const MasterDetails = (props) => {
       premesisTaluka: allNewContractDetails?.premesisTaluka,
       premesisDistrict: allNewContractDetails?.premesisDistrict,
       premesisState: allNewContractDetails?.lesseeState,
+      premesisPinCode: allNewContractDetails?.premesisPinCode,
       premesisBuildingType: allNewContractDetails?.premesisBuildingType,
       northPremesis: allNewContractDetails?.northPremesis,
       southPremesis: allNewContractDetails?.southPremesis,
@@ -1376,7 +1283,7 @@ const MasterDetails = (props) => {
       // agreementSignDate: allNewContractDetails?.agreementSignDate,
       agreementTenure: allNewContractDetails?.agreementTenure,
       agreementActivationStatus:
-        allNewContractDetails?.agreementActivationStatus.label,
+        allNewContractDetails?.agreementActivationStatus,
       agreementStartDate: formatDateToBackEndReqirement(
         allNewContractDetails?.agreementStartDate
       ),
@@ -1401,13 +1308,14 @@ const MasterDetails = (props) => {
       securityDepositAmount: allNewContractDetails?.securityDepositAmount,
       securityDepositPaymentDate:
         allNewContractDetails?.securityDepositPaymentDate,
-      securityDepositPaymentMode:
-        allNewContractDetails?.securityDepositPaymentMode,
+      // securityDepositPaymentMode:
+      //   allNewContractDetails?.securityDepositPaymentMode,
       securityDepositUtr: allNewContractDetails?.securityDepositUtr,
+      rentAmount: allNewContractDetails?.rentAmount,
       securityDepositLockinPeriod:
         allNewContractDetails?.securityDepositLockinPeriod,
       securityDepositnoticePeriod:
-        allNewContractDetails?.securityDepositnoticePeriod,
+        allNewContractDetails?.securityDepositnoticePeriod?.label,
       securityDepositExitTerm: allNewContractDetails?.securityDepositExitTerm,
       standardDeducition: allNewContractDetails?.standardDeducition,
       firstMonthvalue: allNewContractDetails?.firstMonthvalue,
@@ -1428,6 +1336,10 @@ const MasterDetails = (props) => {
       renewalStatus: allNewContractDetails?.renewalStatus,
       tds: allNewContractDetails.tds,
       gst: allNewContractDetails.gst,
+
+      glName: allNewContractDetails?.glName,
+      glEmpId: allNewContractDetails?.glEmpId,
+      signedDate: allNewContractDetails?.signedDate,
     };
     // console.log("payload", payload);
     const { data } = await EditRentContractDetails(props.uniqueID, payload);
@@ -1436,10 +1348,10 @@ const MasterDetails = (props) => {
     if (data) {
       setIFSCCodes(Array(recipientCount).fill(""));
       setBankAndBranch(Array(recipientCount).fill({ bank: "", branch: "" }));
-      props.getContractDetails();
-
       props.close();
       // window.location.reload();
+
+      props.getContractDetails();
     }
   };
   // console.log(props.uniqueID,"uniqueID");
@@ -1484,12 +1396,13 @@ const MasterDetails = (props) => {
         lessorDistrict: props.EditLessorData?.lessorDistrict,
         lessorState: props.EditLessorData?.lessorState,
 
+        lesseeBranchType: props.EditLessorData?.lesseeBranchType,
         lesseeBranchName: props.EditLessorData?.lesseeBranchName,
         lesseeAreaName: props.EditLessorData?.lesseeAreaName,
         lesseeDivision: props.EditLessorData?.lesseeDivision,
         lesseeZone: props.EditLessorData?.lesseeZone,
         lesseeState: props.EditLessorData?.lesseeState,
-        lesseeBranchType: props.EditLessorData?.lesseeBranchType,
+
         lesseeApproverrenewals: props.EditLessorData?.lesseeApproverrenewals,
         lesseeApproverRelocation:
           props.EditLessorData?.lesseeApproverRelocation,
@@ -1506,6 +1419,7 @@ const MasterDetails = (props) => {
         premesisTaluka: props.EditLessorData?.premesisTaluka,
         premesisDistrict: props.EditLessorData?.premesisDistrict,
         premesisState: props.EditLessorData?.lesseeState,
+        premesisPinCode: props.EditLessorData?.premesisPinCode,
         district: props.EditLessorData?.premesisDistrict,
         premesisBuildingType: props.EditLessorData?.premesisBuildingType,
         northPremesis: props.EditLessorData?.northPremesis,
@@ -1566,6 +1480,10 @@ const MasterDetails = (props) => {
         renewalStatus: props.EditLessorData?.renewalStatus,
         tds: props.EditLessorData?.tds,
         gst: props.EditLessorData?.gst,
+
+        glName: props.EditLessorData?.glName,
+        glEmpId: props.EditLessorData?.glEmpId,
+        signedDate: props.EditLessorData?.signedDate,
       });
       setIFSCCodes(Array(recipientCount).fill(""));
       setBankAndBranch(Array(recipientCount).fill({ bank: "", branch: "" }));
@@ -1962,3 +1880,160 @@ export default MasterDetails;
 //     }
 //   }
 // };
+
+// if (allNewContractDetails.agreementSignDate === "") {
+//   errorInForm = true;
+//   errObj.agreementSignDate = "*This field is required";
+// }
+// if (allNewContractDetails.agreementTenure === "") {
+//   errorInForm = true;
+//   errObj.agreementTenure = "*This field is required";
+// }
+// if (allNewContractDetails.agreementStartDate === "") {
+//   errorInForm = true;
+//   errObj.agreementStartDate = "*This field is required";
+// }
+// if (allNewContractDetails.agreementActivationStatus === "") {
+//   errorInForm = true;
+//   errObj.agreementActivationStatus = "*This field is required";
+// }
+// if (allNewContractDetails.agreementStartDate === "") {
+//   errorInForm = true;
+//   errObj.agreementStartDate = "*This field is required";
+// }
+// if (allNewContractDetails.agreementEndDate === "") {
+//   errorInForm = true;
+//   errObj.agreementEndDate = "*This field is required";
+// }
+// if (allNewContractDetails.rentStartDate === "") {
+//   errorInForm = true;
+//   errObj.rentStartDate = "*This field is required";
+// }
+// if (allNewContractDetails.rentEndDate === "") {
+//   errorInForm = true;
+//   errObj.rentEndDate = "*This field is required";
+// }
+// if (allNewContractDetails.maintaineneCharge === "") {
+//   errorInForm = true;
+//   errObj.maintaineneCharge = "*This field is required";
+// } else if (
+//   !numbersRegex.test(allNewContractDetails?.maintaineneCharge) &&
+//   allNewContractDetails.maintaineneCharge !== "") {
+//   errorInForm = true;
+//   errObj.maintaineneCharge = "*Invalid Charges";
+// }
+
+// if (allNewContractDetails.waterCharge === "") {
+//   errorInForm = true;
+//   errObj.waterCharge = "*This field is required";
+// } else if (
+//   !numbersRegex.test(allNewContractDetails?.waterCharge) &&
+//   allNewContractDetails.waterCharge !== ""
+// ) {
+//   errorInForm = true;
+//   errObj.waterCharge = "*Invalid Charges";
+// }
+
+// if (allNewContractDetails.electricity === "") {
+//   errorInForm = true;
+//   errObj.electricity = "*This field is required";
+// } else if (
+//   !numbersRegex.test(allNewContractDetails?.electricity) &&
+//   allNewContractDetails.electricity !== ""
+// ) {
+//   errorInForm = true;
+//   errObj.electricity = "*Invalid Charges";
+// }
+
+// if (allNewContractDetails.documentType === "") {
+//   errorInForm = true;
+//   errObj.documentType = "*This field is required";
+// }
+
+// if (allNewContractDetails.securityDepositAmount === "") {
+//   errorInForm = true;
+//   errObj.securityDepositAmount = "*This field is required";
+// } else if (
+//   !numbersRegex.test(allNewContractDetails?.securityDepositAmount) &&
+//   allNewContractDetails.securityDepositAmount !== ""
+// ) {
+//   errorInForm = true;
+//   errObj.securityDepositAmount = "*Invalid Amount Data";
+// }
+
+// if (allNewContractDetails.securityDepositUtr === "") {
+//   errorInForm = true;
+//   errObj.securityDepositUtr = "*This field is required";
+// } else if (
+//   !numbersRegex.test(allNewContractDetails?.securityDepositUtr) &&
+//   allNewContractDetails.securityDepositUtr !== ""
+// ) {
+//   errorInForm = true;
+//   errObj.securityDepositUtr = "*Invalid Utr Details";
+// }
+
+// if (allNewContractDetails.standardDeducition === "") {
+//   errorInForm = true;
+//   errObj.standardDeducition = "*This  field is required";
+// } else if (
+//   !numbersRegex.test(allNewContractDetails?.standardDeducition) &&
+//   allNewContractDetails.standardDeducition !== ""
+// ) {
+//   errorInForm = true;
+//   errObj.standardDeducition = "*Invalid Amount ";
+// }
+
+// if (allNewContractDetails.firstMonthvalue === "") {
+//   errorInForm = true;
+//   errObj.firstMonthvalue = "*This field is required";
+// } else if (
+//   !numbersRegex.test(allNewContractDetails?.firstMonthvalue) &&
+//   allNewContractDetails.firstMonthvalue !== ""
+// ) {
+//   errorInForm = true;
+//   errObj.firstMonthvalue = "*Invalid value";
+// }
+
+// if (allNewContractDetails.lastMonthvalue === "") {
+//   errorInForm = true;
+//   errObj.lastMonthvalue = "*This field is required";
+// } else if (
+//   !numbersRegex.test(allNewContractDetails?.lastMonthvalue) &&
+//   allNewContractDetails.lastMonthvalue !== ""
+// ) {
+//   errorInForm = true;
+//   errObj.lastMonthvalue = "*Invalid value";
+// }
+
+// if (allNewContractDetails.rentAmount === "") {
+//   errorInForm = true;
+//   errObj.rentAmount = "*This field is required";
+// } else if (
+//   !numbersRegex.test(allNewContractDetails?.rentAmount) &&
+//   allNewContractDetails.rentAmount !== ""
+// ) {
+//   errorInForm = true;
+//   errObj.rentAmount = "*Invalid value";
+// }
+
+// if (allNewContractDetails.escalation === "") {
+//   errorInForm = true;
+//   errObj.escalation = "*This field is required";
+// } else if (
+//   !numbersRegex.test(allNewContractDetails?.escalation) &&
+//   allNewContractDetails.escalation !== ""
+// ) {
+//   errorInForm = true;
+//   errObj.escalation = "*Invalid value";
+// }
+
+// if (allNewContractDetails.renewalTenure === "") {
+//   errorInForm = true;
+//   errObj.renewalTenure = "*This field is required";
+// } else if (
+//   !numbersRegex.test(allNewContractDetails?.renewalTenure) &&
+//   allNewContractDetails.renewalTenure !== ""
+// ) {
+//   errorInForm = true;
+//   errObj.renewalTenure = "*Invalid value";
+// }
