@@ -48,11 +48,11 @@ const AgreementDetails = ({
 }) => {
   const [checked, setChecked] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [isConditionChecked, setisConditionChecked] = useState(false);
+
   const [active, setactive] = useState(null);
   // const [recipientCount, setRecipientCount] = useState(1);
   const [tenure, setTenure] = useState(allNewContractDetails.renewalTenure);
-  const [agreeTenure, setAgreeTenure] = useState("");
+
   const [currentRent, setCurrentRent] = useState(
     allNewContractDetails.rentAmount
   );
@@ -68,7 +68,6 @@ const AgreementDetails = ({
   const [tdsRate, setTdsRate] = useState(null);
   const [escalationRate, setEscalationRate] = useState(null);
   // console.log(tdsRate, "tdsRate");
-  const [gstRate, setGstRate] = useState(allNewContractDetails.gst);
 
   const [originalData, setOriginalData] = useState([
     allNewContractDetails?.recipiants?.lessorAccountNumber,
@@ -169,15 +168,6 @@ const AgreementDetails = ({
     setBankAndBranch(Array(newValue.id).fill({ bank: "", branch: "" }));
   };
 
-  // const updateChange = (e) => {
-  //   setAllNewContractDetails({
-  //     ...allNewContractDetails,
-  //     [e.target.name]: e.target.value,
-  //   });
-  //   setEscalationRate(e.target.value);
-  //   setTdsRate(e.target.value);
-  // };
-
   const updateChange = (e) => {
     const { name, value } = e.target;
 
@@ -187,8 +177,17 @@ const AgreementDetails = ({
     }));
 
     // Assuming e.target.name is 'escalationRate' for setEscalationRate
-    if (name === "escalationRate") {
-      setEscalationRate(value);
+  };
+
+  const handleEscalationChange = (e) => {
+    const { name, value } = e.target;
+    console.log(value, "value");
+    if (name === "escalation") {
+      setAllNewContractDetails((prevDetails) => ({
+        ...prevDetails,
+        escalation: value,
+        // other properties...
+      }));
     }
   };
 
@@ -273,17 +272,19 @@ const AgreementDetails = ({
   };
 
   const calculateTDS = (annualRent) => {
-    return annualRent > 20000 ? (annualRent * (tdsRate / 100)).toFixed(2) : "";
+    return annualRent > 20000
+      ? (annualRent * (allNewContractDetails?.tds / 100)).toFixed(2)
+      : "";
   };
 
   const calculateGST = (annualRent) => {
-    return annualRent * (gstRate / 100).toFixed(2);
+    return annualRent * (allNewContractDetails?.gst / 100).toFixed(2);
   };
   // const escalationRate = 0.05; // 5% annual escalation
   const calculateCurrentRent = (year) => {
     const rent =
       allNewContractDetails?.rentAmount *
-      Math.pow(1 + escalationRate, year - 1);
+      Math.pow(1 + allNewContractDetails?.escalation, year - 1);
     return rent.toFixed(2);
   };
 
@@ -382,8 +383,7 @@ const AgreementDetails = ({
   };
 
   const handleSwitchGSTChange = (checked) => {
-    setChecked(!checked);
-
+    setChecked(checked);
     // If the switch is turned off, reset the GST value to null
     if (!checked) {
       setAllNewContractDetails((prevDetails) => ({
@@ -396,7 +396,6 @@ const AgreementDetails = ({
   // Function to handle changes in the GST value
   const handleGstValueChange = (e) => {
     const { value } = e.target;
-
     // Update the state with the new GST value
     setAllNewContractDetails((prevDetails) => ({
       ...prevDetails,
@@ -1268,8 +1267,9 @@ const AgreementDetails = ({
                 <InputBoxComponent
                   label="Enter Escalation (%)"
                   type="number"
-                  value={(escalationRate / 100) * 100}
-                  onChange={(e) => updateChange(e)}
+                  name="escalation"
+                  value={allNewContractDetails?.escalation}
+                  onChange={(e) => handleEscalationChange(e)}
                   sx={{ width: 300 }}
                 />
               </Grid>

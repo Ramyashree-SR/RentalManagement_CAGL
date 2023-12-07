@@ -1223,7 +1223,7 @@ const MasterDetails = (props) => {
       lessorEmailAddress: allNewContractDetails?.lessorEmailAddress,
       lessorPanNumber: allNewContractDetails?.lessorPanNumber,
       lessorGstNumber: allNewContractDetails?.lessorGstNumber,
-      paymentMode: allNewContractDetails?.paymentMode,
+      paymentMode: allNewContractDetails?.paymentMode?.label,
       recipiants: allNewContractDetails.recipiants.map((recipient, index) => ({
         recipiantsID: recipient?.recipiantsID,
         lessorRecipiantsName: recipient?.lessorRecipiantsName,
@@ -1259,9 +1259,9 @@ const MasterDetails = (props) => {
 
       lesseeApproverrenewals: allNewContractDetails?.lesseeApproverrenewals,
       lesseeApproverRelocation: allNewContractDetails?.lesseeApproverRelocation,
-      lesseeEntityDetails: allNewContractDetails?.lesseeEntityDetails,
+      lesseeEntityDetails: allNewContractDetails?.lesseeEntityDetails?.label,
 
-      premesisLocation: allNewContractDetails?.premesisLocation,
+      premesisLocation: allNewContractDetails?.premesisLocation?.label,
       premesisDoorNumber: allNewContractDetails?.premesisDoorNumber,
       premesisFloorNumber: allNewContractDetails?.premesisFloorNumber,
       premesisWardNo: allNewContractDetails?.premesisWardNo,
@@ -1272,7 +1272,7 @@ const MasterDetails = (props) => {
       premesisDistrict: allNewContractDetails?.premesisDistrict,
       premesisState: allNewContractDetails?.lesseeState,
       premesisPinCode: allNewContractDetails?.premesisPinCode,
-      premesisBuildingType: allNewContractDetails?.premesisBuildingType,
+      premesisBuildingType: allNewContractDetails?.premesisBuildingType?.label,
       northPremesis: allNewContractDetails?.northPremesis,
       southPremesis: allNewContractDetails?.southPremesis,
       eastPremesis: allNewContractDetails?.eastPremesis,
@@ -1304,7 +1304,7 @@ const MasterDetails = (props) => {
       maintaineneCharge: allNewContractDetails?.maintaineneCharge,
       waterCharge: allNewContractDetails?.waterCharge,
       electricity: allNewContractDetails?.electricity,
-      documentType: allNewContractDetails?.documentType,
+      documentType: allNewContractDetails?.documentType?.label,
       securityDepositAmount: allNewContractDetails?.securityDepositAmount,
       securityDepositPaymentDate:
         allNewContractDetails?.securityDepositPaymentDate,
@@ -1313,7 +1313,7 @@ const MasterDetails = (props) => {
       securityDepositUtr: allNewContractDetails?.securityDepositUtr,
       rentAmount: allNewContractDetails?.rentAmount,
       securityDepositLockinPeriod:
-        allNewContractDetails?.securityDepositLockinPeriod,
+        allNewContractDetails?.securityDepositLockinPeriod?.label,
       securityDepositnoticePeriod:
         allNewContractDetails?.securityDepositnoticePeriod?.label,
       securityDepositExitTerm: allNewContractDetails?.securityDepositExitTerm,
