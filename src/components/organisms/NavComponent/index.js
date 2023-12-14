@@ -66,7 +66,7 @@ const NavComponent = ({ children }) => {
 
       <Box
         sx={{
-          marginTop: "-20px",
+          marginTop: "-30px",
           width: "100px",
         }}
       >

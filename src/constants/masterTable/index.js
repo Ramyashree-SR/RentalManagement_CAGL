@@ -6,7 +6,7 @@ const columns = [
   { id: "lesseeBranchType", label: "Type", minWidth: 70, align: "center" },
   {
     id: "agreementActivationStatus",
-    label: "Agreement Activation Status",
+    label: "Activation Status",
     minWidth: 70,
     align: "center",
   },

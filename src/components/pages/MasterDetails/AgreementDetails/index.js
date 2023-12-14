@@ -54,7 +54,7 @@ const AgreementDetails = ({
   const [tenure, setTenure] = useState(allNewContractDetails.renewalTenure);
 
   const [currentRent, setCurrentRent] = useState(
-    allNewContractDetails.rentAmount
+    allNewContractDetails?.rentAmount
   );
 
   // const [ifscCodes, setIFSCCodes] = useState(Array(recipientCount).fill(""));
@@ -66,7 +66,7 @@ const AgreementDetails = ({
   //   })
   // );
   const [tdsRate, setTdsRate] = useState(null);
-  const [escalationRate, setEscalationRate] = useState(null);
+  // const [escalationRate, setEscalationRate] = useState(null);
   // console.log(tdsRate, "tdsRate");
 
   const [originalData, setOriginalData] = useState([
@@ -77,20 +77,20 @@ const AgreementDetails = ({
   // console.log(reEnteredData, "reEnteredData");
   const [dataMatch, setDataMatch] = useState(true);
 
-  useEffect(() => {
-    // Check if allNewContractDetails is defined and has the 'tds' property
-    if (
-      allNewContractDetails?.tds !== undefined &&
-      allNewContractDetails?.tds !== null
-    ) {
-      setTdsRate(allNewContractDetails.tds);
-    }
+  // useEffect(() => {
+  //   // Check if allNewContractDetails is defined and has the 'tds' property
+  //   if (
+  //     allNewContractDetails?.tds !== undefined &&
+  //     allNewContractDetails?.tds !== null
+  //   ) {
+  //     setTdsRate(allNewContractDetails.tds);
+  //   }
 
-    // Check if allNewContractDetails is defined and has the 'escalation' property
-    if (allNewContractDetails?.escalation !== undefined) {
-      setEscalationRate(allNewContractDetails.escalation);
-    }
-  }, [allNewContractDetails]);
+  //   // Check if allNewContractDetails is defined and has the 'escalation' property
+  //   if (allNewContractDetails?.escalation !== undefined) {
+  //     setEscalationRate(allNewContractDetails.escalation);
+  //   }
+  // }, [allNewContractDetails]);
 
   const AgreementfileInput = useRef();
   const [agreementfile, setagreementFile] = useState({
@@ -197,7 +197,7 @@ const AgreementDetails = ({
     // Assuming e.target.name is 'tdsRate' for setTdsRate
     if (name === "tds") {
       // If currentRent is greater than 20000, update tdsRate and other details
-      if (parseInt(currentRent) > 20000) {
+      if (parseInt(allNewContractDetails?.rentAmount) > 20000) {
         setAllNewContractDetails((prevDetails) => ({
           ...prevDetails,
           tds: value,
@@ -271,20 +271,22 @@ const AgreementDetails = ({
     setReEnteredData(updatedReEnteredData);
   };
 
+  // const tdsRateData = allNewContractDetails?.tds / 100;
   const calculateTDS = (annualRent) => {
     return annualRent > 20000
       ? (annualRent * (allNewContractDetails?.tds / 100)).toFixed(2)
       : "";
   };
+  console.log();
 
   const calculateGST = (annualRent) => {
     return annualRent * (allNewContractDetails?.gst / 100).toFixed(2);
   };
-  // const escalationRate = 0.05; // 5% annual escalation
+  const escalationRate = 0.05; // 5% annual escalation
   const calculateCurrentRent = (year) => {
     const rent =
       allNewContractDetails?.rentAmount *
-      Math.pow(1 + allNewContractDetails?.escalation, year - 1);
+      Math.pow(1 + escalationRate, year - 1);
     return rent.toFixed(2);
   };
 
@@ -484,35 +486,14 @@ const AgreementDetails = ({
       branch: value,
     };
   };
+  const calculateTenureInMonths = (startDate, endDate) => {
+    // Calculate the difference in months
+    const monthsDifference =
+      (endDate?.getFullYear() - startDate?.getFullYear()) * 12 +
+      (endDate?.getMonth() - startDate?.getMonth() + 1);
 
-  const calculateTenure = () => {
-    const start = allNewContractDetails?.agreementStartDate;
-    const end = allNewContractDetails?.agreementEndDate;
-
-    const timeDiff = Math.abs(end - start);
-    const tenureInMonths = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30.44)); // Approximate number of days in a month
-
-    return tenureInMonths;
-  };
-
-  const handleDateChange = () => {
-    // Calculate Tenure
-    const tenureValue = calculateTenure();
-    // Update the state with the calculated Tenure value
-    setAllNewContractDetails((prevDetails) => ({
-      ...prevDetails,
-      agreementTenure: tenureValue,
-    }));
-  };
-
-  const handleRenewalDateChange = () => {
-    // Calculate Tenure
-    const tenureValue = calculateTenure();
-    // Update the state with the calculated Tenure value
-    setAllNewContractDetails((prevDetails) => ({
-      ...prevDetails,
-      renewalTenure: tenureValue,
-    }));
+    // You can adjust this calculation based on your specific logic
+    return monthsDifference;
   };
 
   const handleAgreementEndDate = (val) => {
@@ -521,11 +502,28 @@ const AgreementDetails = ({
       agreementEndDate: val,
     });
     // Call the function to update tenure when either date changes
-    handleDateChange(allNewContractDetails.agreementStartDate, new Date(val));
-    handleRenewalDateChange(
-      allNewContractDetails.agreementStartDate,
-      new Date(val)
-    );
+    handleDateChange(allNewContractDetails?.agreementStartDate, val);
+    handleRenewalDateChange(allNewContractDetails.agreementStartDate, val);
+  };
+
+  const handleRenewalDateChange = (startDate, endDate) => {
+    // Calculate Tenure
+    const tenureValue = calculateTenureInMonths(startDate, endDate);
+    // Update the state with the calculated Tenure value
+    setAllNewContractDetails((prevDetails) => ({
+      ...prevDetails,
+      renewalTenure: tenureValue,
+    }));
+  };
+
+  const handleDateChange = (startDate, endDate) => {
+    // Calculate Tenure
+    const tenureValue = calculateTenureInMonths(startDate, endDate);
+    // Update the state with the calculated Tenure value
+    setAllNewContractDetails((prevDetails) => ({
+      ...prevDetails,
+      agreementTenure: tenureValue,
+    }));
   };
 
   const handleRentChange = (e) => {
@@ -565,6 +563,7 @@ const AgreementDetails = ({
     onSave(allNewContractDetails, type);
   };
 
+  console.log(currentRent, "Rent");
   return (
     <>
       <Box sx={{ height: "calc(100% - 75px)", overflowY: "scroll" }}>
@@ -690,6 +689,7 @@ const AgreementDetails = ({
                 label="Tenure (in months)"
                 placeholder="Enter Tenure "
                 sx={{ width: 300, mt: -1.5, ml: 1 }}
+                name="agreementTenure"
                 value={allNewContractDetails?.agreementTenure}
                 onChange={(e) => updateChange(e)}
                 errorText={allNewContractDetailsErr?.agreementTenure}
@@ -998,7 +998,7 @@ const AgreementDetails = ({
                           sx={{ width: 300 }}
                           name={`lessorRentAmount-${index}`}
                           value={
-                            recipientCount > 1
+                            recipientCount && recipientCount > 1
                               ? calculateSplitAmount()
                               : calculateSplitAmount() ||
                                 allNewContractDetails?.recipiants?.[index]
@@ -1048,10 +1048,8 @@ const AgreementDetails = ({
                           placeholder={`Enter IFSC Code ${index + 1}...`}
                           name={`lessorIfscNumber-${index}`}
                           value={
-                            type === "edit"
-                              ? allNewContractDetails?.recipiants?.[index]
-                                  ?.lessorIfscNumber || ifscCodes?.[index]
-                              : ifscCodes?.[index] || ""
+                            allNewContractDetails?.recipiants?.[index]
+                              ?.lessorIfscNumber || ifscCodes?.[index]
                           }
                           onChange={(e) => handleChangeIFSCCode(e, index)}
                           errorText={allNewContractDetailsErr?.lessorIfscNumber}
@@ -1066,11 +1064,9 @@ const AgreementDetails = ({
                             placeholder={`Enter Bank Name ${index + 1}...`}
                             name={`lessorBankName-${index}`}
                             value={
-                              type === "edit"
-                                ? allNewContractDetails.recipiants?.[index]
-                                    .lessorBankName ||
-                                  bankAndBranch?.[index]?.bank
-                                : bankAndBranch?.[index]?.bank || ""
+                              allNewContractDetails.recipiants?.[index]
+                                ?.lessorBankName || bankAndBranch?.[index]?.bank
+                              // : bankAndBranch?.[index]?.bank || ""
                             }
                             onChange={(e) =>
                               handleRecipientBankNameChange(
@@ -1086,28 +1082,12 @@ const AgreementDetails = ({
                             label={`Branch Name ${index + 1}`}
                             sx={{ width: 300 }}
                             placeholder={`Enter Branch Name ${index + 1}...`}
-                            // name={`lessorBranchName-${index}`}
-                            // value={
-                            //   type === "edit"
-                            //     ? allNewContractDetails.recipiants?.[index]
-                            //         .lessorBranchName ||
-                            //       bankAndBranch?.[index]?.branch
-                            //     : allNewContractDetails.recipiants?.[index]
-                            //         .lessorBranchName ||
-                            //       bankAndBranch?.[index]?.branch ||
-                            //       "" // Clear the value in "add" mode
-                            // }
-                            // value={
-                            //   type === "edit"
-                            //     ? bankAndBranch?.[index].branch
-                            //     : bankAndBranch?.[index].branch
-                            // }
                             value={
-                              type === "edit"
-                                ? allNewContractDetails.recipiants?.[index]
-                                    .lessorBranchName ||
-                                  bankAndBranch?.[index]?.branch
-                                : bankAndBranch?.[index]?.branch || ""
+                              // type === "edit"
+                              allNewContractDetails.recipiants?.[index]
+                                ?.lessorBranchName ||
+                              bankAndBranch?.[index]?.branch
+                              // : bankAndBranch?.[index]?.branch || ""
                             }
                             onChange={(e) =>
                               handleRecipientBranchNameChange(
@@ -1158,14 +1138,7 @@ const AgreementDetails = ({
                             // type="password"
                             sx={{ width: 300 }}
                             placeholder={`Enter Re-enter A/c no. ...`}
-                            // name={`AccountNumber-${index}`}
-                            // value={
-                            //   type === "edit"
-                            //     ? allNewContractDetails?.recipiants?.[index]
-                            //         ?.lessorAccountNumber
-                            //     : allNewContractDetails?.recipiants?.[index]
-                            //         ?.lessorAccountNumber || "" // Clear the value in "add" mode
-                            // }
+                            name={`AccountNumber-${index}`}
                             value={
                               type === "edit"
                                 ? allNewContractDetails?.recipiants?.[index]
@@ -1251,6 +1224,7 @@ const AgreementDetails = ({
                 <InputBoxComponent
                   label="Enter Renewal Tenure (in months)"
                   type="number"
+                  name="renewalTenure"
                   value={allNewContractDetails?.renewalTenure}
                   onChange={(e) => updateChange(e)}
                   sx={{ width: 300 }}
@@ -1259,7 +1233,7 @@ const AgreementDetails = ({
                 <InputBoxComponent
                   label="Enter Current Rent"
                   type="number"
-                  value={currentRent}
+                  value={allNewContractDetails?.rentAmount}
                   onChange={handleRentChange}
                   sx={{ width: 300 }}
                 />
@@ -1281,11 +1255,14 @@ const AgreementDetails = ({
                 <Typography>TDS Applicable? </Typography>
                 <SwitchComponent
                   // checked={isChecked}
-                  checked={isChecked || parseInt(currentRent) > 20000}
+                  checked={
+                    isChecked ||
+                    parseInt(allNewContractDetails?.rentAmount) > 20000
+                  }
                   onChange={handleSwitchChange}
                 />
-                {/* parseInt(currentRent) > 20000 ? */}
-                {parseInt(currentRent) > 20000 && (
+                {/* parseInt(allNewContractDetails?.rentAmount) > 20000 ? */}
+                {parseInt(allNewContractDetails?.rentAmount) > 20000 && (
                   <InputBoxComponent
                     label="TDS (%)"
                     type="number"
@@ -1302,7 +1279,7 @@ const AgreementDetails = ({
 
                 <Typography>GST Applicable?</Typography>
                 <SwitchComponent
-                  // checked={parseInt(currentRent) > 20000}
+                  // checked={parseInt(allNewContractDetails?.rentAmount) > 20000}
                   checked={checked}
                   onChange={(isChecked) => handleSwitchGSTChange(isChecked)}
                 />
@@ -1319,7 +1296,7 @@ const AgreementDetails = ({
               </Grid>
 
               <Grid className="d-flex mt-2 flex-column align-items-start justify-content-center">
-                {calculateTenure() > 11 ? (
+                {allNewContractDetails?.renewalTenure > 2 ? (
                   <Grid container spacing={2} className=" py-2 mt-1 ">
                     {startEndDatesList &&
                       startEndDatesList?.length > 0 &&

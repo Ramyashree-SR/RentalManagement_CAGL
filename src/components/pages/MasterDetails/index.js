@@ -30,6 +30,7 @@ import {
   datePickerFormat,
   formatDateToBackEndReqirement,
 } from "../../CommonFunction/CommonFunction";
+import { useToasts } from "react-toast-notifications";
 
 let errObj = {
   uniqueID: "",
@@ -138,6 +139,7 @@ let errObj = {
 };
 
 const MasterDetails = (props) => {
+  const { addToast } = useToasts();
   const [activeStep, setActiveStep] = useState(0);
   const [serialNumber, setSerialNumber] = useState(1);
 
@@ -1084,7 +1086,7 @@ const MasterDetails = (props) => {
       glEmpId: allNewContractDetails?.glEmpId,
       signedDate: allNewContractDetails?.signedDate,
     };
-    const { data } = await AddRentContractDetails(payload);
+    const { data, errRes } = await AddRentContractDetails(payload);
     // console.log(data,"addData");
     if (data?.data) {
       setBranchDetails({
@@ -1112,8 +1114,8 @@ const MasterDetails = (props) => {
           {
             recipiantsID: "",
             lessorRecipiantsName: "",
-            lessorBankName: "",
             lessorIfscNumber: "",
+            lessorBankName: "",
             lessorBranchName: "",
             lessorAccountNumber: "",
             lessorRentAmount: "",
@@ -1202,15 +1204,19 @@ const MasterDetails = (props) => {
         glEmpId: "",
         signedDate: "",
       });
-
-      // setAllNewContractDetails((prevDetails) => ({
-      //   ...prevDetails,
-      //   lesseeBranchType: prevDetails?.lesseeBranchType || "default-value", // Set a default value if lesseeBranchType is empty
-      // }));
-      // console.log(allNewContractDetails?.lesseeBranchType, "lesseeBranchType");
       setIFSCCodes(Array(recipientCount).fill(""));
       setBankAndBranch(Array(recipientCount).fill({ bank: "", branch: "" }));
-      props.getContractDetails();
+      addToast("Rent Contract Data Added Successfully", {
+        appearance: "success",
+      });
+      props.getContractDetails(data?.data);
+      props.close();
+      setTimeout(() => {
+        props.getContractDetails();
+      }, 9000);
+    } else if (errRes) {
+      addToast(errRes, { appearance: "error" });
+      props.close();
     }
   };
 
@@ -1223,7 +1229,7 @@ const MasterDetails = (props) => {
       lessorEmailAddress: allNewContractDetails?.lessorEmailAddress,
       lessorPanNumber: allNewContractDetails?.lessorPanNumber,
       lessorGstNumber: allNewContractDetails?.lessorGstNumber,
-      paymentMode: allNewContractDetails?.paymentMode?.label,
+      paymentMode: allNewContractDetails?.paymentMode,
       recipiants: allNewContractDetails.recipiants.map((recipient, index) => ({
         recipiantsID: recipient?.recipiantsID,
         lessorRecipiantsName: recipient?.lessorRecipiantsName,
@@ -1231,7 +1237,7 @@ const MasterDetails = (props) => {
         lessorBankName:
           recipient?.lessorBankName || bankAndBranch?.[index].bank, // Use bank name from state
         lessorBranchName:
-          recipient?.lessorBankName || bankAndBranch?.[index].branch,
+          recipient?.lessorBranchName || bankAndBranch?.[index].branch,
         lessorAccountNumber: recipient?.lessorAccountNumber,
         lessorRentAmount: recipient?.lessorRentAmount,
         panNo: recipient?.panNo,
@@ -1250,7 +1256,7 @@ const MasterDetails = (props) => {
       lessorDistrict: allNewContractDetails?.lessorDistrict,
       lessorState: allNewContractDetails?.lessorState,
 
-      lesseeBranchType: allNewContractDetails?.lesseeBranchType?.label,
+      lesseeBranchType: allNewContractDetails?.lesseeBranchType,
       lesseeBranchName: allNewContractDetails?.lesseeBranchName,
       lesseeAreaName: allNewContractDetails?.lesseeAreaName,
       lesseeDivision: allNewContractDetails?.lesseeDivision,
@@ -1259,9 +1265,9 @@ const MasterDetails = (props) => {
 
       lesseeApproverrenewals: allNewContractDetails?.lesseeApproverrenewals,
       lesseeApproverRelocation: allNewContractDetails?.lesseeApproverRelocation,
-      lesseeEntityDetails: allNewContractDetails?.lesseeEntityDetails?.label,
+      lesseeEntityDetails: allNewContractDetails?.lesseeEntityDetails,
 
-      premesisLocation: allNewContractDetails?.premesisLocation?.label,
+      premesisLocation: allNewContractDetails?.premesisLocation,
       premesisDoorNumber: allNewContractDetails?.premesisDoorNumber,
       premesisFloorNumber: allNewContractDetails?.premesisFloorNumber,
       premesisWardNo: allNewContractDetails?.premesisWardNo,
@@ -1272,7 +1278,7 @@ const MasterDetails = (props) => {
       premesisDistrict: allNewContractDetails?.premesisDistrict,
       premesisState: allNewContractDetails?.lesseeState,
       premesisPinCode: allNewContractDetails?.premesisPinCode,
-      premesisBuildingType: allNewContractDetails?.premesisBuildingType?.label,
+      premesisBuildingType: allNewContractDetails?.premesisBuildingType,
       northPremesis: allNewContractDetails?.northPremesis,
       southPremesis: allNewContractDetails?.southPremesis,
       eastPremesis: allNewContractDetails?.eastPremesis,
@@ -1304,7 +1310,7 @@ const MasterDetails = (props) => {
       maintaineneCharge: allNewContractDetails?.maintaineneCharge,
       waterCharge: allNewContractDetails?.waterCharge,
       electricity: allNewContractDetails?.electricity,
-      documentType: allNewContractDetails?.documentType?.label,
+      documentType: allNewContractDetails?.documentType,
       securityDepositAmount: allNewContractDetails?.securityDepositAmount,
       securityDepositPaymentDate:
         allNewContractDetails?.securityDepositPaymentDate,
@@ -1313,9 +1319,9 @@ const MasterDetails = (props) => {
       securityDepositUtr: allNewContractDetails?.securityDepositUtr,
       rentAmount: allNewContractDetails?.rentAmount,
       securityDepositLockinPeriod:
-        allNewContractDetails?.securityDepositLockinPeriod?.label,
+        allNewContractDetails?.securityDepositLockinPeriod,
       securityDepositnoticePeriod:
-        allNewContractDetails?.securityDepositnoticePeriod?.label,
+        allNewContractDetails?.securityDepositnoticePeriod,
       securityDepositExitTerm: allNewContractDetails?.securityDepositExitTerm,
       standardDeducition: allNewContractDetails?.standardDeducition,
       firstMonthvalue: allNewContractDetails?.firstMonthvalue,
@@ -1341,20 +1347,140 @@ const MasterDetails = (props) => {
       glEmpId: allNewContractDetails?.glEmpId,
       signedDate: allNewContractDetails?.signedDate,
     };
-    // console.log("payload", payload);
-    const { data } = await EditRentContractDetails(props.uniqueID, payload);
-    // console.log(props.uniqueID, "props.uniqueID");
-    // console.log(data, "data");
+    const { data, errRes } = await EditRentContractDetails(
+      props.uniqueID,
+      payload
+    );
     if (data) {
+      // setBranchDetails({
+      //   branchID: allNewContractDetails?.branchID,
+      //   branchName: allNewContractDetails?.lesseeBranchName,
+      //   areaName: allNewContractDetails?.lesseeAreaName,
+      //   region: allNewContractDetails?.lesseeDivision,
+      //   zone: allNewContractDetails?.lesseeZone,
+      //   state: allNewContractDetails?.lesseeState,
+      //   // ... other fields
+      // });
+
+      // setAllNewContractDetails({
+      //   lessorName: "",
+      //   lessorContactNumber: "",
+      //   lessorEmailAddress: "",
+      //   lessorPanNumber: "",
+      //   lessorGstNumber: "",
+      //   lessorTdsNumber: "",
+      //   paymentMode: "",
+      //   lessorElectricityBillNumber: "",
+      //   lessorTaxNumber: "",
+      //   lessorBankPassBookNumber: "",
+      //   lessorCheuque: "",
+      //   recipiants: [
+      //     {
+      //       recipiantsID: "",
+      //       lessorRecipiantsName: "",
+      //       lessorIfscNumber: "",
+      //       lessorBankName: "",
+      //       lessorBranchName: "",
+      //       lessorAccountNumber: "",
+      //       lessorRentAmount: "",
+      //       panNo: "",
+      //       gstNo: "",
+      //     },
+      //   ],
+      //   lessorDoorNumber: "",
+      //   lessorFloorNumber: "",
+      //   lessorLandMark: "",
+      //   lessorStreet: "",
+      //   lessorWardNo: "",
+      //   lessorArea: "",
+      //   lessorCity: "",
+      //   lessorLocation: "",
+      //   lessorPinCode: "",
+      //   lessorTaluka: "",
+      //   lessorDistrict: "",
+      //   lessorState: "",
+
+      //   lesseeBranchType: "",
+      //   branchID: "",
+      //   lesseeBranchName: "",
+      //   lesseeAreaName: "",
+      //   lesseeDivision: "",
+      //   lesseeZone: "",
+      //   lesseeState: "",
+
+      //   lesseeApproverrenewals: "",
+      //   lesseeApproverRelocation: "",
+      //   lesseeEntityDetails: "",
+      //   premesisLocation: "",
+      //   premesisDoorNumber: "",
+      //   premesisFloorNumber: "",
+      //   premesisWardNo: "",
+      //   premesisLandMark: "",
+      //   premesisStreet: "",
+      //   premesisCity: "",
+      //   premesisPinCode: "",
+      //   premesisTaluka: "",
+      //   premesisDistrict: "",
+      //   northPremesis: "",
+      //   southPremesis: "",
+      //   eastPremesis: "",
+      //   westPremesis: "",
+      //   premesisState: "",
+      //   premesisBuildingType: "",
+      //   agreementSignDate: "",
+      //   agreementTenure: "",
+      //   agreementActivationStatus: "",
+      //   agreementStartDate: "",
+      //   agreementEndDate: "",
+      //   rentStartDate: "",
+      //   rentEndDate: "",
+      //   agreementRefreshStartDate: "",
+      //   agreementRefreshEndDate: "",
+      //   maintaineneCharge: "",
+      //   waterCharge: "",
+      //   electricity: "",
+      //   documentType: "",
+      //   documentPath: "",
+      //   securityDepositAmount: "",
+      //   securityDepositPaymentDate: "",
+      //   securityDepositPaymentMode: "",
+      //   securityDepositUtr: "",
+      //   securityDepositLockinPeriod: "",
+      //   securityDepositnoticePeriod: "",
+      //   securityDepositExitTerm: "",
+      //   standardDeducition: "",
+      //   firstMonthvalue: "",
+      //   lastMonthvalue: "",
+      //   rentAmount: "",
+      //   escalation: "",
+      //   renewalTenure: "",
+      //   lattitude: "",
+      //   longitude: "",
+      //   gpsCoordinates: "",
+      //   tds: "",
+      //   gst: "",
+      //   firstRentDate: "",
+      //   lastRentDate: "",
+      //   plotNumber: "",
+      //   builtupArea: "",
+      //   renewalStatus: "",
+      //   glName: "",
+      //   glEmpId: "",
+      //   signedDate: "",
+      // });
       setIFSCCodes(Array(recipientCount).fill(""));
       setBankAndBranch(Array(recipientCount).fill({ bank: "", branch: "" }));
-      props.close();
-      // window.location.reload();
-
       props.getContractDetails();
+      addToast("Rent Contract Data Edited Successfully", {
+        appearance: "success",
+      });
+      props.close();
+     
+    } else if (errRes) {
+      addToast(errRes, { appearance: "error" });
+      props.close();
     }
   };
-  // console.log(props.uniqueID,"uniqueID");
 
   useEffect(() => {
     if (props.type === "edit") {
@@ -1375,7 +1501,7 @@ const MasterDetails = (props) => {
             lessorBankName:
               recipient?.lessorBankName || bankAndBranch?.[index].bank, // Use bank name from state
             lessorBranchName:
-              recipient?.lessorBankName || bankAndBranch?.[index].branch,
+              recipient?.lessorBranchName || bankAndBranch?.[index].branch,
             lessorAccountNumber: recipient?.lessorAccountNumber,
             lessorRentAmount: recipient?.lessorRentAmount,
             panNo: recipient?.panNo,
@@ -1420,7 +1546,7 @@ const MasterDetails = (props) => {
         premesisDistrict: props.EditLessorData?.premesisDistrict,
         premesisState: props.EditLessorData?.lesseeState,
         premesisPinCode: props.EditLessorData?.premesisPinCode,
-        district: props.EditLessorData?.premesisDistrict,
+        // district: props.EditLessorData?.premesisDistrict,
         premesisBuildingType: props.EditLessorData?.premesisBuildingType,
         northPremesis: props.EditLessorData?.northPremesis,
         southPremesis: props.EditLessorData?.southPremesis,

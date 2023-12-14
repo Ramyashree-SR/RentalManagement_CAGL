@@ -14,6 +14,8 @@ import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
 import TableViewIcon from "@mui/icons-material/TableView";
 import { Link, useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
+import LogoutIcon from "@mui/icons-material/Logout";
+import SummarizeIcon from "@mui/icons-material/Summarize";
 
 function Sider({ isOpen, onClose, height, width, onToggleText }) {
   const [selectedComponent, setSelectedComponent] = useState([]);
@@ -53,20 +55,29 @@ function Sider({ isOpen, onClose, height, width, onToggleText }) {
           open={isOpen}
           onClose={handleDrawerClose}
           PaperProps={{
-            style: { height, width, marginTop: 0 }, // Set the margin to 20px
+            style: { width, height, marginTop: 0 }, // Set the margin to 20px
           }}
           sx={{
             "& .MuiDrawer-paper": {
               marginTop: "10px", // Set the margin to 20px
+              backgroundColor: "#CFE8F7",
+              height: "100%",
             },
           }}
         >
-          <Box sx={{ p: 1 }}>
+          <Box
+            sx={{
+              p: 1,
+              borderColor: "#000000",
+              borderBottom: "1px solid #000000 !important",  //#70B3D1
+              // borderRadius: "10px",
+            }}
+          >
             <img
               src="./assets/cagllogo1.png"
               width={150}
               alt="logo"
-              style={{ marginLeft: 20 }}
+              style={{ marginLeft: 5 }}
             />
           </Box>
           <hr />
@@ -160,7 +171,7 @@ function Sider({ isOpen, onClose, height, width, onToggleText }) {
               }}
             >
               <ListItemIcon>
-                <TableViewIcon sx={{ color: "#000000" }} />
+                <SummarizeIcon sx={{ color: "#000000" }} />
               </ListItemIcon>
               <ListItemText primary="RentReport" sx={{ color: "#000000" }} />
             </ListItem>
@@ -171,7 +182,7 @@ function Sider({ isOpen, onClose, height, width, onToggleText }) {
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
-                marginTop: 45,
+                marginTop: 25,
                 justifyContent: "center",
                 "& .MuiListItemIcon-root": {
                   minWidth: "31px",
@@ -179,6 +190,9 @@ function Sider({ isOpen, onClose, height, width, onToggleText }) {
               }}
               onClick={() => handleListItem("Logout")}
             >
+              <ListItemIcon>
+                <LogoutIcon sx={{ color: "#000000" }} />
+              </ListItemIcon>
               <ListItemText primary="Logout" sx={{ color: "#000000" }} />
             </ListItem>
           </List>

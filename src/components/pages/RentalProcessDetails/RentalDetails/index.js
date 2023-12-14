@@ -38,8 +38,55 @@ import {
   getDistrictByStateFilter,
   getStatesByFilter,
 } from "../../../services/FilterApis";
+import { makeStyles } from "@mui/styles";
+import { blue, green } from "@mui/material/colors";
 
+const useStyles = makeStyles({
+  customTextField: {
+    "& input::placeholder": {
+      fontSize: "13px",
+      color: green[900],
+    },
+  },
+  input: {
+    // color: "#B3B3B3",
+    backgroundColor: green[900],
+  },
+  clearIndicator: {
+    color: "red",
+  },
+  optionStyle: {
+    width: "100%",
+    display: "flex",
+    margin: "0px 5px",
+    padding: "6px 6px",
+    // borderBottom: "0.5px solid #DDEDF4",
+    cursor: "pointer",
+    "&:hover": {
+      background: "#9FCCE066 !important",
+    },
+  },
+  listBox: {
+    border: "1px solid #9FCCE0 !important",
+    borderRadius: "20px !important",
+    marginTop: "3px",
+  },
+});
 const RentalDetails = (props) => {
+  const classes = useStyles();
+  const renderOption = (props, option) => {
+    return (
+      <li {...props} style={{ padding: 0, margin: 0, width: "100%" }}>
+        <Box className={classes.optionStyle}>
+          <Typography
+            sx={{ color: blue[900], fontSize: "13px", fontWeight: "550" }}
+          >
+            {option}
+          </Typography>
+        </Box>
+      </li>
+    );
+  };
   // let navigate = useNavigate();
   const [openLessorModal, setOpenLessorModal] = useState(false);
   const [openEditLessorModal, setOpenEditLessorModal] = useState(false);
@@ -61,17 +108,20 @@ const RentalDetails = (props) => {
   //   ...new Set(rentContractDetails?.map((item) => item.lesseeState))
   // );
   const [stateFilter, setStateFilter] = useState([]);
-  // console.log(stateFilter, "stateFilter");
+
   // const [districtFilter, setDistrictFilter] = useState([
   //   ...new Set(rentContractDetails?.map((item) => item.premesisDistrict)),
   // ]);
-  const [districtFilter, setDistrictFilter] = useState([]);
+  const [districtFilter, setDistrictFilter] = useState(null);
   const [filterState, setFilterState] = useState({});
   const [filterDistrict, setFilterDistrict] = useState({});
   const [filterBranch, setFilterBranch] = useState([]);
+  const [filterBranchName, setFilterBranchName] = useState([]);
   const [branchTypeFilter, setBranchTypeFilter] = useState("All"); // Specify the filter for 'Name'
   const [activationStatusFilter, setActivationStatusFilter] = useState("All");
   const [branchFilter, setBranchFilter] = useState("");
+  const [branchNameFilter, setBranchNameFilter] = useState("");
+
   const handleStateChange = (value) => {
     // console.log(value.target.outerText, "newValue");
     setFilterState({
@@ -79,7 +129,7 @@ const RentalDetails = (props) => {
       lesseeState: value.target.outerText,
     });
     getBranchDistrictByState(value.target.outerText);
-    // getContractDetails(value.target.outerText);
+    getContractDetails(value.target.outerText);
   };
 
   useEffect(() => {
@@ -93,7 +143,7 @@ const RentalDetails = (props) => {
       if (data) {
         let stateData = [];
         data?.data.map((val) => {
-          stateData?.push([val]);
+          stateData.push(val);
         });
         setStateFilter(stateData);
       } else {
@@ -101,29 +151,29 @@ const RentalDetails = (props) => {
       }
     }
   };
+  const handleDistrictChange = (value) => {
+    // console.log(value, "value");
+    // setFilterDistrict({
+    //   ...filterDistrict,
+    //   premesisDistrict: value,
+    // });
+    setFilterDistrict(value);
+    getContractDetails(value);
+  };
 
   const getBranchDistrictByState = async (state) => {
     const { data } = await getDistrictByStateFilter(state);
-    // console.log(data, "Districtdata");
     if (data) {
       // if (data) {
       let districtData = [];
       data?.data.map((val) => {
-        districtData?.push([val]);
+        districtData.push([val]);
       });
       setDistrictFilter(districtData);
     } else {
       setDistrictFilter([]);
     }
     // }
-  };
-  const handleDistrictChange = (value) => {
-    // console.log(value.target.outerText, "value");
-    setFilterDistrict({
-      ...filterDistrict,
-      premesisDistrict: value.target.outerText,
-    });
-    getContractDetails(value.target.outerText);
   };
 
   useEffect(() => {
@@ -141,7 +191,7 @@ const RentalDetails = (props) => {
           if (item.premesisDistrict) {
             return item?.premesisDistrict
               .toLowerCase()
-              .includes(filterState?.districtFilter.toLowerCase());
+              .includes(filterDistrict?.districtFilter.toLowerCase());
           }
         });
         return districtFilteredData;
@@ -175,28 +225,28 @@ const RentalDetails = (props) => {
   //   getContractDetails();
   // }, []);
 
-  const getContractDetails = async (district) => {
-    const { data } = await getAllRentContractDetails(district);
-    // console.log(data?.data.data, "RentContractdata");
+  const getContractDetails = async (district, id) => {
+    console.log(id, "id");
+    let paramsData = id ? id : "All";
+    const { data } = await getAllRentContractDetails(district, paramsData);
     if (data?.data) {
       let getData = data?.data;
       setRentContractDetails(getData);
     }
   };
 
-  const filteredData =
-    branchFilter === ""
-      ? rentContractDetails
-      : rentContractDetails?.filter(
-          (item) => branchFilter === "" || item.branchID === branchFilter
-        );
+  // const filteredData =
+  //   branchFilter === ""
+  //     ? rentContractDetails
+  //     : rentContractDetails?.filter(
+  //         (item) => branchFilter === "" || item.branchID === branchFilter
+  //       );
 
   useEffect(() => {
     getBranchId();
   }, []);
 
   const handleBranchID = (value) => {
-    // console.log(value.target.outerText, "value.target.outerText");
     setFilterBranch({
       ...filterBranch,
       branchID: value.target.outerText,
@@ -206,7 +256,6 @@ const RentalDetails = (props) => {
 
   const getBranchId = async () => {
     const { data } = await getBranchID();
-    // console.log(data, "branchiddtaa");
     if (data) {
       if (data) {
         let branchIDData = [];
@@ -223,15 +272,20 @@ const RentalDetails = (props) => {
 
   const getAllContractDetails = async (branchID) => {
     const { data } = await getAllRentContractDetailsByBranchID(branchID);
-    // console.log(data?.data.data, "RentContractdata");
     if (data?.data) {
       let getData = data?.data;
       setRentContractDetails(getData);
     }
   };
 
+  const handleBranchName = (value) => {
+    setFilterBranchName({
+      ...filterBranchName,
+      branchName: value.target.outerText,
+    });
+  };
+
   const handleBranchTypeFilterChange = (value) => {
-    console.log(value.target.outerText, "value.target.outerText");
     setBranchTypeFilter(value.target.outerText);
   };
 
@@ -239,14 +293,11 @@ const RentalDetails = (props) => {
     setActivationStatusFilter(e.target.value);
   };
 
-  // console.log(branchTypeFilter, "branchTypeFilter");
-  // console.log(activationStatusFilter, "activationStatusFilter");
-
   return (
     <Box>
       <Box
         sx={{
-          flexBasis: "30%",
+          flexBasis: "20%",
           background: "#fff",
         }}
       >
@@ -258,7 +309,7 @@ const RentalDetails = (props) => {
         sx={{
           margin: "1% 1% 0% 10%",
           position: "fixed",
-          marginTop: "-50px",
+          marginTop: "-40px",
           ml: 2,
         }}
       >
@@ -427,21 +478,24 @@ const RentalDetails = (props) => {
           </Typography>
         </Grid>
 
-        <Grid className="d-flex flex-row align-items-center justify-content-between ">
+        <Grid className="d-flex flex-row align-items-center justify-content-around m-1">
           <Autocomplete
             size="small"
             sx={{
-              background: "#E4E7EB",
+              // background: "#E4E7EB",
+              background: "#D5F7DC ", //"#4AB212"
               borderRadius: "100px",
+              width: 210,
+
               "& .MuiOutlinedInput-root:hover": {
                 "& > fieldset": {
-                  borderColor: "#A6A6A6",
+                  borderColor: green[900],
                 },
               },
               "& .MuiOutlinedInput-root:focus": {
                 "& > fieldset": {
-                  outline: "none",
-                  borderColor: "#ECECEC",
+                  borderColor: green[900],
+                  borderWidth: "10px",
                 },
               },
               "& .MuiOutlinedInput-root": {
@@ -449,33 +503,42 @@ const RentalDetails = (props) => {
                   borderColor: "#E4E7EB",
                   borderRadius: "100px",
                 },
-                width: 200,
               },
             }}
+            classes={{ paper: classes.listBox }}
             options={stateFilter}
+            getOptionLabel={(option) =>
+              option && typeof option === "object" ? option.label : option
+            }
+            renderOption={(props, option) => renderOption(props, option)}
             renderInput={(params) => (
-              <TextField {...params} label="State" variant="outlined" />
+              <TextField
+                {...params}
+                label="State"
+                variant="outlined"
+                classes={{ root: classes.customTextField }}
+              />
             )}
             value={filterState?.lesseeState}
             onChange={handleStateChange}
           />
         </Grid>
-        <Grid className="d-flex flex-row align-items-center justify-content-between ">
+        <Grid className="d-flex flex-row align-items-center justify-content-between m-1">
           <Autocomplete
             size="small"
-            // sx={{ width: 200, background: "#E4E7EB" }}
             sx={{
-              // backgroundColor: "#FAFAFA",
               borderRadius: "100px",
-              background: "#E4E7EB",
+              // background: "#E4E7EB",
+              background: "#D5F7DC   ",
+              color: "#ffffff",
               "& .MuiOutlinedInput-root:hover": {
                 "& > fieldset": {
-                  borderColor: "#A6A6A6",
+                  borderColor: green[900],
                 },
               },
               "& .MuiOutlinedInput-root:focus": {
                 "& > fieldset": {
-                  outline: "none",
+                  // outline: "none",
                   borderColor: "#ECECEC",
                 },
               },
@@ -484,34 +547,42 @@ const RentalDetails = (props) => {
                   borderColor: "#E4E7EB",
                   borderRadius: "100px",
                 },
-                width: 200,
+                width: 230,
               },
             }}
-            // defaultValue={null}
-            options={districtFilter}
-            value={filterDistrict?.premesisDistrict}
-            onChange={handleDistrictChange}
+            classes={{ paper: classes.listBox }}
+            options={Array.isArray(districtFilter) ? districtFilter : []}
+            // value={filterDistrict?.premesisDistrict}
+            onChange={(event, newValue) => {
+              // Handle newValue as needed
+              handleDistrictChange(newValue);
+            }}
+            renderOption={(props, option) => renderOption(props, option)}
             renderInput={(params) => (
-              <TextField {...params} label="District" variant="outlined" />
+              <TextField
+                {...params}
+                label="District"
+                variant="outlined"
+                classes={{ root: classes.customTextField }}
+              />
             )}
           />
         </Grid>
-        <Grid className="d-flex flex-row align-items-center justify-content-between ">
+        <Grid className="d-flex flex-row align-items-center justify-content-around m-1">
           <Autocomplete
             size="small"
-            // sx={{ width: 200, background: "#E4E7EB" }}
             sx={{
               // backgroundColor: "#FAFAFA",
-              background: "#E4E7EB",
+              background: "#D5F7DC ", //#C5EBF6
               borderRadius: "100px",
               "& .MuiOutlinedInput-root:hover": {
                 "& > fieldset": {
-                  borderColor: "#E4E7EB",
+                  borderColor: green[900],
                 },
               },
               "& .MuiOutlinedInput-root:focus": {
                 "& > fieldset": {
-                  outline: "none",
+                  // outline: "none",
                   borderColor: "#E4E7EB",
                 },
               },
@@ -523,15 +594,60 @@ const RentalDetails = (props) => {
                 width: 200,
               },
             }}
-            // defaultValue={null}
-            // options={[
-            //   ...new Set(rentContractDetails?.map((item) => item.branchID)),
-            // ]}
+            classes={{ paper: classes.listBox }}
             options={Array.isArray(branchFilter) ? branchFilter : []}
             value={filterBranch?.branchID}
             onChange={handleBranchID}
+            renderOption={(props, option) => renderOption(props, option)}
             renderInput={(params) => (
-              <TextField {...params} label="Branch ID" variant="outlined" />
+              <TextField
+                {...params}
+                label="Branch ID"
+                variant="outlined"
+                classes={{ root: classes.customTextField }}
+              />
+            )}
+          />
+        </Grid>
+        <Grid className="d-flex flex-row align-items-center justify-content-around m-1">
+          <Autocomplete
+            size="small"
+            // sx={{ width: 200, background: "#E4E7EB" }}
+            sx={{
+              // backgroundColor: "#FAFAFA",
+              background: "#D5F7DC",
+              borderRadius: "100px",
+              "& .MuiOutlinedInput-root:hover": {
+                "& > fieldset": {
+                  borderColor: green[900],
+                },
+              },
+              "& .MuiOutlinedInput-root:focus": {
+                "& > fieldset": {
+                  outline: "none",
+                  borderColor: green[900],
+                },
+              },
+              "& .MuiOutlinedInput-root": {
+                "& > fieldset": {
+                  borderColor: "#E4E7EB",
+                  borderRadius: "100px",
+                },
+                width: 200,
+              },
+            }}
+            classes={{ paper: classes.listBox }}
+            options={Array.isArray(branchNameFilter) ? branchNameFilter : []}
+            value={filterBranchName?.branchName}
+            onChange={handleBranchName}
+            renderOption={(props, option) => renderOption(props, option)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Branch Name"
+                variant="outlined"
+                classes={{ root: classes.customTextField }}
+              />
             )}
           />
         </Grid>
@@ -592,12 +708,12 @@ const RentalDetails = (props) => {
         </MenuItem>
       </Menu>
 
-      {/* {searchText ? ( */}
+      {}
       <Box
         sm={12}
         xs={12}
         sx={{
-          margin: "4% auto auto 0%",
+          margin: "4.5% auto auto 0%",
           flexBasis: "80%",
           background: "#fff",
           height: "100%",
@@ -609,7 +725,7 @@ const RentalDetails = (props) => {
           data={rentContractDetails}
           // data={branchFilter || rentContractDetails}
           columns={columns}
-          // getContractDetails={getContractDetails}
+          getContractDetails={getContractDetails}
           setEditLessorData={setEditLessorData}
           setOpenEditLessorModal={setOpenEditLessorModal}
           setOpenLessorModal={setOpenLessorModal}
@@ -627,7 +743,6 @@ const RentalDetails = (props) => {
           }
         />
       </Box>
-      {/* ) : null} */}
     </Box>
   );
 };

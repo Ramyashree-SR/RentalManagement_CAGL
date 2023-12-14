@@ -8,6 +8,8 @@ import { createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/styles";
 import Home from "./components/pages/RentalProcessDetails/HomeScreen";
 import RentReport from "./components/pages/RentalProcessDetails/RentReport";
+import { ToastProvider } from "react-toast-notifications";
+import ToasterComponent from "./components/atoms/ToasterComponent";
 
 function App() {
   // const gender = [
@@ -30,26 +32,35 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <Route
-            path="/*"
-            element={
-              <>
-                <ThemeProvider theme={theme}>
-                  <div id="loader" style={{ display: "none" }}>
-                    <div className="loader"></div>
-                  </div>
-                  <LoginScreen />
-                </ThemeProvider>
-              </>
-            }
-          />
+        <ToastProvider
+          components={{ Toast: ToasterComponent }}
+          placement="top-center"
+          autoDismissTimeout={5000}
+          autoDismiss
+          id="toaster"
+          transitionDuration={4}
+        >
+          <Routes>
+            <Route
+              path="/*"
+              element={
+                <>
+                  <ThemeProvider theme={theme}>
+                    <div id="loader" style={{ display: "none" }}>
+                      <div className="loader"></div>
+                    </div>
+                    <LoginScreen />
+                  </ThemeProvider>
+                </>
+              }
+            />
 
-          <Route path="home" element={<Home />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="rentContracts" element={<RentalDetails />} />
-          <Route path="rentReport" element={<RentReport />} />
-        </Routes>
+            <Route path="home" element={<Home />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="rentContracts" element={<RentalDetails />} />
+            <Route path="rentReport" element={<RentReport />} />
+          </Routes>
+        </ToastProvider>
       </BrowserRouter>
     </>
   );

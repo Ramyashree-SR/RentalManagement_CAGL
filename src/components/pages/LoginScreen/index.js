@@ -14,6 +14,7 @@ import {
 import { Gradient, Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { dummyUsers } from "../../../constants/LoginCredentials";
+import { blue, green } from "@mui/material/colors";
 // import { useToasts } from "react-toast-notifications";
 
 function LoginScreen() {
@@ -138,7 +139,17 @@ function LoginScreen() {
   //     setLoading(true);
   //     loginDetailsOfMakerChecker();
   //   };
-
+  const imgStyle = {
+    position: "absolute",
+    left: "0",
+    top: "10",
+    zIndex: -2,
+    // Lower z-index value
+    boxShadow: "0px 0px 10px 0px black",
+    borderRadius: "0px",
+    width: "100%",
+    height: "100%",
+  };
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -159,137 +170,164 @@ function LoginScreen() {
   };
 
   return (
-    
-    <Box
-      className="d-flex align-items-center justify-content-center "
-      sx={{ height: "100vh", zIndex: -2 }}
-    >
-      <Paper
+    <Box>
+      <Box
+        className="d-flex align-items-center justify-content-center"
         sx={{
-          width: 500,
-          height: 400,
-          background: "#E8FAAF ",    //#E4FA9E
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-around",
-          
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          left: 0,
+          top: 0,
         }}
-        elevation={4}
-        
       >
-        <Box>
-          <img
-            src="./assets/cagllogo1.png"
-            alt="cagllogo"
-            width="150px"
-            height="80px"
-          />
-        </Box>
-        <Typography sx={{ fontSize: 20, fontWeight: 700, textAlign: "center" }}>
-          LOGIN
-        </Typography>
-
+        <img
+          src="./assets/wallcagl.jpeg"
+          alt="caglimage"
+          width="100%"
+          height="100%"
+          style={imgStyle}
+        />
         <Box
-          sx={{
-            width: "60%",
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
-          }}
-        >
-          <Typography sx={{ fontSize: 15, fontWeight: 600 }}>
-            UserName
-          </Typography>
-          <TextField
-            placeholder="EnterUserName"
-            // name="userName"
-            // value={loginDetails.userName}
-            // onChange={(e) => {
-            //   updateChange(e);
-            // }}
-            size="small"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          {/* {userNameErr && (
-            <Typography sx={{ color: "red" }}>{userNameErr}</Typography>
-          )} */}
-        </Box>
-
-        <Box
-          sx={{
-            width: "60%",
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
-          }}
-        >
-          <Typography sx={{ fontSize: 15, fontWeight: 600 }}>
-            Password
-          </Typography>
-          <TextField
-            type={showPassword ? "text" : "password"}
-            placeholder="Enter Password"
-            // name="password"
-            // value={loginDetails.password}
-            // onChange={(e) => updateChange(e)}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            size="small"
-            InputProps={{
-              endAdornment: (
-                <IconButton onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? (
-                    <Visibility
-                      sx={{
-                        fill: "#A6A6A6",
-                      }}
-                    />
-                  ) : (
-                    <VisibilityOff
-                      sx={{
-                        fill: "#A6A6A6",
-                      }}
-                    />
-                  )}
-                </IconButton>
-              ),
-            }}
-          />
-          {/* {passwordErr && (
-            <Typography sx={{ color: "red" }}>{passwordErr}</Typography>
-          )} */}
-        </Box>
-
-        <Box
+          className="d-flex align-items-center justify-content-center"
           sx={{
             width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            heigth: "100%",
+            position: "absolute",
+            left: 0,
+            top: 100,
           }}
         >
-          <Button
-            variant="contained"
-            onClick={() => Submit()}
+          <Paper
             sx={{
-              fontSize: 12,
-              background: "#249506",
-              paddingX: "15px",
-              paddingY: "10px",
+              width: 400,
+              height: 400,
+              background: blue[50], //"#0d47a1",    //#E4FA9E  #E8FAAF
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "space-around",
+              // zIndex: -1,
             }}
+            elevation={10}
+            
           >
-            {loading ? "Loading..." : "Login"}
-            {loading ? (
-              <i
-                class="fa fa-spinner fa-spin"
-                style={{ marginLeft: "12px", marginRight: "8px" }}
-              ></i>
-            ) : null}
-          </Button>
+            <Box>
+              <img
+                src="./assets/cagllogo1.png"
+                alt="cagllogo"
+                width="150px"
+                height="80px"
+              />
+            </Box>
+            <Typography
+              sx={{ fontSize: 20, fontWeight: 700, textAlign: "center" }}
+            >
+              LOGIN
+            </Typography>
+
+            <Box
+              sx={{
+                width: "60%",
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <Typography sx={{ fontSize: 15, fontWeight: 600 }}>
+                UserName
+              </Typography>
+              <TextField
+                placeholder="EnterUserName"
+                // name="userName"
+                // value={loginDetails.userName}
+                // onChange={(e) => {
+                //   updateChange(e);
+                // }}
+                size="small"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              {/* {userNameErr && (
+            <Typography sx={{ color: "red" }}>{userNameErr}</Typography>
+          )} */}
+            </Box>
+
+            <Box
+              sx={{
+                width: "60%",
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <Typography sx={{ fontSize: 15, fontWeight: 600 }}>
+                Password
+              </Typography>
+              <TextField
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter Password"
+                // name="password"
+                // value={loginDetails.password}
+                // onChange={(e) => updateChange(e)}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                size="small"
+                InputProps={{
+                  endAdornment: (
+                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? (
+                        <Visibility
+                          sx={{
+                            fill: "#A6A6A6",
+                          }}
+                        />
+                      ) : (
+                        <VisibilityOff
+                          sx={{
+                            fill: "#A6A6A6",
+                          }}
+                        />
+                      )}
+                    </IconButton>
+                  ),
+                }}
+              />
+              {/* {passwordErr && (
+            <Typography sx={{ color: "red" }}>{passwordErr}</Typography>
+          )} */}
+            </Box>
+
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                variant="contained"
+                onClick={() => Submit()}
+                sx={{
+                  fontSize: 12,
+                  background: "#249506",
+                  paddingX: "15px",
+                  paddingY: "10px",
+                }}
+              >
+                {loading ? "Loading..." : "Login"}
+                {loading ? (
+                  <i
+                    class="fa fa-spinner fa-spin"
+                    style={{ marginLeft: "12px", marginRight: "8px" }}
+                  ></i>
+                ) : null}
+              </Button>
+            </Box>
+          </Paper>
         </Box>
-      </Paper>
+      </Box>
     </Box>
   );
 }

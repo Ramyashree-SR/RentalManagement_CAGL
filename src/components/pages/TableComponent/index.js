@@ -18,7 +18,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import ApartmentIcon from "@mui/icons-material/Apartment";
-import { blue, deepOrange, green, pink } from "@mui/material/colors";
+import { blue, deepOrange, green, pink, yellow } from "@mui/material/colors";
 import CustomModal from "../../pages/RentalProcessDetails/RentalDetails/CustomModal";
 import ViewDetailsModal from "../../pages/RentalProcessDetails/RentalDetails/ViewDetailsModal";
 import EditIcon from "@mui/icons-material/Edit";
@@ -30,19 +30,19 @@ import DropDownComponent from "../../atoms/DropDownComponent";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.root}`]: {
-    padding: "8px",
+    padding: "5px",
   },
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme?.palette?.info.dark,
+    backgroundColor: theme?.palette?.success.dark,
     color: theme.palette?.common?.white,
     fontSize: 12,
-    fontWeight: 700,
-    padding: "4px",
+    fontWeight: 650,
+    padding: "3px",
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 12,
-    fontWeight: 740,
-    backgroundColor: "#FFFFFF",
+    fontSize: 11,
+    fontWeight: 700,
+    backgroundColor: "#D5F7DC ", //#CFE8F7, #C5EBF6 ,
     fontFamily: "sans-serif",
   },
 }));
@@ -69,6 +69,7 @@ const ColorButton = styled(Button)(({ theme }) => ({
 const ColorIcon = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(pink[300]),
   color: pink[900],
+  // color:yellow[900],
   // color: theme.palette.common.white,
   "&:hover": {
     color: deepOrange[700],
@@ -181,200 +182,206 @@ const TableComponent = ({
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer
-        sx={{
-          height: "365px",
-        }}
-      >
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <StyledTableRow>
-              <TableCell
-                sx={{
-                  border: "none !important",
-                  color: "#FFFFFF",
-                  fontWeight: "500",
-                  fontSize: "12px",
-                  borderRight: "1px solid #000000 !important",
-                  backgroundColor: "#01579b",
-                }}
-              >
-                Sl No.
-              </TableCell>
-              {columns &&
-                columns?.map((column) => (
-                  // console.log(column,"column");
-                  <StyledTableCell key={column.id}>
-                    {column.label}
-                    {column &&
-                      column.label === "Agreement Activation Status" && (
-                        <select
-                          value={activationStatusFilter || "All"}
-                          onChange={handleActivationStatusFilterChange}
-                        >
-                          {/* <option value=""></option> */}
-                          <option value="All">All</option>
-                          {filterOptions?.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      )}
-
-                    {column.icon && (
-                      <IconButton size="small">{column.icon}</IconButton>
-                    )}
-                  </StyledTableCell>
-                ))}
-            </StyledTableRow>
-          </TableHead>
-          <TableBody>
-            {Array.isArray(filteredData) &&
-              filteredData
-                ?.filter((value) => {
-                  if (searchText === "") {
-                    return value;
-                  } else if (
-                    Object.values(value)
-                      .join("")
-                      .toLowerCase()
-                      .includes(searchText.toLowerCase().toString())
-                  ) {
-                    return value;
-                  }
-                })
-
-                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                ?.map((row, index) => (
-                  <StyledTableRow key={index}>
-                    <StyledTableCell
-                      sx={{
-                        borderBottom: "1px solid #70B3D1 !important",
-                        borderRight: "1px solid #70B3D1 !important",
-                      }}
-                    >
-                      {index + 1}
-                    </StyledTableCell>
-                    {columns &&
-                      columns?.map((column, columnIndex) => {
-                        const value = row[column.id] || "";
-                        return (
-                          <StyledTableCell
-                            key={columnIndex}
-                            classes={{ root: classes.tableHeader }}
+      
+        <TableContainer
+          sx={{
+            height: "365px",
+          }}
+        >
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <StyledTableRow>
+                <TableCell
+                  sx={{
+                    border: "none !important",
+                    color: "#FFFFFF",
+                    fontWeight: "500",
+                    fontSize: "12px",
+                    borderRight: "1px solid #000000 !important",
+                    // backgroundColor: "#01579b",
+                    backgroundColor: green[900],
+                  }}
+                >
+                  Sl No.
+                </TableCell>
+                {columns &&
+                  columns?.map((column) => (
+                    // console.log(column,"column");
+                    <StyledTableCell key={column.id}>
+                      {column.label}
+                      {column &&
+                        column.label === "Activation Status" && (
+                          <select
+                            value={activationStatusFilter || "All"}
+                            onChange={handleActivationStatusFilterChange}
                           >
-                            {column?.format && typeof value === "number"
-                              ? column?.format(value)
-                              : value}
-                            {/* Add icons to the data cells */}
-                            {column?.actions && (
-                              <Box sx={{ display: "flex" }}>
-                                {column?.actions.includes("edit") && (
-                                  <ColorIcon
-                                    sx={{
-                                      display: "flex",
-                                      flexDirection: "column",
-                                    }}
-                                  >
-                                    <EditIcon
-                                      size="small"
-                                      onClick={(e) => {
-                                        handleEditRow(e, row);
-                                        setUniqueID(row.uniqueID);
+                            {/* <option value=""></option> */}
+                            <option value="All">All</option>
+                            {filterOptions?.map((option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+
+                      {column.icon && (
+                        <IconButton size="small">{column.icon}</IconButton>
+                      )}
+                    </StyledTableCell>
+                  ))}
+              </StyledTableRow>
+            </TableHead>
+            <TableBody>
+              {Array.isArray(filteredData) &&
+                filteredData
+                  ?.filter((value) => {
+                    if (searchText === "") {
+                      return value;
+                    } else if (
+                      Object.values(value)
+                        .join("")
+                        .toLowerCase()
+                        .includes(searchText.toLowerCase().toString())
+                    ) {
+                      return value;
+                    }
+                  })
+
+                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  ?.map((row, index) => (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell
+                        sx={{
+                          borderBottom: "1px solid #70B3D1 !important",
+                          borderRight: "1px solid #70B3D1 !important",
+                        }}
+                      >
+                        {index + 1}
+                      </StyledTableCell>
+                      {columns &&
+                        columns?.map((column, columnIndex) => {
+                          const value = row[column.id] || "";
+                          return (
+                            <StyledTableCell
+                              key={columnIndex}
+                              classes={{ root: classes.tableHeader }}
+                            >
+                              {column?.format && typeof value === "number"
+                                ? column?.format(value)
+                                : value}
+                              {/* Add icons to the data cells */}
+                              {column?.actions && (
+                                <Box sx={{ display: "flex" }}>
+                                  {column?.actions.includes("edit") && (
+                                    <ColorIcon
+                                      sx={{
+                                        display: "flex",
+                                        flexDirection: "column",
                                       }}
-                                    />
-
-                                    <Typography
-                                      sx={{ fontSize: 9, fontWeight: 800 }}
                                     >
-                                      Edit Details
-                                    </Typography>
-                                  </ColorIcon>
-                                )}
+                                      <EditIcon
+                                        size="small"
+                                        onClick={(e) => {
+                                          handleEditRow(e, row);
+                                          setUniqueID(row.uniqueID);
+                                        }}
+                                      />
 
-                                {column?.actions.includes("viewBank") && (
-                                  <ColorIcon
-                                    sx={{
-                                      display: "flex",
-                                      flexDirection: "column",
-                                    }}
-                                  >
-                                    <AccountBalanceWalletIcon
-                                      onClick={() => {
-                                        handleModalOpen(row);
+                                      <Typography
+                                        sx={{ fontSize: 8, fontWeight: 800 }}
+                                      >
+                                        Edit Details
+                                      </Typography>
+                                    </ColorIcon>
+                                  )}
+
+                                  {column?.actions.includes("viewBank") && (
+                                    <ColorIcon
+                                      sx={{
+                                        display: "flex",
+                                        flexDirection: "column",
                                       }}
-                                    />
-                                    <Typography
-                                      sx={{ fontSize: 9, fontWeight: 800 }}
                                     >
-                                      Bank Details
-                                    </Typography>
-                                  </ColorIcon>
-                                )}
+                                      <AccountBalanceWalletIcon
+                                        onClick={() => {
+                                          handleModalOpen(row);
+                                        }}
+                                      />
+                                      <Typography
+                                        sx={{ fontSize: 8, fontWeight: 800 }}
+                                      >
+                                        Bank Details
+                                      </Typography>
+                                    </ColorIcon>
+                                  )}
 
-                                <ViewDetailsModal
-                                  show={modalOpen}
-                                  close={handleModalClose}
-                                  selectedItem={selectedItem}
-                                />
+                                  <ViewDetailsModal
+                                    show={modalOpen}
+                                    close={handleModalClose}
+                                    selectedItem={selectedItem}
+                                  />
 
-                                {column?.actions.includes("viewBranch") && (
-                                  <ColorIcon
-                                    sx={{
-                                      display: "flex",
-                                      flexDirection: "column",
-                                    }}
-                                  >
-                                    <ApartmentIcon
-                                      size="small"
-                                      onClick={() => handleBranchModalOpen(row)}
-                                    />
-
-                                    <Typography
-                                      sx={{ fontSize: 9, fontWeight: 800 }}
+                                  {column?.actions.includes("viewBranch") && (
+                                    <ColorIcon
+                                      sx={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                      }}
                                     >
-                                      Branch Details
-                                    </Typography>
-                                  </ColorIcon>
-                                )}
+                                      <ApartmentIcon
+                                        size="small"
+                                        onClick={() =>
+                                          handleBranchModalOpen(row)
+                                        }
+                                      />
 
-                                <BranchDetailsModal
-                                  show={branchModal}
-                                  close={() => setBranchModal(false)}
-                                  selectedItem={selectedItem}
-                                />
+                                      <Typography
+                                        sx={{ fontSize: 8, fontWeight: 800 }}
+                                      >
+                                        Branch Details
+                                      </Typography>
+                                    </ColorIcon>
+                                  )}
 
-                                {column?.actions.includes("viewAgreement") && (
-                                  <ColorIcon
-                                    sx={{
-                                      display: "flex",
-                                      flexDirection: "column",
-                                    }}
-                                  >
-                                    <HandshakeIcon
-                                      size="small"
-                                      onClick={() =>
-                                        handleCustomInputModalOpen(row)
-                                      }
-                                    />
+                                  <BranchDetailsModal
+                                    show={branchModal}
+                                    close={() => setBranchModal(false)}
+                                    selectedItem={selectedItem}
+                                  />
 
-                                    <Typography
-                                      sx={{ fontSize: 9, fontWeight: 800 }}
+                                  {column?.actions.includes(
+                                    "viewAgreement"
+                                  ) && (
+                                    <ColorIcon
+                                      sx={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                      }}
                                     >
-                                      Agreement Details
-                                    </Typography>
-                                  </ColorIcon>
-                                )}
-                              </Box>
-                            )}
+                                      <HandshakeIcon
+                                        size="small"
+                                        onClick={() =>
+                                          handleCustomInputModalOpen(row)
+                                        }
+                                      />
 
-                            <CustomModal
-                              show={customInputModalOpen}
-                              close={handleCustomInputModalClose}
-                              selectedItem={selectedItem}
-                            />
-                            {/* 
+                                      <Typography
+                                        sx={{ fontSize: 8, fontWeight: 800 }}
+                                      >
+                                        Agreement Details
+                                      </Typography>
+                                    </ColorIcon>
+                                  )}
+                                </Box>
+                              )}
+
+                              <CustomModal
+                                show={customInputModalOpen}
+                                close={handleCustomInputModalClose}
+                                selectedItem={selectedItem}
+                              />
+                              {/* 
                             {column?.actions?.includes(
                               "viewUploadedAgreement"
                             ) && (
@@ -401,15 +408,15 @@ const TableComponent = ({
                               show={agreementModal}
                               close={() => setAgreementModal(false)}
                             /> */}
-                          </StyledTableCell>
-                        );
-                      })}
-                  </StyledTableRow>
-                ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {/* )} */}
+                            </StyledTableCell>
+                          );
+                        })}
+                    </StyledTableRow>
+                  ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+    
 
       <TablePagination
         rowsPerPageOptions={[10, 15, 100]}

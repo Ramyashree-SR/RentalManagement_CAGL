@@ -53,10 +53,10 @@ const GeneralInformation = ({
 
   const handlePaymentChange = (name, value) => {
     // console.log(name, value, "value");
-    setAllNewContractDetails({
+    setAllNewContractDetails(() => ({
       ...allNewContractDetails,
       [name]: value,
-    });
+    }));
     // setAllNewContractDetails(value);
   };
 
@@ -297,7 +297,11 @@ const GeneralInformation = ({
                 sx={{ width: 300 }}
                 options={PaymentMode}
                 name="paymentMode"
-                value={allNewContractDetails?.paymentMode}
+                value={
+                  type === "edit"
+                    ? allNewContractDetails?.paymentMode
+                    : allNewContractDetails?.paymentMode || ""
+                }
                 // onChange={handlePaymentChange}
                 onChange={(val) => {
                   handlePaymentChange("paymentMode", val);
@@ -447,7 +451,7 @@ const GeneralInformation = ({
                   label="Tax Paid Recipt "
                   // placeholder="Enter BankCheck"
                   sx={{ width: 200 }}
-                  value={bankChequeFile?.filename}
+                  value={taxReciptFile?.filename}
                 />
                 <form
                   action="/action_page.php"
