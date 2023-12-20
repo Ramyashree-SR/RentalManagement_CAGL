@@ -21,7 +21,10 @@ const HomeScreen = () => {
         sx={{
           marginTop: "-10px",
           width: "100px",
+          
         }}
+        xs={12}
+        md={6}
       >
         <MenuOpenIcon onClick={handleDrawerToggle} fontSize="large" />
         <Sider

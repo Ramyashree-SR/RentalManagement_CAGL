@@ -34,18 +34,21 @@ const CustomModal = (props) => {
                   placeholder=" Agreement Sign Dtae"
                   sx={{ width: 200 }}
                   value={props.selectedItem?.agreementSignDate}
+                  readOnly
                 />
                 <InputBoxComponent
                   label="Tenure Period"
                   placeholder=" Tenure Period"
                   sx={{ width: 200 }}
                   value={props.selectedItem?.agreementTenure}
+                  readOnly
                 />
                 <InputBoxComponent
                   label="Agreement Start Date"
                   placeholder="Agreement Start Date"
                   sx={{ width: 200 }}
                   value={props.selectedItem?.agreementStartDate}
+                  readOnly
                 />
               </Grid>
             </Col>
@@ -56,18 +59,21 @@ const CustomModal = (props) => {
                   placeholder="Agreement End Date"
                   sx={{ width: 200 }}
                   value={props.selectedItem?.agreementEndDate}
+                  readOnly
                 />
                 <InputBoxComponent
                   label="Rent Start Date"
                   placeholder=" Rent Start Date "
                   sx={{ width: 200 }}
                   value={props.selectedItem?.rentStartDate}
+                  readOnly
                 />
                 <InputBoxComponent
                   label="Rent End Date"
                   placeholder=" Rent End Date "
                   sx={{ width: 200 }}
                   value={props.selectedItem?.rentEndDate}
+                  readOnly
                 />
               </Grid>
             </Col>
@@ -78,18 +84,21 @@ const CustomModal = (props) => {
                   placeholder="Security Deposit"
                   sx={{ width: 200 }}
                   value={props.selectedItem?.securityDepositAmount}
+                  readOnly
                 />
                 <InputBoxComponent
                   label="Monthly Rent"
                   placeholder=" Monthly Rent"
                   sx={{ width: 200 }}
                   value={props.selectedItem?.rentAmount}
+                  readOnly
                 />
                 <InputBoxComponent
                   label="First Month Value"
                   placeholder="First Month Value"
                   sx={{ width: 200 }}
                   value={props.selectedItem?.firstMonthvalue}
+                  readOnly
                 />
               </Grid>
             </Col>
@@ -101,18 +110,21 @@ const CustomModal = (props) => {
                   placeholder="Last Month Value"
                   sx={{ width: 200 }}
                   value={props.selectedItem?.lastMonthvalue}
+                  readOnly
                 />
                 <InputBoxComponent
                   label="Standard Deduction"
                   placeholder=" Standard Deduction"
                   sx={{ width: 200 }}
                   value={props.selectedItem?.standardDeducition}
+                  readOnly
                 />
                 <InputBoxComponent
                   label="TDS (%)"
                   placeholder=" TDS %"
                   sx={{ width: 200 }}
                   value={props.selectedItem?.tds}
+                  readOnly
                 />
               </Grid>
             </Col>
@@ -123,18 +135,21 @@ const CustomModal = (props) => {
                   placeholder=" First Rent Date"
                   sx={{ width: 200 }}
                   value={props.selectedItem?.rentStartDate}
+                  readOnly
                 />
                 <InputBoxComponent
                   label="Last Rent Date"
                   placeholder="Last Rent Date"
                   sx={{ width: 200 }}
                   value={props.selectedItem?.rentStartDate}
+                  readOnly
                 />
                 <InputBoxComponent
                   label="Renewal (%)"
                   placeholder="Renewal (%)"
                   sx={{ width: 200 }}
                   value={props.selectedItem?.escalation}
+                  readOnly
                 />
               </Grid>
             </Col>

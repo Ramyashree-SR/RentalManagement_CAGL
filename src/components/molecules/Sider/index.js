@@ -22,7 +22,7 @@ function Sider({ isOpen, onClose, height, width, onToggleText }) {
   const handleDrawerClose = () => {
     onClose();
   };
-
+  const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
   let navigate = useNavigate();
 
   const handleListItem = (componentName) => {
@@ -47,6 +47,10 @@ function Sider({ isOpen, onClose, height, width, onToggleText }) {
   const navigateToRentReport = () => {
     navigate("/rentReport");
   };
+
+  const OpenSidebar = () => {
+    setOpenSidebarToggle(!openSidebarToggle);
+  };
   return (
     <Box sx={{ display: "flex", zIndex: "100" }}>
       <Paper>
@@ -69,7 +73,7 @@ function Sider({ isOpen, onClose, height, width, onToggleText }) {
             sx={{
               p: 1,
               borderColor: "#000000",
-              borderBottom: "1px solid #000000 !important",  //#70B3D1
+              borderBottom: "1px solid #000000 !important", //#70B3D1
               // borderRadius: "10px",
             }}
           >
@@ -79,6 +83,9 @@ function Sider({ isOpen, onClose, height, width, onToggleText }) {
               alt="logo"
               style={{ marginLeft: 5 }}
             />
+            {/* <span className="icon close_icon" onClick={OpenSidebar}>
+              X
+            </span> */}
           </Box>
           <hr />
           <List>

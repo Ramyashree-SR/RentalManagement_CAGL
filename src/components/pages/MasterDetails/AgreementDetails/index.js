@@ -490,7 +490,7 @@ const AgreementDetails = ({
     // Calculate the difference in months
     const monthsDifference =
       (endDate?.getFullYear() - startDate?.getFullYear()) * 12 +
-      (endDate?.getMonth() - startDate?.getMonth() + 1);
+      (endDate?.getMonth() - startDate?.getMonth() );
 
     // You can adjust this calculation based on your specific logic
     return monthsDifference;
@@ -693,6 +693,7 @@ const AgreementDetails = ({
                 value={allNewContractDetails?.agreementTenure}
                 onChange={(e) => updateChange(e)}
                 errorText={allNewContractDetailsErr?.agreementTenure}
+                readOnly
               />
             </Grid>
 
@@ -717,7 +718,7 @@ const AgreementDetails = ({
                 name="rentEndDate"
                 value={allNewContractDetails?.rentEndDate}
                 onChange={handleRentEndDate}
-                disabled
+                // disabled
               />
             </Grid>
           </Grid>
@@ -1228,6 +1229,7 @@ const AgreementDetails = ({
                   value={allNewContractDetails?.renewalTenure}
                   onChange={(e) => updateChange(e)}
                   sx={{ width: 300 }}
+                  readOnly
                 />
 
                 <InputBoxComponent

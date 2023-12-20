@@ -31,7 +31,7 @@ const NavComponent = ({ children }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleDrawerToggle = () => {
-    setDrawerOpen(true);
+    setDrawerOpen(!drawerOpen);
   };
 
   const handleSelection = (name) => {

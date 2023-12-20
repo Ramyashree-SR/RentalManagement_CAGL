@@ -27,13 +27,14 @@ import BranchDetailsModal from "../../pages/RentalProcessDetails/RentalDetails/B
 import ViewRentDocumentModal from "../RentalProcessDetails/RentalDetails/ViewRentDocumentModal";
 import GavelIcon from "@mui/icons-material/Gavel";
 import DropDownComponent from "../../atoms/DropDownComponent";
+import MenuComponent from "../../molecules/MenuComponent";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.root}`]: {
     padding: "5px",
   },
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme?.palette?.success.dark,
+    backgroundColor: theme?.palette?.info.dark,
     color: theme.palette?.common?.white,
     fontSize: 12,
     fontWeight: 650,
@@ -42,7 +43,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.body}`]: {
     fontSize: 11,
     fontWeight: 700,
-    backgroundColor: "#D5F7DC ", //#CFE8F7, #C5EBF6 ,
+    backgroundColor: "#FFFFFF", //#CFE8F7, #C5EBF6 ,#D5F7DC
     fontFamily: "sans-serif",
   },
 }));
@@ -105,6 +106,12 @@ const TableComponent = ({
   filterDatas,
   activationStatusFilter,
   handleActivationStatusFilterChange,
+  handleEdit,
+  setOpenProvisionsMoadal,
+  setOpenRentDueModal,
+  openRentDueModal,
+  branchIDforDue,
+  uniqueID
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
@@ -114,6 +121,7 @@ const TableComponent = ({
   const [branchModal, setBranchModal] = useState(false);
   const [agreementModal, setAgreementModal] = useState(false);
   const [customInputModalOpen, setCustomInputModalOpen] = useState(false);
+  // const [selectProvisionDetails, setSelectProvisionDetails] = useState([])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -125,17 +133,13 @@ const TableComponent = ({
   };
 
   const handleEditRow = (event, rowData) => {
-    // console.log(rowData, "rowData");
     setModalType("edit");
-    // if (modalType === "edit") {
     setOpenLessorModal(true);
     setEditLessorData(rowData);
     setOpenEditLessorModal(true);
-    // }
   };
 
   const handleModalOpen = (rowData) => {
-    // console.log("rowdata", rowData);
     setSelectedItem(rowData);
     setModalOpen(true);
   };
@@ -146,7 +150,6 @@ const TableComponent = ({
   };
 
   const handleCustomInputModalOpen = (rowData) => {
-    // console.log("rowdata", rowData);
     setSelectedItem(rowData);
     setCustomInputModalOpen(true);
   };
@@ -156,11 +159,23 @@ const TableComponent = ({
   };
 
   const handleBranchModalOpen = (rowData) => {
-    // console.log("rowdata", rowData);
     setSelectedItem(rowData);
     setBranchModal(true);
   };
 
+  const changeProvisions = (rowData) => {
+    if (
+      activationStatusFilter === "open" ||
+      activationStatusFilter === "Open"
+    ) {
+      setOpenProvisionsMoadal(true);
+    }
+    setSelectedItem(rowData);
+  };
+
+  const handleRentDueDetails = () => {
+    setOpenRentDueModal(true);
+  };
   const handleDocumentModalOpen = () => {
     setAgreementModal(true);
   };
@@ -182,206 +197,217 @@ const TableComponent = ({
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      
-        <TableContainer
-          sx={{
-            height: "365px",
-          }}
-        >
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <StyledTableRow>
-                <TableCell
-                  sx={{
-                    border: "none !important",
-                    color: "#FFFFFF",
-                    fontWeight: "500",
-                    fontSize: "12px",
-                    borderRight: "1px solid #000000 !important",
-                    // backgroundColor: "#01579b",
-                    backgroundColor: green[900],
-                  }}
-                >
-                  Sl No.
-                </TableCell>
-                {columns &&
-                  columns?.map((column) => (
-                    // console.log(column,"column");
-                    <StyledTableCell key={column.id}>
-                      {column.label}
-                      {column &&
-                        column.label === "Activation Status" && (
-                          <select
-                            value={activationStatusFilter || "All"}
-                            onChange={handleActivationStatusFilterChange}
-                          >
-                            {/* <option value=""></option> */}
-                            <option value="All">All</option>
-                            {filterOptions?.map((option) => (
-                              <option key={option} value={option}>
-                                {option}
-                              </option>
-                            ))}
-                          </select>
-                        )}
-
-                      {column.icon && (
-                        <IconButton size="small">{column.icon}</IconButton>
-                      )}
-                    </StyledTableCell>
-                  ))}
-              </StyledTableRow>
-            </TableHead>
-            <TableBody>
-              {Array.isArray(filteredData) &&
-                filteredData
-                  ?.filter((value) => {
-                    if (searchText === "") {
-                      return value;
-                    } else if (
-                      Object.values(value)
-                        .join("")
-                        .toLowerCase()
-                        .includes(searchText.toLowerCase().toString())
-                    ) {
-                      return value;
-                    }
-                  })
-
-                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  ?.map((row, index) => (
-                    <StyledTableRow key={index}>
-                      <StyledTableCell
-                        sx={{
-                          borderBottom: "1px solid #70B3D1 !important",
-                          borderRight: "1px solid #70B3D1 !important",
-                        }}
+      <TableContainer
+        sx={{
+          height: "363px",
+        }}
+      >
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <StyledTableRow>
+              <TableCell
+                sx={{
+                  border: "none !important",
+                  color: "#FFFFFF",
+                  fontWeight: "500",
+                  fontSize: "12px",
+                  borderRight: "1px solid #000000 !important",
+                  backgroundColor: "#01579b",
+                  // backgroundColor: blue[900],
+                }}
+              >
+                Sl No.
+              </TableCell>
+              {columns &&
+                columns?.map((column) => (
+                  // console.log(column,"column");
+                  <StyledTableCell key={column.id}>
+                    {column.label}
+                    {column && column.label === "Activation Status" && (
+                      <select
+                        value={activationStatusFilter || "All"}
+                        onChange={handleActivationStatusFilterChange}
                       >
-                        {index + 1}
-                      </StyledTableCell>
-                      {columns &&
-                        columns?.map((column, columnIndex) => {
-                          const value = row[column.id] || "";
-                          return (
-                            <StyledTableCell
-                              key={columnIndex}
-                              classes={{ root: classes.tableHeader }}
-                            >
-                              {column?.format && typeof value === "number"
-                                ? column?.format(value)
-                                : value}
-                              {/* Add icons to the data cells */}
-                              {column?.actions && (
-                                <Box sx={{ display: "flex" }}>
-                                  {column?.actions.includes("edit") && (
-                                    <ColorIcon
-                                      sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                      }}
-                                    >
-                                      <EditIcon
-                                        size="small"
-                                        onClick={(e) => {
-                                          handleEditRow(e, row);
-                                          setUniqueID(row.uniqueID);
-                                        }}
-                                      />
+                        {/* <option value=""></option> */}
+                        <option value="All">All</option>
+                        {filterOptions?.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    )}
 
-                                      <Typography
-                                        sx={{ fontSize: 8, fontWeight: 800 }}
-                                      >
-                                        Edit Details
-                                      </Typography>
-                                    </ColorIcon>
-                                  )}
+                    {column.icon && (
+                      <IconButton size="small">{column.icon}</IconButton>
+                    )}
+                  </StyledTableCell>
+                ))}
+            </StyledTableRow>
+          </TableHead>
+          <TableBody>
+            {Array.isArray(filteredData) &&
+              filteredData
+                ?.filter((value) => {
+                  if (searchText === "") {
+                    return value;
+                  } else if (
+                    Object.values(value)
+                      .join("")
+                      .toLowerCase()
+                      .includes(searchText.toLowerCase().toString())
+                  ) {
+                    return value;
+                  }
+                })
 
-                                  {column?.actions.includes("viewBank") && (
-                                    <ColorIcon
-                                      sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                      }}
-                                    >
-                                      <AccountBalanceWalletIcon
-                                        onClick={() => {
-                                          handleModalOpen(row);
-                                        }}
-                                      />
-                                      <Typography
-                                        sx={{ fontSize: 8, fontWeight: 800 }}
-                                      >
-                                        Bank Details
-                                      </Typography>
-                                    </ColorIcon>
-                                  )}
+                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                ?.map((row, index) => (
+                  <StyledTableRow key={index}>
+                    <StyledTableCell
+                      sx={{
+                        borderBottom: "1px solid #70B3D1 !important",
+                        borderRight: "1px solid #70B3D1 !important",
+                      }}
+                    >
+                      {index + 1}
+                    </StyledTableCell>
+                    {columns &&
+                      columns?.map((column, columnIndex) => {
+                        const value = row[column.id] || "";
+                        return (
+                          <StyledTableCell
+                            key={columnIndex}
+                            classes={{ root: classes.tableHeader }}
+                          >
+                            {column?.format && typeof value === "number"
+                              ? column?.format(value)
+                              : value}
+                            {/* Add icons to the data cells */}
+                            {column?.actions && (
+                              <Box sx={{ display: "flex" }}>
+                                {column?.actions.includes("edit") && (
+                                  //   <ColorIcon
+                                  //     sx={{
+                                  //       display: "flex",
+                                  //       flexDirection: "column",
+                                  //     }}
+                                  //   >
+                                  //     <EditIcon
+                                  //         size="small"
+                                  //         onClick={(e) => {
+                                  //           handleEditRow(e, row);
+                                  //           setUniqueID(row.uniqueID);
+                                  //         }}
+                                  //       />
 
-                                  <ViewDetailsModal
-                                    show={modalOpen}
-                                    close={handleModalClose}
+                                  //      <Typography
+                                  //       sx={{ fontSize: 9, fontWeight: 800 }}
+                                  //     >
+                                  //       Edit Details
+                                  //     </Typography>
+                                  //  </ColorIcon>
+
+                                  <MenuComponent
+                                    handleEdit={(e) => {
+                                      handleEditRow(e, row);
+                                      setUniqueID(row.uniqueID);
+                                    }}
+                                    handleEditProvisions={changeProvisions}
+                                    handleRentDue={() => {
+                                      handleRentDueDetails();
+                                      setUniqueID(row.uniqueID);
+                                    }}
+                                    openRentDueModal={openRentDueModal}
+                                    setOpenRentDueModal={setOpenRentDueModal}
                                     selectedItem={selectedItem}
+                                    branchIDforDue={branchIDforDue}
+                                    uniqueID={uniqueID}
                                   />
+                                )}
 
-                                  {column?.actions.includes("viewBranch") && (
-                                    <ColorIcon
-                                      sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
+                                {column?.actions.includes("viewBank") && (
+                                  <ColorIcon
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                    }}
+                                  >
+                                    <AccountBalanceWalletIcon
+                                      onClick={() => {
+                                        handleModalOpen(row);
                                       }}
+                                    />
+                                    <Typography
+                                      sx={{ fontSize: 8, fontWeight: 800 }}
                                     >
-                                      <ApartmentIcon
-                                        size="small"
-                                        onClick={() =>
-                                          handleBranchModalOpen(row)
-                                        }
-                                      />
+                                      Bank Details
+                                    </Typography>
+                                  </ColorIcon>
+                                )}
 
-                                      <Typography
-                                        sx={{ fontSize: 8, fontWeight: 800 }}
-                                      >
-                                        Branch Details
-                                      </Typography>
-                                    </ColorIcon>
-                                  )}
+                                <ViewDetailsModal
+                                  show={modalOpen}
+                                  close={handleModalClose}
+                                  selectedItem={selectedItem}
+                                />
 
-                                  <BranchDetailsModal
-                                    show={branchModal}
-                                    close={() => setBranchModal(false)}
-                                    selectedItem={selectedItem}
-                                  />
+                                {column?.actions.includes("viewBranch") && (
+                                  <ColorIcon
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                    }}
+                                  >
+                                    <ApartmentIcon
+                                      size="small"
+                                      onClick={() => handleBranchModalOpen(row)}
+                                    />
 
-                                  {column?.actions.includes(
-                                    "viewAgreement"
-                                  ) && (
-                                    <ColorIcon
-                                      sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                      }}
+                                    <Typography
+                                      sx={{ fontSize: 8, fontWeight: 800 }}
                                     >
-                                      <HandshakeIcon
-                                        size="small"
-                                        onClick={() =>
-                                          handleCustomInputModalOpen(row)
-                                        }
-                                      />
+                                      Branch Details
+                                    </Typography>
+                                  </ColorIcon>
+                                )}
 
-                                      <Typography
-                                        sx={{ fontSize: 8, fontWeight: 800 }}
-                                      >
-                                        Agreement Details
-                                      </Typography>
-                                    </ColorIcon>
-                                  )}
-                                </Box>
-                              )}
+                                <BranchDetailsModal
+                                  show={branchModal}
+                                  close={() => setBranchModal(false)}
+                                  selectedItem={selectedItem}
+                                />
 
-                              <CustomModal
-                                show={customInputModalOpen}
-                                close={handleCustomInputModalClose}
-                                selectedItem={selectedItem}
-                              />
-                              {/* 
+                                {column?.actions.includes("viewAgreement") && (
+                                  <ColorIcon
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                    }}
+                                  >
+                                    <HandshakeIcon
+                                      size="small"
+                                      onClick={() =>
+                                        handleCustomInputModalOpen(row)
+                                      }
+                                    />
+
+                                    <Typography
+                                      sx={{ fontSize: 8, fontWeight: 800 }}
+                                    >
+                                      Agreement Details
+                                    </Typography>
+                                  </ColorIcon>
+                                )}
+                              </Box>
+                            )}
+
+                            <CustomModal
+                              show={customInputModalOpen}
+                              close={handleCustomInputModalClose}
+                              selectedItem={selectedItem}
+                            />
+                            {/* 
                             {column?.actions?.includes(
                               "viewUploadedAgreement"
                             ) && (
@@ -408,15 +434,14 @@ const TableComponent = ({
                               show={agreementModal}
                               close={() => setAgreementModal(false)}
                             /> */}
-                            </StyledTableCell>
-                          );
-                        })}
-                    </StyledTableRow>
-                  ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-    
+                          </StyledTableCell>
+                        );
+                      })}
+                  </StyledTableRow>
+                ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       <TablePagination
         rowsPerPageOptions={[10, 15, 100]}

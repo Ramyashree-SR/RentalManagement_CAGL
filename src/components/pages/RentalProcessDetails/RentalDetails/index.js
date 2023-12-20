@@ -40,6 +40,7 @@ import {
 } from "../../../services/FilterApis";
 import { makeStyles } from "@mui/styles";
 import { blue, green } from "@mui/material/colors";
+import { getRentDueDetails } from "../../../services/RentDueApi";
 
 const useStyles = makeStyles({
   customTextField: {
@@ -102,8 +103,9 @@ const RentalDetails = (props) => {
   const [openProvisionsMoadal, setOpenProvisionsMoadal] = useState(false);
   const [fullscreen, setFullscreen] = useState(true);
   const [uniqueID, setUniqueID] = useState(null);
+  // console.log(uniqueID, "uniqueID");
   const [rentContractDetails, setRentContractDetails] = useState([]);
-
+  // console.log(rentContractDetails, "rentContractDetails");
   // const [stateFilter, setStateFilter] = useState(
   //   ...new Set(rentContractDetails?.map((item) => item.lesseeState))
   // );
@@ -121,6 +123,8 @@ const RentalDetails = (props) => {
   const [activationStatusFilter, setActivationStatusFilter] = useState("All");
   const [branchFilter, setBranchFilter] = useState("");
   const [branchNameFilter, setBranchNameFilter] = useState("");
+  const [branchIDforDue, setbranchIDforDue] = useState("");
+  // console.log(branchIDforDue, "branchIDforDue");
 
   const handleStateChange = (value) => {
     // console.log(value.target.outerText, "newValue");
@@ -232,6 +236,7 @@ const RentalDetails = (props) => {
     if (data?.data) {
       let getData = data?.data;
       setRentContractDetails(getData);
+      setbranchIDforDue(getData);
     }
   };
 
@@ -251,6 +256,7 @@ const RentalDetails = (props) => {
       ...filterBranch,
       branchID: value.target.outerText,
     });
+    setbranchIDforDue(value.target.outerText);
     getAllContractDetails(value.target.outerText);
   };
 
@@ -293,6 +299,7 @@ const RentalDetails = (props) => {
     setActivationStatusFilter(e.target.value);
   };
 
+  
   return (
     <Box>
       <Box
@@ -437,32 +444,34 @@ const RentalDetails = (props) => {
                   Menu
                 </Typography>
               </IconButton>
-              <PaymentReport
+              {/* <PaymentReport
                 show={openPaymentModal}
                 close={() => setOpenPaymentModal(false)}
                 fullscreen={fullscreen}
-              />
+              /> */}
 
-              <RentActual
+              {/* <RentActual
                 show={openRentActualModal}
                 close={() => setOpenRentActualModal(false)}
                 fullscreen={fullscreen}
-              />
-              <RentDue
+              /> */}
+              {/* <RentDue
                 show={openRentDueModal}
                 close={() => setOpenRentDueModal(false)}
                 fullscreen={fullscreen}
-              />
-              <Provisions
+                branchIDforDue={branchIDforDue}
+                rentDueDetails={rentDueDetails}
+              /> */}
+              {/* <Provisions
                 show={openProvisionsMoadal}
                 close={() => setOpenProvisionsMoadal(false)}
                 fullscreen={fullscreen}
-              />
-              <Variance
+              /> */}
+              {/* <Variance
                 show={openVarianceModal}
                 close={() => setOpenVarianceModal(false)}
                 fullscreen={fullscreen}
-              />
+              /> */}
             </Box>
           </Box>
         </Box>
@@ -731,6 +740,7 @@ const RentalDetails = (props) => {
           setOpenLessorModal={setOpenLessorModal}
           modalType={modalType}
           setUniqueID={setUniqueID}
+          uniqueID={uniqueID}
           setModalType={setModalType}
           EditLessorData={EditLessorData}
           searchText={searchText}
@@ -741,6 +751,10 @@ const RentalDetails = (props) => {
           handleActivationStatusFilterChange={
             handleActivationStatusFilterChange
           }
+          openRentDueModal={openRentDueModal}
+          setOpenProvisionsMoadal={setOpenProvisionsMoadal}
+          setOpenRentDueModal={setOpenRentDueModal}
+          branchIDforDue={branchIDforDue}
         />
       </Box>
     </Box>

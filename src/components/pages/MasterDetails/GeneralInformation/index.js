@@ -85,12 +85,10 @@ const GeneralInformation = ({
     payload.append("appid", "3");
     payload.append("doctype", "ElectricityBillFile");
     const { data, errRes } = await uploadFileApi(payload);
-    // console.log(data, "data");
+    console.log(data, "data");
     if (data) {
-      if (data) {
-        setactive(data?.data);
-        // addToast("File Uploaded", { appearance: "success" });
-      }
+      setactive(data);
+      // addToast("File Uploaded", { appearance: "success" });
     } else if (errRes) {
       // addToast(errRes, { appearance: "error" });
     }
@@ -617,6 +615,16 @@ const GeneralInformation = ({
                       Upload
                     </Typography>
                   </ColorIcon>
+                  <a
+                    href={`http://dedupeuat.grameenkoota.in:8080/APIFile/downloadFile/231219124408128`}
+                    target="_blank"
+                    rel="noreferrer"
+                    // onClick={() =>
+                    //   handlePanCardFileView(mainDealerId, "PanCardDetails")
+                    // }
+                  >
+                    Download
+                  </a>
                 </form>
               </Grid>
             </Grid>

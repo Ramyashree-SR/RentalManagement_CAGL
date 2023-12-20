@@ -7,7 +7,7 @@ const columns = [
   {
     id: "agreementActivationStatus",
     label: "Activation Status",
-    minWidth: 70,
+    minWidth: 100,
     align: "center",
   },
   { id: "branchID", label: "Offical ID", minWidth: 70, align: "center" },

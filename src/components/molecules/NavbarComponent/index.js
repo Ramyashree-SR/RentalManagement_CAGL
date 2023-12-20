@@ -20,37 +20,39 @@ const NavbarComponent = ({ formLabel = "" }) => {
         width: "100%",
         height: "12%",
         borderRadius: "0px",
-        // boxShadow: "0px 1px 17px  #ccc",
         position: "fixed",
         top: "0",
         zIndex: "200",
       }}
+      
     >
-      <Box className="d-flex align-items-center justify-content-between ">
-        <Box sx={{}}>
+      <Grid className="d-flex align-items-center justify-content-between"  >
+        <Grid >
           <img
             src="./assets/cagllogo1.png"
             width={120}
             alt="logo"
             style={{ marginLeft: 20 }}
+           
           />
-        </Box>
-        <Box
+        </Grid>
+        <Grid
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             mr: 3,
           }}
+         
         >
           <Typography
             sx={{ fontSize: 30, fontFamily: "sans-serif", fontWeight: "bold" }}
           >
             {formLabel}
           </Typography>
-        </Box>
+        </Grid>
 
-         <Box
+         {/* <Box
           sx={{
             display: "flex",
             alignItems: "center",
@@ -58,8 +60,8 @@ const NavbarComponent = ({ formLabel = "" }) => {
             mr: 3,
             mt:2
           }}
-        ></Box> 
-      </Box>
+        ></Box>  */}
+      </Grid>
     </Paper>
   );
 };
