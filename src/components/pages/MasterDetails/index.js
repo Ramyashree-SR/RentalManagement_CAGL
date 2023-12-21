@@ -1289,7 +1289,7 @@ const MasterDetails = (props) => {
       // agreementSignDate: allNewContractDetails?.agreementSignDate,
       agreementTenure: allNewContractDetails?.agreementTenure,
       agreementActivationStatus:
-        allNewContractDetails?.agreementActivationStatus,
+        allNewContractDetails?.agreementActivationStatus?.label,
       agreementStartDate: formatDateToBackEndReqirement(
         allNewContractDetails?.agreementStartDate
       ),
@@ -1475,7 +1475,6 @@ const MasterDetails = (props) => {
         appearance: "success",
       });
       props.close();
-     
     } else if (errRes) {
       addToast(errRes, { appearance: "error" });
       props.close();

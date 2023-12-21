@@ -100,12 +100,13 @@ const RentalDetails = (props) => {
   const [openRentActualModal, setOpenRentActualModal] = useState(false);
   const [openVarianceModal, setOpenVarianceModal] = useState(false);
   const [openRentDueModal, setOpenRentDueModal] = useState(false);
-  const [openProvisionsMoadal, setOpenProvisionsMoadal] = useState(false);
+  const [openRentDueDataModal, setOpenRentDueDataModal] = useState(false);
+  
   const [fullscreen, setFullscreen] = useState(true);
   const [uniqueID, setUniqueID] = useState(null);
   // console.log(uniqueID, "uniqueID");
   const [rentContractDetails, setRentContractDetails] = useState([]);
-  // console.log(rentContractDetails, "rentContractDetails");
+  console.log(rentContractDetails, "rentContractDetails");
   // const [stateFilter, setStateFilter] = useState(
   //   ...new Set(rentContractDetails?.map((item) => item.lesseeState))
   // );
@@ -125,6 +126,7 @@ const RentalDetails = (props) => {
   const [branchNameFilter, setBranchNameFilter] = useState("");
   const [branchIDforDue, setbranchIDforDue] = useState("");
   // console.log(branchIDforDue, "branchIDforDue");
+  const [rentDueDataByBranchId, setRentDueDataByBranchId] = useState([]);
 
   const handleStateChange = (value) => {
     // console.log(value.target.outerText, "newValue");
@@ -258,6 +260,9 @@ const RentalDetails = (props) => {
     });
     setbranchIDforDue(value.target.outerText);
     getAllContractDetails(value.target.outerText);
+    if (value.target.outerText) {
+      getAllRentDueDetailsByBranchID(value.target.outerText);
+    }
   };
 
   const getBranchId = async () => {
@@ -299,7 +304,22 @@ const RentalDetails = (props) => {
     setActivationStatusFilter(e.target.value);
   };
 
-  
+  useEffect(() => {
+    getAllRentDueDetailsByBranchID();
+  }, [branchIDforDue]);
+
+  const getAllRentDueDetailsByBranchID = async () => {
+    const { data } = await getRentDueDetails(branchIDforDue);
+    if (data) {
+      if (data) {
+        let getData = data?.data;
+        setRentDueDataByBranchId(getData);
+      } else {
+        setRentDueDataByBranchId([]);
+      }
+    }
+  };
+
   return (
     <Box>
       <Box
@@ -455,13 +475,16 @@ const RentalDetails = (props) => {
                 close={() => setOpenRentActualModal(false)}
                 fullscreen={fullscreen}
               /> */}
-              {/* <RentDue
-                show={openRentDueModal}
-                close={() => setOpenRentDueModal(false)}
+              <RentDue
+                show={openRentDueDataModal}
+                close={() => setOpenRentDueDataModal(false)}
                 fullscreen={fullscreen}
                 branchIDforDue={branchIDforDue}
-                rentDueDetails={rentDueDetails}
-              /> */}
+                rentDueDataByBranchId={rentDueDataByBranchId}
+                getAllRentDueDetailsByBranchID={getAllRentDueDetailsByBranchID}
+                branchFilter={branchFilter}
+                handleBranchID={handleBranchID}
+              />
               {/* <Provisions
                 show={openProvisionsMoadal}
                 close={() => setOpenProvisionsMoadal(false)}
@@ -674,7 +697,7 @@ const RentalDetails = (props) => {
         <MenuItem
           onClick={() => {
             handleClose();
-            setOpenRentDueModal(true);
+            setOpenRentDueDataModal(true);
           }}
         >
           Rent Due
@@ -698,14 +721,14 @@ const RentalDetails = (props) => {
           Rent Actual
         </MenuItem>
 
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             setOpenProvisionsMoadal(true);
             handleClose();
           }}
         >
           Provisions
-        </MenuItem>
+        </MenuItem> */}
 
         <MenuItem
           onClick={() => {
@@ -752,9 +775,10 @@ const RentalDetails = (props) => {
             handleActivationStatusFilterChange
           }
           openRentDueModal={openRentDueModal}
-          setOpenProvisionsMoadal={setOpenProvisionsMoadal}
+          // setOpenProvisionsMoadal={setOpenProvisionsMoadal}
           setOpenRentDueModal={setOpenRentDueModal}
           branchIDforDue={branchIDforDue}
+          rentContractDetails={rentContractDetails?.rentStartDate}
         />
       </Box>
     </Box>

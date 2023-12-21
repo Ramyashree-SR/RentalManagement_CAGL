@@ -18,10 +18,12 @@ import { blue, deepOrange, green, pink, red } from "@mui/material/colors";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import PanToolIcon from "@mui/icons-material/PanTool";
 import HolidayVillageIcon from "@mui/icons-material/HolidayVillage";
-import RentDue from "../../pages/RentalProcessDetails/RentalDetails/RentDue";
+
 import { useState } from "react";
 import { useEffect } from "react";
 import { getRentDueDetails } from "../../services/RentDueApi";
+import RentDueDetails from "../../pages/RentalProcessDetails/RentalDetails/RentDueDetails";
+import Provisions from "../../pages/RentalProcessDetails/RentalDetails/Provisions";
 
 const ColorIcon = styled(Icon)(({ theme }) => ({
   //   color: theme.palette?.getContrastText(pink[900]),
@@ -38,9 +40,12 @@ export default function MenuComponent({
   setOpenRentDueModal,
   uniqueID,
   branchIDforDue,
+  rentContractDetails
 }) {
   const [fullscreen, setFullscreen] = useState(true);
   const [rentDueDetails, setRentDueDetails] = useState([]);
+
+  const [openProvisionsMoadal, setOpenProvisionsMoadal] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -50,9 +55,9 @@ export default function MenuComponent({
     setAnchorEl(null);
   };
 
-    useEffect(() => {
-      getAllRentDueDetailsByBranchID();
-    }, [uniqueID]);
+  useEffect(() => {
+    getAllRentDueDetailsByBranchID();
+  }, [uniqueID]);
 
   const getAllRentDueDetailsByBranchID = async () => {
     const { data } = await getRentDueDetails(uniqueID);
@@ -158,13 +163,18 @@ export default function MenuComponent({
           &nbsp; Provisions
         </MenuItem>
       </Menu>
-      <RentDue
+      <RentDueDetails
         show={openRentDueModal}
         close={() => setOpenRentDueModal(false)}
         fullscreen={fullscreen}
         branchIDforDue={branchIDforDue}
         rentDueDetails={rentDueDetails}
-        // uniqueID={uniqueID}
+        rentContractDetails={rentContractDetails}
+      />
+      <Provisions
+        show={openProvisionsMoadal}
+        close={() => setOpenProvisionsMoadal(false)}
+        fullscreen={fullscreen}
       />
     </React.Fragment>
   );

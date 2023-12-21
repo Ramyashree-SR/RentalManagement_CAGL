@@ -277,7 +277,7 @@ const AgreementDetails = ({
       ? (annualRent * (allNewContractDetails?.tds / 100)).toFixed(2)
       : "";
   };
-  console.log();
+  
 
   const calculateGST = (annualRent) => {
     return annualRent * (allNewContractDetails?.gst / 100).toFixed(2);

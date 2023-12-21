@@ -41,7 +41,7 @@ const commonStyles = {
 };
 const DropDownComponent = ({
   id = "simple-drop-down",
-  value = null,
+  value = "",
   inputValue,
   options = [],
   fullWidth = false,
@@ -73,12 +73,13 @@ const DropDownComponent = ({
           <Typography
             sx={{ color: "#4a4a4a", fontSize: "14px", fontWeight: "400" }}
           >
-            {option.label}
+            {option && option?.label ? option?.label : ""}
           </Typography>
         </Box>
       </li>
     );
   };
+  const handleOptionSelected = (option, value) => option.value === value.value;
 
   return (
     <>
@@ -115,13 +116,18 @@ const DropDownComponent = ({
           multiple={multiple}
           options={options}
           fullWidth={fullWidth}
-          getOptionLabel={option => (option.label ? option.label : option || "")}
-          isOptionEqualToValue={(option, value) =>
-            value === undefined || value === "" || option.id === value.id
+          getOptionLabel={(option) =>
+            option?.label ? option?.label : option || ""
           }
+          isOptionEqualToValue={(option, value) =>
+            value === undefined ||
+            value === "" ||
+            option?.label === value?.label
+          }
+          getOptionSelected={handleOptionSelected}
           disabled={disabled}
           renderOption={(props, option) => renderOption(props, option)}
-          renderInput={params => (
+          renderInput={(params) => (
             <TextField
               {...params}
               label={label}
@@ -132,9 +138,7 @@ const DropDownComponent = ({
               classes={{ root: classes.customTextField }}
             />
           )}
-          onChange={(_, value) => {
-            onChange(value);
-          }}
+          onChange={(_, value) => onChange(value)}
           onInputChange={(_, newvalue) => {
             onInputChange(newvalue);
           }}
@@ -204,13 +208,6 @@ const DropDownComponent = ({
 };
 
 export default DropDownComponent;
-
-
-
-
-
-
-
 
 // import Autocomplete from "@mui/material/Autocomplete";
 // import { TextField, Box, Grid, Typography } from "@mui/material";
@@ -335,7 +332,7 @@ export default DropDownComponent;
 //           isOptionEqualToValue={(option, value) =>
 //             value === undefined || value === "" || option.id === value.label
 //           }
-          
+
 //           disabled={disabled}
 //           renderOption={(props, option) => renderOption(props, option)}
 //           renderInput={(params) => (

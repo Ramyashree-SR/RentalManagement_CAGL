@@ -111,7 +111,8 @@ const TableComponent = ({
   setOpenRentDueModal,
   openRentDueModal,
   branchIDforDue,
-  uniqueID
+  uniqueID,
+  rentContractDetails
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
@@ -323,6 +324,7 @@ const TableComponent = ({
                                     selectedItem={selectedItem}
                                     branchIDforDue={branchIDforDue}
                                     uniqueID={uniqueID}
+                                    rentContractDetails={rentContractDetails}
                                   />
                                 )}
 

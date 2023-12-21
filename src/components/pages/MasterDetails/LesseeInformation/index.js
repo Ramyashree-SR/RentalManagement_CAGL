@@ -174,7 +174,6 @@ const LesseeInformation = ({
 
   const handleBranchType = (name, value) => {
     setAllNewContractDetails((prev) => ({ ...prev, [name]: value }));
-
     setSelectedBranchType(value);
     getAllBranchID(value);
     if (value !== undefined) {
@@ -215,6 +214,10 @@ const LesseeInformation = ({
   //   return baseURL + queryParams + typeParam;
   // };
 
+  useEffect(() => {
+    getAllBranchID();
+  }, []);
+
   const getAllBranchID = async (branchType) => {
     const { data } = await getBranchIDForBranchDetails(branchType?.label);
     if (data) {
@@ -252,11 +255,7 @@ const LesseeInformation = ({
                 sx={{ width: 300 }}
                 options={BranchType}
                 name="lesseeBranchType"
-                value={
-                  type === "edit"
-                    ? allNewContractDetails?.lesseeBranchType
-                    : allNewContractDetails?.lesseeBranchType || ""
-                }
+                value={allNewContractDetails?.lesseeBranchType || ""}
                 onChange={(val) => handleBranchType("lesseeBranchType", val)}
               />
             </Grid>
@@ -274,7 +273,7 @@ const LesseeInformation = ({
           type === "edit" ? (
             <Grid container spacing={2} className="px-2 py-2 mt-1">
               <Grid item className="d-flex m-2" lg={12}>
-                <Autocomplete
+                {/* <Autocomplete
                   size="small"
                   sx={{ width: 300, ml: 1, borderRadius: 10 }}
                   // defaultValue={null}
@@ -288,6 +287,14 @@ const LesseeInformation = ({
                       variant="outlined"
                     />
                   )}
+                /> */}
+                <DropDownComponent
+                  size="small"
+                  sx={{ width: 300, ml: 1, borderRadius: 10 }}
+                  options={branchData}
+                  name="branchID"
+                  value={allNewContractDetails?.branchID}
+                  onChange={(val) => handleBranchID("branchID", val)}
                 />
               </Grid>
 
