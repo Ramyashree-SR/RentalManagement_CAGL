@@ -106,7 +106,7 @@ const RentalDetails = (props) => {
   const [uniqueID, setUniqueID] = useState(null);
   // console.log(uniqueID, "uniqueID");
   const [rentContractDetails, setRentContractDetails] = useState([]);
-  console.log(rentContractDetails, "rentContractDetails");
+  // console.log(rentContractDetails, "rentContractDetails");
   // const [stateFilter, setStateFilter] = useState(
   //   ...new Set(rentContractDetails?.map((item) => item.lesseeState))
   // );
@@ -431,6 +431,9 @@ const RentalDetails = (props) => {
               getContractDetails={getContractDetails}
               fullscreen={fullscreen}
               setFullscreen={setFullscreen}
+              branchIDforDue={branchIDforDue}
+              branchFilter={branchFilter}
+              handleBranchID={handleBranchID}
               type={openEditLessorModal && modalType ? "edit" : "add"}
               disabled={openEditLessorModal ? "edit" : "add"}
               uniqueID={uniqueID}

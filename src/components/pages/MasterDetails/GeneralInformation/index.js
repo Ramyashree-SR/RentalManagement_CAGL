@@ -15,6 +15,7 @@ import UploadDocumentFile from "../../../atoms/UploadDocumentFile";
 import { uploadFileApi } from "../../../services/UploadDoucmentApi";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { deepOrange, green } from "@mui/material/colors";
+import { useToasts } from "react-toast-notifications";
 
 const ColorIcon = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(green[300]),
@@ -41,7 +42,7 @@ const GeneralInformation = ({
   EditLessorData,
 }) => {
   const [address, setAddress] = useState("");
-
+  const { addToast } = useToasts();
   const joinAddress = () => {
     // Combine the address components into a single string with proper formatting.
     const joinedAddress = `${allNewContractDetails.lessorDoorNumber}, ${allNewContractDetails.lessorFloorNumber}, ${allNewContractDetails.lessorLandMark}, ${allNewContractDetails.lessorStreet},${allNewContractDetails.lessorWardNo},
@@ -206,12 +207,22 @@ const GeneralInformation = ({
   //   window.URL.revokeObjectURL(href);
   // };
   const handleSubmit = () => {
-    // let err = handleAddRentContractInformationError();
-    // if (err) {
-    setAllNewContractDetails(allNewContractDetails, type);
-    AddAllNewRentContactInformation();
+    let err = handleAddRentContractInformationError();
+    if (err) {
+      // const isAnyFieldEmpty = Object.values(allNewContractDetails)?.some(
+      //   (value) => value === ""
+      // );
+
+      // if (isAnyFieldEmpty) {
+      //   addToast("Please fill in all the fields", {
+      //     appearance: "error",
+      //   });
+      //   return true;
+      // }
+      setAllNewContractDetails(allNewContractDetails, type);
+      AddAllNewRentContactInformation();
+    }
     close();
-    // }
   };
 
   const handleBack = () => {

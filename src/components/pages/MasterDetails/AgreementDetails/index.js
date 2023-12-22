@@ -560,7 +560,11 @@ const AgreementDetails = ({
   };
 
   const handleNext = () => {
-    onSave(allNewContractDetails, type);
+    let err=handleAddRentContractInformationError()
+    if(!err){
+      onSave(allNewContractDetails, type);
+    }
+    
   };
 
   console.log(currentRent, "Rent");

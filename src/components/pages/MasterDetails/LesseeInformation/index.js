@@ -45,18 +45,6 @@ const LesseeInformation = ({
   console.log(type, "type");
   const [selectedBranchType, setSelectedBranchType] = useState("");
 
-  const handleNext = () => {
-    const ValidateError = handleAddRentContractInformationError();
-    if (ValidateError) {
-      // setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      onSave(allNewContractDetails, type);
-    }
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
   const updateChange = (e) => {
     // console.log(e,"e");
     setAllNewContractDetails({
@@ -216,7 +204,7 @@ const LesseeInformation = ({
 
   useEffect(() => {
     getAllBranchID();
-  }, []);
+  }, [selectedBranchType?.label]);
 
   const getAllBranchID = async (branchType) => {
     const { data } = await getBranchIDForBranchDetails(branchType?.label);
@@ -239,6 +227,19 @@ const LesseeInformation = ({
         setAllNewContractDetails(data?.data || {});
       }
     }
+  };
+
+  const handleNext = () => {
+    const ValidateError = handleAddRentContractInformationError();
+    console.log("ValidateError", ValidateError);
+    if (!ValidateError) {
+      onSave(allNewContractDetails, type);
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   return (
@@ -273,11 +274,19 @@ const LesseeInformation = ({
           type === "edit" ? (
             <Grid container spacing={2} className="px-2 py-2 mt-1">
               <Grid item className="d-flex m-2" lg={12}>
-                {/* <Autocomplete
+                <Autocomplete
                   size="small"
                   sx={{ width: 300, ml: 1, borderRadius: 10 }}
                   // defaultValue={null}
                   options={branchData}
+                  getOptionLabel={(option) =>
+                    option?.label ? option?.label : option || ""
+                  }
+                  isOptionEqualToValue={(option, value) =>
+                    value === undefined ||
+                    value === "" ||
+                    option?.label === value?.label
+                  }
                   value={allNewContractDetails?.branchID}
                   onChange={handleBranchID}
                   renderInput={(params) => (
@@ -287,15 +296,15 @@ const LesseeInformation = ({
                       variant="outlined"
                     />
                   )}
-                /> */}
-                <DropDownComponent
+                />
+                {/* <DropDownComponent
                   size="small"
                   sx={{ width: 300, ml: 1, borderRadius: 10 }}
                   options={branchData}
                   name="branchID"
-                  value={allNewContractDetails?.branchID}
+                  value={allNewContractDetails?.branchID || ""}
                   onChange={(val) => handleBranchID("branchID", val)}
-                />
+                /> */}
               </Grid>
 
               <Grid item className="d-flex m-2" lg={12}>
