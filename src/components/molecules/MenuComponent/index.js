@@ -18,12 +18,15 @@ import { blue, deepOrange, green, pink, red } from "@mui/material/colors";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import PanToolIcon from "@mui/icons-material/PanTool";
 import HolidayVillageIcon from "@mui/icons-material/HolidayVillage";
-
+import EditNoteIcon from "@mui/icons-material/EditNote";
 import { useState } from "react";
 import { useEffect } from "react";
 import { getRentDueDetails } from "../../services/RentDueApi";
 import RentDueDetails from "../../pages/RentalProcessDetails/RentalDetails/RentDueDetails";
 import Provisions from "../../pages/RentalProcessDetails/RentalDetails/Provisions";
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import LockClockIcon from "@mui/icons-material/LockClock";
+import LockIcon from "@mui/icons-material/Lock";
 
 const ColorIcon = styled(Icon)(({ theme }) => ({
   //   color: theme.palette?.getContrastText(pink[900]),
@@ -40,7 +43,10 @@ export default function MenuComponent({
   setOpenRentDueModal,
   uniqueID,
   branchIDforDue,
-  rentContractDetails
+  rentContractDetails,
+  rentStartDate,
+  rentEndDate,
+  agreementTenure,
 }) {
   const [fullscreen, setFullscreen] = useState(true);
   const [rentDueDetails, setRentDueDetails] = useState([]);
@@ -136,8 +142,11 @@ export default function MenuComponent({
         transformOrigin={{ horizontal: "left", vertical: "top" }}
         anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleEdit}>
-          <HolidayVillageIcon size="small" sx={{ color: blue[900] }} />
+        <MenuItem
+          onClick={handleEdit}
+          sx={{ fontSize: 13, fontWeight: 600, color: blue[900] }}
+        >
+          <EditNoteIcon size="small" sx={{ color: blue[900] }} />
           &nbsp;Edit Contract
         </MenuItem>
 
@@ -146,20 +155,22 @@ export default function MenuComponent({
             handleRentDue();
             getAllRentDueDetailsByBranchID();
           }}
+          sx={{ fontSize: 13, fontWeight: 600, color: blue[900] }}
         >
           {/* <ListItemIcon> */}
-          <PersonAdd fontSize="small" sx={{ color: blue[900] }} />
+          <PendingActionsIcon fontSize="small" sx={{ color: blue[900] }} />
           {/* </ListItemIcon> */}
-          &nbsp;Rent Due
+          &nbsp; Rent Due
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          {/* <ListItemIcon> */}
+        {/* <MenuItem onClick={handleClose} sx={{ fontSize: 13, fontWeight: 600 }}>
           <Settings fontSize="small" sx={{ color: blue[900] }} />
-          {/* </ListItemIcon> */}
           &nbsp;Rent Actual
-        </MenuItem>
-        <MenuItem onClick={handleEditProvisions}>
-          <PanToolIcon size="small" sx={{ color: blue[900] }} />
+        </MenuItem> */}
+        <MenuItem
+          onClick={handleEditProvisions}
+          sx={{ fontSize: 13, fontWeight: 600, color: blue[900] }}
+        >
+          <LockIcon fontSize="small" sx={{ color: blue[900] }} />
           &nbsp; Provisions
         </MenuItem>
       </Menu>
@@ -170,6 +181,10 @@ export default function MenuComponent({
         branchIDforDue={branchIDforDue}
         rentDueDetails={rentDueDetails}
         rentContractDetails={rentContractDetails}
+        rentStartDate={rentStartDate}
+        rentEndDate={rentEndDate}
+        uniqueID={uniqueID}
+        agreementTenure={agreementTenure}
       />
       <Provisions
         show={openProvisionsMoadal}

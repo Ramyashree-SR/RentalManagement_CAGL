@@ -207,22 +207,19 @@ const GeneralInformation = ({
   //   window.URL.revokeObjectURL(href);
   // };
   const handleSubmit = () => {
-    let err = handleAddRentContractInformationError();
-    if (err) {
-      // const isAnyFieldEmpty = Object.values(allNewContractDetails)?.some(
-      //   (value) => value === ""
-      // );
-
-      // if (isAnyFieldEmpty) {
-      //   addToast("Please fill in all the fields", {
-      //     appearance: "error",
-      //   });
-      //   return true;
-      // }
+    const ValidateError = handleAddRentContractInformationError();
+    // console.log("ValidateError", ValidateError);
+    // Check for empty fields
+    const isEmptyField = Object.values(allNewContractDetails).some(
+      (value) => value === ""
+    );
+    if (!ValidateError && !isEmptyField) {
+      // console.log("ValidateError", ValidateError);
       setAllNewContractDetails(allNewContractDetails, type);
       AddAllNewRentContactInformation();
+      close();
     }
-    close();
+    
   };
 
   const handleBack = () => {

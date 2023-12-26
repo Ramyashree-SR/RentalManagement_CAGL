@@ -14,11 +14,19 @@ import {
   TablePagination,
   IconButton,
   Typography,
+  Grid,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import ApartmentIcon from "@mui/icons-material/Apartment";
-import { blue, deepOrange, green, pink, yellow } from "@mui/material/colors";
+import {
+  blue,
+  deepOrange,
+  green,
+  pink,
+  red,
+  yellow,
+} from "@mui/material/colors";
 import CustomModal from "../../pages/RentalProcessDetails/RentalDetails/CustomModal";
 import ViewDetailsModal from "../../pages/RentalProcessDetails/RentalDetails/ViewDetailsModal";
 import EditIcon from "@mui/icons-material/Edit";
@@ -31,20 +39,22 @@ import MenuComponent from "../../molecules/MenuComponent";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.root}`]: {
-    padding: "5px",
+   padding:"5px",
+   width:8
   },
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme?.palette?.info.dark,
     color: theme.palette?.common?.white,
     fontSize: 12,
     fontWeight: 650,
-    padding: "3px",
+   
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 11,
     fontWeight: 700,
     backgroundColor: "#FFFFFF", //#CFE8F7, #C5EBF6 ,#D5F7DC
     fontFamily: "sans-serif",
+    
   },
 }));
 
@@ -83,12 +93,17 @@ const useStyles = makeStyles({
     fontSize: "12px !important",
     borderBottom: "1px solid #70B3D1 !important",
     borderRight: "1px solid #70B3D1  !!!important",
+    // minWidth: "10px",
+    // padding: "4px -1px",
   },
   tableRow: {
     border: "none !important",
     color: "#373737",
+    // color:red[900],
     fontWeight: "500",
     fontSize: "12px",
+    // minWidth: "10px",
+    // padding: "4px -1px",
   },
 });
 
@@ -112,7 +127,13 @@ const TableComponent = ({
   openRentDueModal,
   branchIDforDue,
   uniqueID,
-  rentContractDetails
+  rentContractDetails,
+  rentEndDate,
+  rentStartDate,
+  agreementTenure,
+  setRentStartDate,
+  setAgreementTenure,
+  setRentEndDate,
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
@@ -206,19 +227,19 @@ const TableComponent = ({
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <StyledTableRow>
-              <TableCell
+              <StyledTableCell
                 sx={{
                   border: "none !important",
                   color: "#FFFFFF",
                   fontWeight: "500",
-                  fontSize: "12px",
+                  fontSize: "10px",
                   borderRight: "1px solid #000000 !important",
                   backgroundColor: "#01579b",
                   // backgroundColor: blue[900],
                 }}
               >
                 Sl No.
-              </TableCell>
+              </StyledTableCell>
               {columns &&
                 columns?.map((column) => (
                   // console.log(column,"column");
@@ -228,11 +249,12 @@ const TableComponent = ({
                       <select
                         value={activationStatusFilter || "All"}
                         onChange={handleActivationStatusFilterChange}
+                       
                       >
                         {/* <option value=""></option> */}
-                        <option value="All">All</option>
+                        <option value="All" >All</option>
                         {filterOptions?.map((option) => (
-                          <option key={option} value={option}>
+                          <option key={option} value={option}  >
                             {option}
                           </option>
                         ))}
@@ -286,7 +308,7 @@ const TableComponent = ({
                               : value}
                             {/* Add icons to the data cells */}
                             {column?.actions && (
-                              <Box sx={{ display: "flex" }}>
+                              <Box>
                                 {column?.actions.includes("edit") && (
                                   //   <ColorIcon
                                   //     sx={{
@@ -318,12 +340,18 @@ const TableComponent = ({
                                     handleRentDue={() => {
                                       handleRentDueDetails();
                                       setUniqueID(row.uniqueID);
+                                      setAgreementTenure(row.agreementTenure);
+                                      setRentStartDate(row.rentStartDate);
+                                      setRentEndDate(row.rentEndDate);
                                     }}
                                     openRentDueModal={openRentDueModal}
                                     setOpenRentDueModal={setOpenRentDueModal}
                                     selectedItem={selectedItem}
                                     branchIDforDue={branchIDforDue}
                                     uniqueID={uniqueID}
+                                    rentStartDate={rentStartDate}
+                                    rentEndDate={rentEndDate}
+                                    agreementTenure={agreementTenure}
                                     rentContractDetails={rentContractDetails}
                                   />
                                 )}
@@ -333,6 +361,8 @@ const TableComponent = ({
                                     sx={{
                                       display: "flex",
                                       flexDirection: "column",
+                                      minWidth: "5px",
+                                      padding: "1px -1px",
                                     }}
                                   >
                                     <AccountBalanceWalletIcon
@@ -359,6 +389,8 @@ const TableComponent = ({
                                     sx={{
                                       display: "flex",
                                       flexDirection: "column",
+                                      minWidth: "2px",
+                                      padding: "-1px -1px",
                                     }}
                                   >
                                     <ApartmentIcon
@@ -385,6 +417,8 @@ const TableComponent = ({
                                     sx={{
                                       display: "flex",
                                       flexDirection: "column",
+                                      minWidth: "5px",
+                                      padding: "1px -1px",
                                     }}
                                   >
                                     <HandshakeIcon

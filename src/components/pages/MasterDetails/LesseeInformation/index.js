@@ -231,10 +231,14 @@ const LesseeInformation = ({
 
   const handleNext = () => {
     const ValidateError = handleAddRentContractInformationError();
-    console.log("ValidateError", ValidateError);
-    if (!ValidateError) {
+    // console.log("ValidateError", ValidateError);
+    // Check for empty fields
+    const isEmptyField = Object.values(allNewContractDetails).some(
+      (value) => value === ""
+    );
+    if (!ValidateError && !isEmptyField) {
+      // console.log("ValidateError", ValidateError);
       onSave(allNewContractDetails, type);
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
   };
 

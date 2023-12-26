@@ -101,12 +101,12 @@ const RentalDetails = (props) => {
   const [openVarianceModal, setOpenVarianceModal] = useState(false);
   const [openRentDueModal, setOpenRentDueModal] = useState(false);
   const [openRentDueDataModal, setOpenRentDueDataModal] = useState(false);
-  
+
   const [fullscreen, setFullscreen] = useState(true);
   const [uniqueID, setUniqueID] = useState(null);
   // console.log(uniqueID, "uniqueID");
   const [rentContractDetails, setRentContractDetails] = useState([]);
-  // console.log(rentContractDetails, "rentContractDetails");
+  console.log(rentContractDetails, "rentContractDetails");
   // const [stateFilter, setStateFilter] = useState(
   //   ...new Set(rentContractDetails?.map((item) => item.lesseeState))
   // );
@@ -127,13 +127,21 @@ const RentalDetails = (props) => {
   const [branchIDforDue, setbranchIDforDue] = useState("");
   // console.log(branchIDforDue, "branchIDforDue");
   const [rentDueDataByBranchId, setRentDueDataByBranchId] = useState([]);
+  // const [rentDetailsForDue, setrentDetailsForDue] = useState([]);
+  // console.log(rentDetailsForDue, "rentDetailsForDue");
 
+  const [rentStartDate,setRentStartDate ] = useState(null)
+  const [rentEndDate, setRentEndDate] = useState(null)
+  const [agreementTenure, setAgreementTenure] = useState(null)
+
+  // const [rentstartDate, setRentstartDate] = useState("")
   const handleStateChange = (value) => {
     // console.log(value.target.outerText, "newValue");
     setFilterState({
       ...filterState,
       lesseeState: value.target.outerText,
     });
+
     getBranchDistrictByState(value.target.outerText);
     getContractDetails(value.target.outerText);
   };
@@ -239,6 +247,7 @@ const RentalDetails = (props) => {
       let getData = data?.data;
       setRentContractDetails(getData);
       setbranchIDforDue(getData);
+      // setrentDetailsForDue(getData);
     }
   };
 
@@ -310,10 +319,11 @@ const RentalDetails = (props) => {
 
   const getAllRentDueDetailsByBranchID = async () => {
     const { data } = await getRentDueDetails(branchIDforDue);
+    
     if (data) {
       if (data) {
         let getData = data?.data;
-        setRentDueDataByBranchId(getData);
+        setRentDueDataByBranchId({getData});
       } else {
         setRentDueDataByBranchId([]);
       }
@@ -518,7 +528,7 @@ const RentalDetails = (props) => {
             size="small"
             sx={{
               // background: "#E4E7EB",
-              background: "#D5F7DC ", //"#4AB212"
+              background: "#C5EBF6 ", //"#4AB212"
               borderRadius: "100px",
               width: 210,
 
@@ -564,7 +574,7 @@ const RentalDetails = (props) => {
             sx={{
               borderRadius: "100px",
               // background: "#E4E7EB",
-              background: "#D5F7DC   ",
+              background: "#C5EBF6 ",
               color: "#ffffff",
               "& .MuiOutlinedInput-root:hover": {
                 "& > fieldset": {
@@ -608,7 +618,7 @@ const RentalDetails = (props) => {
             size="small"
             sx={{
               // backgroundColor: "#FAFAFA",
-              background: "#D5F7DC ", //#C5EBF6
+              background: "#C5EBF6 ", //#C5EBF6
               borderRadius: "100px",
               "& .MuiOutlinedInput-root:hover": {
                 "& > fieldset": {
@@ -650,7 +660,7 @@ const RentalDetails = (props) => {
             // sx={{ width: 200, background: "#E4E7EB" }}
             sx={{
               // backgroundColor: "#FAFAFA",
-              background: "#D5F7DC",
+              background: "#C5EBF6", //background: "#D5F7DC",
               borderRadius: "100px",
               "& .MuiOutlinedInput-root:hover": {
                 "& > fieldset": {
@@ -703,7 +713,7 @@ const RentalDetails = (props) => {
             setOpenRentDueDataModal(true);
           }}
         >
-          Rent Due
+          Branch Rent Due
         </MenuItem>
 
         <MenuItem
@@ -743,7 +753,7 @@ const RentalDetails = (props) => {
         </MenuItem>
       </Menu>
 
-      {}
+   
       <Box
         sm={12}
         xs={12}
@@ -781,7 +791,13 @@ const RentalDetails = (props) => {
           // setOpenProvisionsMoadal={setOpenProvisionsMoadal}
           setOpenRentDueModal={setOpenRentDueModal}
           branchIDforDue={branchIDforDue}
-          rentContractDetails={rentContractDetails?.rentStartDate}
+          // rentContractDetails={rentContractDetails.rentStartDate}
+          rentStartDate={rentStartDate}
+          setRentStartDate={setRentStartDate}
+          rentEndDate={rentEndDate}
+          setRentEndDate={setRentEndDate}
+          agreementTenure={agreementTenure}
+          setAgreementTenure={setAgreementTenure}
         />
       </Box>
     </Box>

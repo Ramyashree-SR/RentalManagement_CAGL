@@ -8,7 +8,15 @@ import { Typography } from "antd";
 
 const RentDueDetails = (props) => {
   // const [rentDueDetails, setRentDueDetails] = useState([]);
-  const { branchIDforDue, rentDueDetails,rentContractDetails } = props;
+  const {
+    branchIDforDue,
+    rentDueDetails,
+    rentContractDetails,
+    rentStartDate,
+    rentEndDate,
+    agreementTenure,
+    uniqueID
+  } = props;
   console.log(props, "props");
   const userData = [
     { id: 1, col1: "1", col2: "3/16", col3: "open", col4: "Branch" },
@@ -54,17 +62,18 @@ const RentDueDetails = (props) => {
               <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
                 Branch ID : {branchIDforDue}
               </Typography>
-
               <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Rent Start Date : {rentContractDetails}
+                Rent Start Date : {rentStartDate}
+              </Typography>
+              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
+                Rent End Date : {rentEndDate}
+              </Typography>
+              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
+                Tenure : {agreementTenure}
               </Typography>
 
               <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Rent End Date : {branchIDforDue}
-              </Typography>
-
-              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Tenure : {branchIDforDue}
+                Contract ID : {uniqueID}
               </Typography>
             </Grid>
             <ReusableTable data={rentDueDetails} columns={rentDueData} />

@@ -1,16 +1,23 @@
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import MapsHomeWorkRoundedIcon from "@mui/icons-material/MapsHomeWorkRounded";
+import { green, red } from "@mui/material/colors";
 
 const columns = [
-  // { id: "1", label: "SLNO.", minWidth:10, align: "center" },
+  {
+    id: "uniqueID",
+    label: "ID.",
+    // minWidth: 70,
+    align: "center",
+    // backgroundColor: red[900],
+  },
   { id: "lesseeBranchType", label: "Type", minWidth: 70, align: "center" },
   {
     id: "agreementActivationStatus",
     label: "Activation Status",
-    minWidth: 100,
+    // minWidth:120,
     align: "center",
   },
-  { id: "branchID", label: "Offical ID", minWidth: 70, align: "center" },
+  { id: "branchID", label: "Offical ID", align: "center" },
   {
     id: "lesseeBranchName",
     label: "Office Name",
@@ -107,7 +114,7 @@ const columns = [
   {
     id: "edit",
     label: "",
-    width: 100,
+    minWidth: 10,
     icon: null,
     actions: ["edit"],
     align: "center",
@@ -118,7 +125,8 @@ const columns = [
   {
     id: "viewBank",
     label: "",
-    width: 100,
+    minWidth: -10,
+
     icon: null,
     actions: ["viewBank"],
     align: "center",
@@ -129,7 +137,7 @@ const columns = [
   {
     id: "viewBranch",
     label: "Actions",
-    minWidth: 70,
+    minWidth: -10,
     align: "center",
     icon: null,
     actions: ["viewBranch"],
@@ -137,7 +145,7 @@ const columns = [
   {
     id: "viewAgreement",
     label: "",
-    minWidth: 70,
+    minWidth: -10,
     align: "center",
     icon: null,
     actions: ["viewAgreement"],

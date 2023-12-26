@@ -54,7 +54,7 @@ const AgreementDetails = ({
   const [tenure, setTenure] = useState(allNewContractDetails.renewalTenure);
 
   const [currentRent, setCurrentRent] = useState(
-    allNewContractDetails?.rentAmount
+    allNewContractDetails?.monthlyRent
   );
 
   // const [ifscCodes, setIFSCCodes] = useState(Array(recipientCount).fill(""));
@@ -197,7 +197,7 @@ const AgreementDetails = ({
     // Assuming e.target.name is 'tdsRate' for setTdsRate
     if (name === "tds") {
       // If currentRent is greater than 20000, update tdsRate and other details
-      if (parseInt(allNewContractDetails?.rentAmount) > 20000) {
+      if (parseInt(allNewContractDetails?.monthlyRent) > 20000) {
         setAllNewContractDetails((prevDetails) => ({
           ...prevDetails,
           tds: value,
@@ -277,7 +277,6 @@ const AgreementDetails = ({
       ? (annualRent * (allNewContractDetails?.tds / 100)).toFixed(2)
       : "";
   };
-  
 
   const calculateGST = (annualRent) => {
     return annualRent * (allNewContractDetails?.gst / 100).toFixed(2);
@@ -285,7 +284,7 @@ const AgreementDetails = ({
   const escalationRate = 0.05; // 5% annual escalation
   const calculateCurrentRent = (year) => {
     const rent =
-      allNewContractDetails?.rentAmount *
+      allNewContractDetails?.monthlyRent *
       Math.pow(1 + escalationRate, year - 1);
     return rent.toFixed(2);
   };
@@ -407,11 +406,12 @@ const AgreementDetails = ({
 
   const calculateSplitAmount = () => {
     if (recipientCount > 1) {
-      const splitAmount = allNewContractDetails?.rentAmount / recipientCount;
+      const splitAmount = allNewContractDetails?.monthlyRent / recipientCount;
       return splitAmount.toFixed(2); // Round to 2 decimal places
     }
-    return allNewContractDetails?.rentAmount;
+    return allNewContractDetails?.monthlyRent;
   };
+
 
   useEffect(() => {
     const IFSCInformation = async () => {
@@ -490,7 +490,7 @@ const AgreementDetails = ({
     // Calculate the difference in months
     const monthsDifference =
       (endDate?.getFullYear() - startDate?.getFullYear()) * 12 +
-      (endDate?.getMonth() - startDate?.getMonth() );
+      (endDate?.getMonth() - startDate?.getMonth());
 
     // You can adjust this calculation based on your specific logic
     return monthsDifference;
@@ -560,14 +560,18 @@ const AgreementDetails = ({
   };
 
   const handleNext = () => {
-    let err=handleAddRentContractInformationError()
-    if(!err){
+    const ValidateError = handleAddRentContractInformationError();
+    // console.log("ValidateError", ValidateError);
+    // Check for empty fields
+    const isEmptyField = Object.values(allNewContractDetails).some(
+      (value) => value === ""
+    );
+    if (!ValidateError && !isEmptyField) {
+      // console.log("ValidateError", ValidateError);
       onSave(allNewContractDetails, type);
     }
-    
   };
 
-  console.log(currentRent, "Rent");
   return (
     <>
       <Box sx={{ height: "calc(100% - 75px)", overflowY: "scroll" }}>
@@ -862,10 +866,10 @@ const AgreementDetails = ({
                 label="Monthly Rent"
                 placeholder="Enter Monthly Rent"
                 sx={{ width: 300, my: -1.3 }}
-                name="rentAmount"
-                value={allNewContractDetails?.rentAmount}
+                name="monthlyRent"
+                value={allNewContractDetails?.monthlyRent}
                 onChange={(e) => updateChange(e)}
-                errorText={allNewContractDetailsErr?.rentAmount}
+                errorText={allNewContractDetailsErr?.monthlyRent}
               />
               <DatePickerComponent
                 placeholder="Select Start From"
@@ -897,15 +901,6 @@ const AgreementDetails = ({
                   handleLockinPeriod("securityDepositLockinPeriod", value)
                 }
               />
-              {/* <InputBoxComponent
-                label="Lockin Period"
-                placeholder="Enter Lockin Period"
-                sx={{ width: 300, my: -1.3, ml: 0.5 }}
-                // name="securityDepositLockinPeriod"
-                value={lockinPeriod}
-                // onChange={(e) => updateChange(e)}
-                readonly
-              /> */}
 
               <DropDownComponent
                 label="Notice Period"
@@ -926,12 +921,8 @@ const AgreementDetails = ({
                 // options={ExitTerms}
                 placeholder="Enter Remarks"
                 multiline
-                // onSelect={handleExitTerms}
                 name="securityDepositExitTerm"
                 value={allNewContractDetails?.securityDepositExitTerm}
-                // onChange={(value) =>
-                //   handleExitTerms("securityDepositExitTerm", value)
-                // }
                 onChange={(e) => updateChange(e)}
               />
             </Grid>
@@ -950,8 +941,59 @@ const AgreementDetails = ({
                 spacing={2}
                 className="d-flex align-items-center justify-content-center py-1 px-0"
               >
-                <Grid item className="d-flex " lg={12}>
-                  <DropDownComponent
+                {/* <Grid item className="d-flex m-2" lg={12}>
+                  <InputBoxComponent
+                    label="Recipiant Name"
+                    name="lessorName"
+                    value={allNewContractDetails?.lessorName}
+                    onChange={(e) => updateChange(e)}
+                    sx={{ width: 300 }}
+                    
+                  />
+                  <InputBoxComponent
+                    label="Bank Name"
+                    type="number"
+                    name="lessorBankName"
+                    value={allNewContractDetails?.lessorBankName}
+                    onChange={(e) => updateChange(e)}
+                    sx={{ width: 300 }}
+                    
+                  />
+                </Grid>
+                <Grid item className="d-flex m-2" lg={12}>
+                  <InputBoxComponent
+                    label="Branch Name"
+                    name="lessorBranchName"
+                    value={allNewContractDetails?.lessorBranchName}
+                    onChange={(e) => updateChange(e)}
+                    sx={{ width: 300 }}
+                    
+                  />
+
+                  <InputBoxComponent
+                    label="Enter Renewal Tenure (in months)"
+                    type="number"
+                    name="agreementTenure"
+                    value={allNewContractDetails?.agreementTenure}
+                    onChange={(e) => updateChange(e)}
+                    sx={{ width: 300 }}
+                    
+                  />
+                </Grid>
+                <Grid item className="d-flex m-2" lg={12}>
+                  <InputBoxComponent
+                    label="Enter Renewal Tenure (in months)"
+                    type="number"
+                    name="agreementTenure"
+                    value={allNewContractDetails?.agreementTenure}
+                    onChange={(e) => updateChange(e)}
+                    sx={{ width: 300 }}
+                    
+                  />
+                </Grid> */}
+             
+
+              <DropDownComponent
                     label="Recipiants"
                     placeholder="Enter Recipiant"
                     sx={{ width: 300, ml: 1 }}
@@ -959,9 +1001,7 @@ const AgreementDetails = ({
                     value={recipientCount}
                     onChange={handleDropDownChange}
                   />
-                </Grid>
-
-                <Grid item className="d-flex flex-column" lg={12}>
+              <Grid item className="d-flex flex-column" lg={12}>
                   {Array.from({ length: recipientCount }, (_, index) => (
                     <Grid
                       container
@@ -1045,7 +1085,7 @@ const AgreementDetails = ({
                           }
                         />
 
-                        {/* {ifscCodes?.map((ifscCode, index) => ( */}
+                      
 
                         <InputBoxComponent
                           label="IFSC Code"
@@ -1071,7 +1111,7 @@ const AgreementDetails = ({
                             value={
                               allNewContractDetails.recipiants?.[index]
                                 ?.lessorBankName || bankAndBranch?.[index]?.bank
-                              // : bankAndBranch?.[index]?.bank || ""
+                             
                             }
                             onChange={(e) =>
                               handleRecipientBankNameChange(
@@ -1088,11 +1128,11 @@ const AgreementDetails = ({
                             sx={{ width: 300 }}
                             placeholder={`Enter Branch Name ${index + 1}...`}
                             value={
-                              // type === "edit"
+                              
                               allNewContractDetails.recipiants?.[index]
                                 ?.lessorBranchName ||
                               bankAndBranch?.[index]?.branch
-                              // : bankAndBranch?.[index]?.branch || ""
+                             
                             }
                             onChange={(e) =>
                               handleRecipientBranchNameChange(
@@ -1121,11 +1161,6 @@ const AgreementDetails = ({
                               : allNewContractDetails?.recipiants?.[index]
                                   ?.lessorAccountNumber || "" // Clear the value in "add" mode
                           }
-                          // value={
-                          //   type === "edit"
-                          //     ? allNewContractDetails.recipiants?.[index].originalData?.[index]
-                          //     : originalData?.[index] || ""
-                          // }
                           onChange={(e) =>
                             handleRecipientAccountChange(
                               index,
@@ -1209,7 +1244,7 @@ const AgreementDetails = ({
                     </Grid>
                   ))}
                 </Grid>
-              </Grid>
+                 </Grid>
             </Box>
           </Box>
 
@@ -1229,8 +1264,8 @@ const AgreementDetails = ({
                 <InputBoxComponent
                   label="Enter Renewal Tenure (in months)"
                   type="number"
-                  name="renewalTenure"
-                  value={allNewContractDetails?.renewalTenure}
+                  name="agreementTenure"
+                  value={allNewContractDetails?.agreementTenure}
                   onChange={(e) => updateChange(e)}
                   sx={{ width: 300 }}
                   readOnly
@@ -1238,9 +1273,10 @@ const AgreementDetails = ({
 
                 <InputBoxComponent
                   label="Enter Current Rent"
-                  type="number"
-                  value={allNewContractDetails?.rentAmount}
-                  onChange={handleRentChange}
+                  // type="number"
+                  name="monthlyRent"
+                  value={allNewContractDetails?.monthlyRent}
+                  onChange={(e) => updateChange(e)}
                   sx={{ width: 300 }}
                 />
 
@@ -1263,12 +1299,12 @@ const AgreementDetails = ({
                   // checked={isChecked}
                   checked={
                     isChecked ||
-                    parseInt(allNewContractDetails?.rentAmount) > 20000
+                    parseInt(allNewContractDetails?.monthlyRent) > 20000
                   }
                   onChange={handleSwitchChange}
                 />
-                {/* parseInt(allNewContractDetails?.rentAmount) > 20000 ? */}
-                {parseInt(allNewContractDetails?.rentAmount) > 20000 && (
+                {/* parseInt(allNewContractDetails?.monthlyRent) > 20000 ? */}
+                {parseInt(allNewContractDetails?.monthlyRent) > 20000 && (
                   <InputBoxComponent
                     label="TDS (%)"
                     type="number"
@@ -1285,7 +1321,7 @@ const AgreementDetails = ({
 
                 <Typography>GST Applicable?</Typography>
                 <SwitchComponent
-                  // checked={parseInt(allNewContractDetails?.rentAmount) > 20000}
+                  // checked={parseInt(allNewContractDetails?.monthlyRent) > 20000}
                   checked={checked}
                   onChange={(isChecked) => handleSwitchGSTChange(isChecked)}
                 />
@@ -1512,7 +1548,7 @@ export default AgreementDetails;
 // const [escalations, setEscalations] = useState(new Array(5).fill(0));
 
 // const [currentRent, setCurrentRent] = useState(
-//   allNewContractDetails.rentAmount
+//   allNewContractDetails.monthlyRent
 // );
 // const handleCurrentRentChange = (e) => {
 //   setCurrentRent(parseFloat(e.target.value));

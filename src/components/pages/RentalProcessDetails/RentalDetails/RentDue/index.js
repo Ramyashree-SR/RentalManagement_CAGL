@@ -69,7 +69,7 @@ const RentDue = (props) => {
       >
         <Modal.Header>
           <Modal.Title id="contained-modal-title-vcenter">
-            Rent Due Information
+            Branch-wise Rent Due Information
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

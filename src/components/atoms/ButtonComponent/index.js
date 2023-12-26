@@ -67,7 +67,7 @@ const ButtonComponent = ({
         ...sx,
       }}
       fullWidth={fullWidth}
-      disabled={disabled}
+      // disabled={disabled}
       disableFocusRipple
       disableElevation
     >

@@ -22,6 +22,7 @@ import {
   emailRegex,
   gstRegex,
   mobileRegex,
+  nameRegex,
   nameWithSpaces,
   nameWithSpacesAndNumbers,
   numberNameWithSpecialCharacters,
@@ -66,6 +67,10 @@ let errObj = {
       gstNo: "",
     },
   ],
+  lessorBankName: "",
+  lessorIfscNumber: "",
+  lessorBranchName: "",
+  lessorAccountNumber: "",
   lessorDoorNumber: "",
   lessorFloorNumber: "",
   lessorLandMark: "",
@@ -129,9 +134,9 @@ let errObj = {
   standardDeducition: "",
   firstMonthvalue: "",
   lastMonthvalue: "",
-  rentAmount: "",
+  // rentAmount: "",
   escalation: "",
-  renewalTenure: "",
+  // renewalTenure: "",
   lattitude: "",
   longitude: "",
   gpsCoordinates: "",
@@ -141,10 +146,11 @@ let errObj = {
   lastRentDate: "",
   plotNumber: "",
   builtupArea: "",
-  renewalStatus: "",
+  // renewalStatus: "",
   glName: "",
   glEmpId: "",
   signedDate: "",
+  monthlyRent: "",
 };
 
 const MasterDetails = (props) => {
@@ -160,21 +166,20 @@ const MasterDetails = (props) => {
   const [stepData5, setStepData5] = useState("");
   const [stepData6, setStepData6] = useState("");
   const [allNewContractDetails, setAllNewContractDetails] = useState({
-    // uniqueID: "",
+    uniqueID: "",
     lessorName: "",
     lessorContactNumber: "",
     lessorEmailAddress: "",
     lessorPanNumber: "",
     lessorGstNumber: "",
     lessorTdsNumber: "",
-    paymentMode: { label: "" },
+    paymentMode: "",
     lessorElectricityBillNumber: "",
     lessorTaxNumber: "",
     lessorBankPassBookNumber: "",
     lessorCheuque: "",
     recipiants: [
       {
-        recipiantsID: "",
         lessorRecipiantsName: "",
         lessorBankName: "",
         lessorIfscNumber: "",
@@ -185,6 +190,10 @@ const MasterDetails = (props) => {
         gstNo: "",
       },
     ],
+    lessorBankName: "",
+    lessorIfscNumber: "",
+    lessorBranchName: "",
+    lessorAccountNumber: "",
     lessorDoorNumber: "",
     lessorFloorNumber: "",
     lessorLandMark: "",
@@ -231,6 +240,8 @@ const MasterDetails = (props) => {
     agreementEndDate: null,
     rentStartDate: null,
     rentEndDate: null,
+    agreementRefreshStartDate: "",
+    agreementRefreshEndDate: "",
     maintaineneCharge: "",
     waterCharge: "",
     electricity: "",
@@ -246,9 +257,9 @@ const MasterDetails = (props) => {
     standardDeducition: "",
     firstMonthvalue: "",
     lastMonthvalue: "",
-    rentAmount: "",
+    // rentAmount: "",
     escalation: "",
-    renewalTenure: "",
+    // renewalTenure: "",
     lattitude: "",
     longitude: "",
     gpsCoordinates: "",
@@ -258,10 +269,11 @@ const MasterDetails = (props) => {
     lastRentDate: "",
     plotNumber: "",
     builtupArea: "",
-    renewalStatus: "",
+    // renewalStatus: "",
     glName: "",
     glEmpId: "",
     signedDate: "",
+    monthlyRent: "",
   });
 
   // console.log("allNewContractDetails", allNewContractDetails);
@@ -290,7 +302,7 @@ const MasterDetails = (props) => {
   });
   useEffect(() => {
     let errObj = {
-      // uniqueID: "",
+      uniqueID: "",
       lessorName: "",
       lessorContactNumber: "",
       lessorEmailAddress: "",
@@ -314,6 +326,10 @@ const MasterDetails = (props) => {
           gstNo: "",
         },
       ],
+      lessorBankName: "",
+      lessorIfscNumber: "",
+      lessorBranchName: "",
+      lessorAccountNumber: "",
       lessorDoorNumber: "",
       lessorFloorNumber: "",
       lessorLandMark: "",
@@ -326,13 +342,14 @@ const MasterDetails = (props) => {
       lessorTaluka: "",
       lessorDistrict: "",
       lessorState: "",
+      lesseeBranchType: "",
       branchID: "",
       lesseeBranchName: "",
       lesseeAreaName: "",
       lesseeDivision: "",
       lesseeZone: "",
       lesseeState: "",
-      lesseeBranchType: "",
+
       lesseeApproverrenewals: "",
       lesseeApproverRelocation: "",
       lesseeEntityDetails: "",
@@ -352,13 +369,13 @@ const MasterDetails = (props) => {
       westPremesis: "",
       premesisState: "",
       premesisBuildingType: "",
-      agreementSignDate: "",
+      agreementSignDate: null,
       agreementTenure: "",
       agreementActivationStatus: "",
-      agreementStartDate: "",
-      agreementEndDate: "",
-      rentStartDate: "",
-      rentEndDate: "",
+      agreementStartDate: null,
+      agreementEndDate: null,
+      rentStartDate: null,
+      rentEndDate: null,
       agreementRefreshStartDate: "",
       agreementRefreshEndDate: "",
       maintaineneCharge: "",
@@ -376,22 +393,23 @@ const MasterDetails = (props) => {
       standardDeducition: "",
       firstMonthvalue: "",
       lastMonthvalue: "",
-      rentAmount: "",
+      // rentAmount: "",
       escalation: "",
-      renewalTenure: "",
+      // renewalTenure: "",
       lattitude: "",
       longitude: "",
       gpsCoordinates: "",
+      tds: "",
+      gst: "",
       firstRentDate: "",
       lastRentDate: "",
       plotNumber: "",
       builtupArea: "",
-      renewalStatus: "",
-      tds: "",
-      gst: "",
+      // renewalStatus: "",
       glName: "",
       glEmpId: "",
       signedDate: "",
+      monthlyRent: "",
     };
     setAllNewContractDetailsErr(errObj);
   }, []);
@@ -399,7 +417,7 @@ const MasterDetails = (props) => {
   const handleAddRentContractInformationError = () => {
     let errorInForm = false;
     let errObj = {
-      // uniqueID: "",
+      uniqueID: "",
       lessorName: "",
       lessorContactNumber: "",
       lessorEmailAddress: "",
@@ -423,6 +441,10 @@ const MasterDetails = (props) => {
           gstNo: "",
         },
       ],
+      lessorBankName: "",
+      lessorIfscNumber: "",
+      lessorBranchName: "",
+      lessorAccountNumber: "",
       lessorDoorNumber: "",
       lessorFloorNumber: "",
       lessorLandMark: "",
@@ -435,13 +457,14 @@ const MasterDetails = (props) => {
       lessorTaluka: "",
       lessorDistrict: "",
       lessorState: "",
+      lesseeBranchType: "",
       branchID: "",
       lesseeBranchName: "",
       lesseeAreaName: "",
       lesseeDivision: "",
       lesseeZone: "",
       lesseeState: "",
-      lesseeBranchType: "",
+
       lesseeApproverrenewals: "",
       lesseeApproverRelocation: "",
       lesseeEntityDetails: "",
@@ -461,13 +484,13 @@ const MasterDetails = (props) => {
       westPremesis: "",
       premesisState: "",
       premesisBuildingType: "",
-      agreementSignDate: "",
+      agreementSignDate: null,
       agreementTenure: "",
       agreementActivationStatus: "",
-      agreementStartDate: "",
-      agreementEndDate: "",
-      rentStartDate: "",
-      rentEndDate: "",
+      agreementStartDate: null,
+      agreementEndDate: null,
+      rentStartDate: null,
+      rentEndDate: null,
       agreementRefreshStartDate: "",
       agreementRefreshEndDate: "",
       maintaineneCharge: "",
@@ -485,601 +508,438 @@ const MasterDetails = (props) => {
       standardDeducition: "",
       firstMonthvalue: "",
       lastMonthvalue: "",
-      rentAmount: "",
+      // rentAmount: "",
       escalation: "",
-      renewalTenure: "",
+      // renewalTenure: "",
       lattitude: "",
       longitude: "",
       gpsCoordinates: "",
       tds: "",
       gst: "",
+      firstRentDate: "",
+      lastRentDate: "",
+      plotNumber: "",
+      builtupArea: "",
+      // renewalStatus: "",
       glName: "",
       glEmpId: "",
       signedDate: "",
+      monthlyRent: "",
     };
-    if (allNewContractDetails.lesseeBranchName === "") {
-      errObj.lesseeBranchName = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lesseeBranchName)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lesseeBranchName = "*Invalid  Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lesseeBranchName = "";
+    if (!allNewContractDetails.lessorDoorNumber) {
+      errObj.lessorDoorNumber = "This field is required";
+    } else if (
+      allNewContractDetails.lessorDoorNumber.trim().length !==
+      allNewContractDetails.lessorDoorNumber.length
+    ) {
+      errObj.lessorDoorNumber = "*Invalid Field";
+    } else if (
+      !nameWithSpacesAndNumbers.test(allNewContractDetails.lessorDoorNumber)
+    ) {
+      errObj.lessorDoorNumber = "*Invalid Field";
     }
 
-    if (allNewContractDetails.lesseeAreaName === "") {
-      errObj.lesseeAreaName = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lesseeAreaName)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lesseeAreaName = "*Invalid  Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lesseeAreaName = "";
-    }
-    if (allNewContractDetails.lesseeDivision === "") {
-      errObj.lesseeDivision = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lesseeDivision)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lesseeDivision = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lesseeDivision = "";
-    }
-    if (allNewContractDetails.lesseeZone === "") {
-      errObj.lesseeZone = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lesseeZone)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lesseeZone = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lesseeZone = "";
-    }
-    if (allNewContractDetails.lesseeState === "") {
-      errObj.lesseeState = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lesseeState)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lesseeState = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lesseeState = "";
-    }
-    if (allNewContractDetails.premesisDoorNumber === "") {
-      errObj.premesisDoorNumber = "*This field is required";
-      errorInForm = true;
+    if (!allNewContractDetails.lessorFloorNumber) {
+      errObj.lessorFloorNumber = "This field is required";
     } else if (
-      !nameWithSpacesAndNumbers.test(allNewContractDetails.premesisDoorNumber)
+      allNewContractDetails.lessorFloorNumber.trim().length !==
+      allNewContractDetails.lessorFloorNumber.length
     ) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.premesisDoorNumber = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.premesisDoorNumber = "";
+      errObj.lessorFloorNumber = "*Invalid Field";
+    } else if (
+      !nameWithSpacesAndNumbers.test(allNewContractDetails.lessorFloorNumber)
+    ) {
+      errObj.lessorFloorNumber = "*Invalid Field";
     }
-    if (allNewContractDetails.premesisFloorNumber === "") {
-      errObj.premesisFloorNumber = "*This field is required";
-      errorInForm = true;
+
+    if (!allNewContractDetails.lessorLandMark) {
+      errObj.lessorLandMark = "This field is required";
+    } else if (
+      allNewContractDetails.lessorLandMark.trim().length !==
+      allNewContractDetails.lessorLandMark.length
+    ) {
+      errObj.lessorLandMark = "*Invalid Field";
+    } else if (!nameWithSpaces.test(allNewContractDetails.lessorLandMark)) {
+      errObj.lessorLandMark = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.lessorStreet) {
+      errObj.lessorStreet = "This field is required";
+    } else if (
+      allNewContractDetails.lessorStreet.trim().length !==
+      allNewContractDetails.lessorStreet.length
+    ) {
+      errObj.lessorStreet = "*Invalid Field";
+    } else if (!nameWithSpaces.test(allNewContractDetails.lessorStreet)) {
+      errObj.lessorStreet = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.lessorWardNo) {
+      errObj.lessorWardNo = "This field is required";
+    } else if (
+      allNewContractDetails.lessorWardNo.trim().length !==
+      allNewContractDetails.lessorWardNo.length
+    ) {
+      errObj.lessorWardNo = "*Invalid Field";
+    } else if (!numbersRegex.test(allNewContractDetails.lessorWardNo)) {
+      errObj.lessorWardNo = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.lessorArea) {
+      errObj.lessorArea = "This field is required";
+    } else if (
+      allNewContractDetails.lessorArea.trim().length !==
+      allNewContractDetails.lessorArea.length
+    ) {
+      errObj.lessorArea = "*Invalid Field";
+    } else if (!nameWithSpaces.test(allNewContractDetails.lessorArea)) {
+      errObj.lessorArea = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.lessorCity) {
+      errObj.lessorCity = "This field is required";
+    } else if (
+      allNewContractDetails.lessorCity.trim().length !==
+      allNewContractDetails.lessorCity.length
+    ) {
+      errObj.lessorCity = "*Invalid Field";
+    } else if (!nameWithSpaces.test(allNewContractDetails.lessorCity)) {
+      errObj.lessorCity = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.lessorLocation) {
+      errObj.lessorLocation = "This field is required";
+    } else if (
+      allNewContractDetails.lessorLocation.trim().length !==
+      allNewContractDetails.lessorLocation.length
+    ) {
+      errObj.lessorLocation = "*Invalid Field";
+    } else if (!nameWithSpaces.test(allNewContractDetails.lessorLocation)) {
+      errObj.lessorLocation = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.lessorPinCode) {
+      errObj.lessorPinCode = "This field is required";
+    } else if (
+      allNewContractDetails.lessorPinCode.trim().length !==
+      allNewContractDetails.lessorPinCode.length
+    ) {
+      errObj.lessorPinCode = "*Invalid Field";
+    } else if (!pincodeRegex.test(allNewContractDetails.lessorPinCode)) {
+      errObj.lessorPinCode = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.lessorTaluka) {
+      errObj.lessorTaluka = "This field is required";
+    } else if (
+      allNewContractDetails.lessorTaluka.trim().length !==
+      allNewContractDetails.lessorTaluka.length
+    ) {
+      errObj.lessorTaluka = "*Invalid Field";
+    } else if (!nameWithSpaces.test(allNewContractDetails.lessorTaluka)) {
+      errObj.lessorTaluka = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.lessorDistrict) {
+      errObj.lessorDistrict = "This field is required";
+    } else if (
+      allNewContractDetails.lessorDistrict.trim().length !==
+      allNewContractDetails.lessorDistrict.length
+    ) {
+      errObj.lessorDistrict = "*Invalid Field";
+    } else if (!nameWithSpaces.test(allNewContractDetails.lessorDistrict)) {
+      errObj.lessorDistrict = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.premesisDoorNumber) {
+      errObj.premesisDoorNumber = "This field is required";
+    } else if (
+      allNewContractDetails.premesisDoorNumber.trim().length !==
+      allNewContractDetails.premesisDoorNumber.length
+    ) {
+      errObj.premesisDoorNumber = "*Invalid Field";
+    } else if (
+      !numberNameWithSpecialCharacters.test(
+        allNewContractDetails.premesisDoorNumber
+      )
+    ) {
+      errObj.premesisDoorNumber = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.premesisFloorNumber) {
+      errObj.premesisFloorNumber = "This field is required";
+    } else if (
+      allNewContractDetails.premesisFloorNumber.trim().length !==
+      allNewContractDetails.premesisFloorNumber.length
+    ) {
+      errObj.premesisFloorNumber = "*Invalid Field";
     } else if (
       !nameWithSpacesAndNumbers.test(allNewContractDetails.premesisFloorNumber)
     ) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.premesisFloorNumber = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.premesisFloorNumber = "";
-    }
-    if (allNewContractDetails.premesisLandMark === "") {
-      errObj.premesisLandMark = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.premesisLandMark)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.premesisLandMark = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.premesisLandMark = "";
-    }
-    if (allNewContractDetails.premesisLandMark === "") {
-      errObj.premesisLandMark = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.premesisLandMark)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.premesisLandMark = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.premesisLandMark = "";
-    }
-    if (allNewContractDetails.premesisPinCode === "") {
-      errObj.premesisPinCode = "*This field is required";
-      errorInForm = true;
-    } else if (!pincodeRegex.test(allNewContractDetails.premesisPinCode)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.premesisPinCode = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.premesisPinCode = "";
-    }
-    if (allNewContractDetails.premesisCity === "") {
-      errObj.premesisCity = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.premesisCity)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.premesisCity = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.premesisCity = "";
-    }
-    if (allNewContractDetails.premesisState === "") {
-      errObj.premesisState = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.premesisState)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.premesisState = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.premesisState = "";
-    }
-    if (allNewContractDetails.premesisDistrict === "") {
-      errObj.premesisDistrict = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.premesisDistrict)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.premesisDistrict = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.premesisDistrict = "";
+      errObj.premesisFloorNumber = "*Invalid Field";
     }
 
-    if (allNewContractDetails.plotNumber === "") {
-      errObj.plotNumber = "*This field is required";
-      errorInForm = true;
-    } else if (!numbersRegex.test(allNewContractDetails.plotNumber)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.plotNumber = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.plotNumber = "";
+    if (!allNewContractDetails.premesisWardNo) {
+      errObj.premesisWardNo = "This field is required";
+    } else if (
+      allNewContractDetails.premesisWardNo.trim().length !==
+      allNewContractDetails.premesisWardNo.length
+    ) {
+      errObj.premesisWardNo = "*Invalid Field";
+    } else if (!numbersRegex.test(allNewContractDetails.premesisWardNo)) {
+      errObj.premesisWardNo = "*Invalid Field";
     }
-    if (allNewContractDetails.builtupArea === "") {
-      errObj.builtupArea = "*This field is required";
-      errorInForm = true;
-    } else if (!numbersRegex.test(allNewContractDetails.builtupArea)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.builtupArea = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.builtupArea = "";
+
+    if (!allNewContractDetails.premesisLandMark) {
+      errObj.premesisLandMark = "This field is required";
+    } else if (
+      allNewContractDetails.premesisLandMark.trim().length !==
+      allNewContractDetails.premesisLandMark.length
+    ) {
+      errObj.premesisLandMark = "*Invalid Field";
+    } else if (
+      !nameWithSpacesAndNumbers.test(allNewContractDetails.premesisLandMark)
+    ) {
+      errObj.premesisLandMark = "*Invalid Field";
     }
-    if (allNewContractDetails.northPremesis === "") {
-      errObj.northPremesis = "*This field is required";
-      errorInForm = true;
+
+    if (!allNewContractDetails.premesisStreet) {
+      errObj.premesisStreet = "This field is required";
+    } else if (
+      allNewContractDetails.premesisStreet.trim().length !==
+      allNewContractDetails.premesisStreet.length
+    ) {
+      errObj.premesisStreet = "*Invalid Field";
+    } else if (!nameWithSpaces.test(allNewContractDetails.premesisStreet)) {
+      errObj.premesisStreet = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.premesisCity) {
+      errObj.premesisCity = "This field is required";
+    } else if (
+      allNewContractDetails.premesisCity.trim().length !==
+      allNewContractDetails.premesisCity.length
+    ) {
+      errObj.premesisCity = "*Invalid Field";
+    } else if (!nameWithSpaces.test(allNewContractDetails.premesisCity)) {
+      errObj.premesisCity = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.premesisPinCode) {
+      errObj.premesisPinCode = "This field is required";
+    } else if (
+      allNewContractDetails.premesisPinCode.trim().length !==
+      allNewContractDetails.premesisPinCode.length
+    ) {
+      errObj.premesisPinCode = "*Invalid Field";
+    } else if (!pincodeRegex.test(allNewContractDetails.premesisPinCode)) {
+      errObj.premesisPinCode = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.premesisTaluka) {
+      errObj.premesisTaluka = "This field is required";
+    } else if (
+      allNewContractDetails.premesisTaluka.trim().length !==
+      allNewContractDetails.premesisTaluka.length
+    ) {
+      errObj.premesisTaluka = "*Invalid Field";
+    } else if (!nameWithSpaces.test(allNewContractDetails.premesisTaluka)) {
+      errObj.premesisTaluka = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.premesisDistrict) {
+      errObj.premesisDistrict = "This field is required";
+    } else if (
+      allNewContractDetails.premesisDistrict.trim().length !==
+      allNewContractDetails.premesisDistrict.length
+    ) {
+      errObj.premesisDistrict = "*Invalid Field";
+    } else if (!nameWithSpaces.test(allNewContractDetails.premesisDistrict)) {
+      errObj.premesisDistrict = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.premesisState) {
+      errObj.premesisState = "This field is required";
+    } else if (!nameWithSpaces.test(allNewContractDetails.premesisState)) {
+      errObj.premesisState = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.northPremesis) {
+      errObj.northPremesis = "This field is required";
+    } else if (
+      allNewContractDetails.northPremesis.trim().length !==
+      allNewContractDetails.northPremesis.length
+    ) {
+      errObj.northPremesis = "*Invalid Field";
     } else if (!nameWithSpaces.test(allNewContractDetails.northPremesis)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.northPremesis = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.northPremesis = "";
+      errObj.northPremesis = "*Invalid Field";
     }
-    if (allNewContractDetails.southPremesis === "") {
-      errObj.southPremesis = "*This field is required";
-      errorInForm = true;
+
+    if (!allNewContractDetails.southPremesis) {
+      errObj.southPremesis = "This field is required";
+    } else if (
+      allNewContractDetails.southPremesis.trim().length !==
+      allNewContractDetails.southPremesis.length
+    ) {
+      errObj.southPremesis = "*Invalid Field";
     } else if (!nameWithSpaces.test(allNewContractDetails.southPremesis)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.southPremesis = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.southPremesis = "";
+      errObj.southPremesis = "*Invalid Field";
     }
-    if (allNewContractDetails.eastPremesis === "") {
-      errObj.eastPremesis = "*This field is required";
-      errorInForm = true;
+
+    if (!allNewContractDetails.eastPremesis) {
+      errObj.eastPremesis = "This field is required";
+    } else if (
+      allNewContractDetails.eastPremesis.trim().length !==
+      allNewContractDetails.eastPremesis.length
+    ) {
+      errObj.eastPremesis = "*Invalid Field";
     } else if (!nameWithSpaces.test(allNewContractDetails.eastPremesis)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.eastPremesis = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.eastPremesis = "";
+      errObj.eastPremesis = "*Invalid Field";
     }
-    if (allNewContractDetails.westPremesis === "") {
-      errObj.westPremesis = "*This field is required";
-      errorInForm = true;
+
+    if (!allNewContractDetails.westPremesis) {
+      errObj.westPremesis = "This field is required";
+    } else if (
+      allNewContractDetails.westPremesis.trim().length !==
+      allNewContractDetails.westPremesis.length
+    ) {
+      errObj.westPremesis = "*Invalid Field";
     } else if (!nameWithSpaces.test(allNewContractDetails.westPremesis)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.westPremesis = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.westPremesis = "";
+      errObj.westPremesis = "*Invalid Field";
     }
-    if (allNewContractDetails.lattitude === "") {
-      errObj.lattitude = "*This field is required";
-      errorInForm = true;
+
+    if (!allNewContractDetails.glName) {
+      errObj.glName = "This field is required";
+    } else if (
+      allNewContractDetails.glName.trim().length !==
+      allNewContractDetails.glName.length
+    ) {
+      errObj.glName = "*Invalid Field";
+    } else if (!nameWithSpaces.test(allNewContractDetails.glName)) {
+      errObj.glName = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.glEmpId) {
+      errObj.glEmpId = "This field is required";
+    } else if (
+      allNewContractDetails.glEmpId.trim().length !==
+      allNewContractDetails.glEmpId.length
+    ) {
+      errObj.glEmpId = "*Invalid Field";
+    } else if (!nameWithSpacesAndNumbers.test(allNewContractDetails.glEmpId)) {
+      errObj.glEmpId = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.securityDepositAmount) {
+      errObj.securityDepositAmount = "This field is required";
+    } else if (
+      allNewContractDetails.securityDepositAmount.trim().length !==
+      allNewContractDetails.securityDepositAmount.length
+    ) {
+      errObj.securityDepositAmount = "*Invalid Field";
+    } else if (
+      !numbersRegex.test(allNewContractDetails.securityDepositAmount)
+    ) {
+      errObj.securityDepositAmount = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.monthlyRent) {
+      errObj.monthlyRent = "This field is required";
+    } else if (
+      allNewContractDetails.monthlyRent.trim().length !==
+      allNewContractDetails.monthlyRent.length
+    ) {
+      errObj.monthlyRent = "*Invalid Field";
+    } else if (!numbersRegex.test(allNewContractDetails.monthlyRent)) {
+      errObj.monthlyRent = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.escalation) {
+      errObj.escalation = "This field is required";
+    } else if (
+      allNewContractDetails.escalation.trim().length !==
+      allNewContractDetails.escalation.length
+    ) {
+      errObj.escalation = "*Invalid Field";
+    } else if (!numbersRegex.test(allNewContractDetails.escalation)) {
+      errObj.escalation = "*Invalid Field";
+    }
+
+    if (!allNewContractDetails.lattitude) {
+      errObj.lattitude = "This field is required";
+    } else if (
+      allNewContractDetails.lattitude.trim().length !==
+      allNewContractDetails.lattitude.length
+    ) {
+      errObj.lattitude = "*Invalid Field";
     } else if (
       !numbersWithSpecialChatracters.test(allNewContractDetails.lattitude)
     ) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lattitude = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lattitude = "";
+      errObj.lattitude = "*Invalid Field";
     }
 
-    if (allNewContractDetails.longitude === "") {
-      errObj.longitude = "*This field is required";
-      errorInForm = true;
+    if (!allNewContractDetails.longitude) {
+      errObj.longitude = "This field is required";
+    } else if (
+      allNewContractDetails.longitude.trim().length !==
+      allNewContractDetails.longitude.length
+    ) {
+      errObj.longitude = "*Invalid Field";
     } else if (
       !numbersWithSpecialChatracters.test(allNewContractDetails.longitude)
     ) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.longitude = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.longitude = "";
+      errObj.longitude = "*Invalid Field";
     }
-    if (allNewContractDetails.gpsCoordinates === "") {
-      errObj.gpsCoordinates = "*This field is required";
-      errorInForm = true;
+
+    if (!allNewContractDetails.gpsCoordinates) {
+      errObj.gpsCoordinates = "This field is required";
+    } else if (
+      allNewContractDetails.gpsCoordinates.trim().length !==
+      allNewContractDetails.gpsCoordinates.length
+    ) {
+      errObj.gpsCoordinates = "*Invalid Field";
     } else if (
       !numbersWithSpecialChatractersAndSeparated.test(
         allNewContractDetails.gpsCoordinates
       )
     ) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.gpsCoordinates = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.gpsCoordinates = "";
-    }
-    if (allNewContractDetails.glName === "") {
-      errObj.glName = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.glName)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.glName = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.glName = "";
+      errObj.gpsCoordinates = "*Invalid Field";
     }
 
-    if (allNewContractDetails.glEmpId === "") {
-      errObj.glEmpId = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpacesAndNumbers.test(allNewContractDetails.glEmpId)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.glEmpId = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.glEmpId = "";
+    if (!allNewContractDetails.lessorContactNumber) {
+      errObj.lessorContactNumber = "This field is required";
+    } else if (
+      allNewContractDetails.lessorContactNumber.trim().length !==
+      allNewContractDetails.lessorContactNumber.length
+    ) {
+      errObj.lessorContactNumber = "*Invalid Field";
+    } else if (!mobileRegex.test(allNewContractDetails.lessorContactNumber)) {
+      errObj.lessorContactNumber = "*Invalid Field";
     }
 
-    if (allNewContractDetails.agreementTenure === "") {
-      errObj.agreementTenure = "*This field is required";
-      errorInForm = true;
-    } else if (!numbersRegex.test(allNewContractDetails.agreementTenure)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.agreementTenure = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.agreementTenure = "";
-    }
-    if (allNewContractDetails.lessorEmailAddress === "") {
-      errObj.lessorEmailAddress = "*This field is required";
-      errorInForm = true;
-    } else if (!emailRegex.test(allNewContractDetails.lessorEmailAddress)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorEmailAddress = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorEmailAddress = "";
-    }
-    if (allNewContractDetails.lessorFloorNumber === "") {
-      errObj.lessorFloorNumber = "*This field is required";
-      errorInForm = true;
+    if (!allNewContractDetails.lessorPanNumber) {
+      errObj.lessorPanNumber = "This field is required";
     } else if (
-      !nameWithSpacesAndNumbers.test(allNewContractDetails.lessorFloorNumber)
+      allNewContractDetails.lessorPanNumber.trim().length !==
+      allNewContractDetails.lessorPanNumber.length
     ) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorFloorNumber = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorFloorNumber = "";
-    }
-    if (allNewContractDetails.lessorRecipiantsName === "") {
-      errObj.lessorRecipiantsName = "*This field is required";
-      errorInForm = true;
-    } else if (
-      !nameWithSpaces.test(allNewContractDetails.lessorRecipiantsName)
-    ) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorRecipiantsName = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorRecipiantsName = "";
-    }
-    if (allNewContractDetails.lessorRentAmount === "") {
-      errObj.lessorRentAmount = "*This field is required";
-      errorInForm = true;
-    } else if (!numbersRegex.test(allNewContractDetails.lessorRentAmount)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorRentAmount = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorRentAmount = "";
-    }
-    if (allNewContractDetails.lessorAccountNumber === "") {
-      errObj.lessorAccountNumber = "*This field is required";
-      errorInForm = true;
-    } else if (!numbersRegex.test(allNewContractDetails.lessorAccountNumber)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorAccountNumber = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.longitude = "";
-    }
-    if (allNewContractDetails.lessorBankName === "") {
-      errObj.lessorBankName = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lessorBankName)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorBankName = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorBankName = "";
-    }
-    if (allNewContractDetails.lessorBranchName === "") {
-      errObj.lessorBranchName = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lessorBranchName)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorBranchName = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorBranchName = "";
-    }
-    if (allNewContractDetails.lessorGstNumber === "") {
-      errObj.lessorGstNumber = "*This field is required";
-      errorInForm = true;
-    } else if (!gstRegex.test(allNewContractDetails.lessorGstNumber)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorGstNumber = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorGstNumber = "";
-    }
-    if (allNewContractDetails.lessorPanNumber === "") {
-      errObj.lessorPanNumber = "*This field is required";
-      errorInForm = true;
+      errObj.lessorPanNumber = "*Invalid Field";
     } else if (!panCardRegex.test(allNewContractDetails.lessorPanNumber)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorPanNumber = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorPanNumber = "";
+      errObj.lessorPanNumber = "*Invalid Field";
     }
-    if (allNewContractDetails.lessorName === "") {
-      errObj.lessorName = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lessorName)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorName = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorName = "";
-    }
-    if (allNewContractDetails.lessorDoorNumber === "") {
-      errObj.lessorDoorNumber = "*This field is required";
-      errorInForm = true;
+
+    if (!allNewContractDetails.lessorGstNumber) {
+      errObj.lessorGstNumber = "This field is required";
     } else if (
-      !nameWithSpacesAndNumbers.test(allNewContractDetails.lessorDoorNumber)
+      allNewContractDetails.lessorGstNumber.trim().length !==
+      allNewContractDetails.lessorGstNumber.length
     ) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorDoorNumber = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorDoorNumber = "";
-    }
-    if (allNewContractDetails.lessorFloorNumber === "") {
-      errObj.lessorFloorNumber = "*This field is required";
-      errorInForm = true;
-    } else if (
-      !nameWithSpacesAndNumbers.test(allNewContractDetails.lessorFloorNumber)
-    ) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorFloorNumber = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorFloorNumber = "";
-    }
-    if (allNewContractDetails.lessorCity === "") {
-      errObj.lessorCity = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lessorCity)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorCity = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorCity = "";
-    }
-    if (allNewContractDetails.lessorArea === "") {
-      errObj.lessorArea = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lessorArea)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorArea = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorArea = "";
-    }
-    if (allNewContractDetails.lessorLandMark === "") {
-      errObj.lessorLandMark = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lessorLandMark)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorLandMark = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorLandMark = "";
+      errObj.lessorGstNumber = "*Invalid Field";
+    } else if (!gstRegex.test(allNewContractDetails.lessorGstNumber)) {
+      errObj.lessorGstNumber = "*Invalid Field";
     }
 
-    if (allNewContractDetails.lessorLocation === "") {
-      errObj.lessorLocation = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lessorLocation)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorLocation = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorLocation = "";
-    }
-
-    if (allNewContractDetails.lessorPinCode === "") {
-      errObj.lessorPinCode = "*This field is required";
-      errorInForm = true;
-    } else if (!pincodeRegex.test(allNewContractDetails.lessorPinCode)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorPinCode = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorPinCode = "";
-    }
-
-    if (allNewContractDetails.lessorWardNo === "") {
-      errObj.lessorWardNo = "*This field is required";
-      errorInForm = true;
-    } else if (!numbersRegex.test(allNewContractDetails.lessorWardNo)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorWardNo = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorWardNo = "";
-    }
-
-    if (allNewContractDetails.lessorDistrict === "") {
-      errObj.lessorDistrict = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lessorDistrict)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorDistrict = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorDistrict = "";
-    }
-
-    if (allNewContractDetails.lessorStreet === "") {
-      errObj.lessorStreet = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lessorStreet)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorStreet = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorStreet = "";
-    }
-
-    if (allNewContractDetails.lessorState === "") {
-      errObj.lessorState = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lessorState)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorState = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorState = "";
-    }
-    if (allNewContractDetails.lessorTaluka === "") {
-      errObj.lessorTaluka = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lessorTaluka)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorTaluka = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorTaluka = "";
-    }
-    if (allNewContractDetails.lessorDistrict === "") {
-      errObj.lessorDistrict = "*This field is required";
-      errorInForm = true;
-    } else if (!nameWithSpaces.test(allNewContractDetails.lessorDistrict)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorDistrict = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorDistrict = "";
-    }
-
-    if (allNewContractDetails.lessorContract === "") {
-      errObj.lessorContract = "*This field is required";
-      errorInForm = true;
-    } else if (!mobileRegex.test(allNewContractDetails.lessorContract)) {
-      // Check if the name contains only valid characters (spaces included)
-      errorInForm = true;
-      errObj.lessorContract = "*Invalid Name";
-    } else {
-      // Reset the error message if the field is valid
-      errObj.lessorContract = "";
-    }
-
-    // Check if any field is empty
-    const isAnyFieldEmpty = Object.values(allNewContractDetails)?.some(
-      (value) => value === ""
-    );
-
-    if (isAnyFieldEmpty) {
-      addToast("Please fill in all the fields", {
-        appearance: "error",
-      });
-      return true;
-    }
+    console.log("Validation Result:", errorInForm);
     setAllNewContractDetailsErr({ ...errObj });
     return errorInForm;
   };
@@ -1107,11 +967,7 @@ const MasterDetails = (props) => {
       default:
         break;
     }
-    // Uncommented code for validation and moving to the next step
-    // const validateFields = await handleAddRentContractInformationError();
-    // if (!validateFields) {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    // }
   };
 
   const AddAllNewRentContactInformation = async () => {
@@ -1228,6 +1084,8 @@ const MasterDetails = (props) => {
       glName: allNewContractDetails?.glName,
       glEmpId: allNewContractDetails?.glEmpId,
       signedDate: allNewContractDetails?.signedDate,
+
+      monthlyRent: allNewContractDetails?.monthlyRent,
     };
     const { data, errRes } = await AddRentContractDetails(payload);
     // console.log(data,"addData");
@@ -1242,6 +1100,7 @@ const MasterDetails = (props) => {
         // ... other fields
       });
       setAllNewContractDetails({
+        uniqueID: "",
         lessorName: "",
         lessorContactNumber: "",
         lessorEmailAddress: "",
@@ -1255,10 +1114,9 @@ const MasterDetails = (props) => {
         lessorCheuque: "",
         recipiants: [
           {
-            recipiantsID: "",
             lessorRecipiantsName: "",
-            lessorIfscNumber: "",
             lessorBankName: "",
+            lessorIfscNumber: "",
             lessorBranchName: "",
             lessorAccountNumber: "",
             lessorRentAmount: "",
@@ -1266,6 +1124,10 @@ const MasterDetails = (props) => {
             gstNo: "",
           },
         ],
+        lessorBankName: "",
+        lessorIfscNumber: "",
+        lessorBranchName: "",
+        lessorAccountNumber: "",
         lessorDoorNumber: "",
         lessorFloorNumber: "",
         lessorLandMark: "",
@@ -1278,7 +1140,6 @@ const MasterDetails = (props) => {
         lessorTaluka: "",
         lessorDistrict: "",
         lessorState: "",
-
         lesseeBranchType: "",
         branchID: "",
         lesseeBranchName: "",
@@ -1306,13 +1167,13 @@ const MasterDetails = (props) => {
         westPremesis: "",
         premesisState: "",
         premesisBuildingType: "",
-        agreementSignDate: "",
+        agreementSignDate: null,
         agreementTenure: "",
         agreementActivationStatus: "",
-        agreementStartDate: "",
-        agreementEndDate: "",
-        rentStartDate: "",
-        rentEndDate: "",
+        agreementStartDate: null,
+        agreementEndDate: null,
+        rentStartDate: null,
+        rentEndDate: null,
         agreementRefreshStartDate: "",
         agreementRefreshEndDate: "",
         maintaineneCharge: "",
@@ -1330,9 +1191,9 @@ const MasterDetails = (props) => {
         standardDeducition: "",
         firstMonthvalue: "",
         lastMonthvalue: "",
-        rentAmount: "",
+        // rentAmount: "",
         escalation: "",
-        renewalTenure: "",
+        // renewalTenure: "",
         lattitude: "",
         longitude: "",
         gpsCoordinates: "",
@@ -1342,10 +1203,11 @@ const MasterDetails = (props) => {
         lastRentDate: "",
         plotNumber: "",
         builtupArea: "",
-        renewalStatus: "",
+        // renewalStatus: "",
         glName: "",
         glEmpId: "",
         signedDate: "",
+        monthlyRent: "",
       });
       setIFSCCodes(Array(recipientCount).fill(""));
       setBankAndBranch(Array(recipientCount).fill({ bank: "", branch: "" }));
@@ -1460,15 +1322,12 @@ const MasterDetails = (props) => {
       // securityDepositPaymentMode:
       //   allNewContractDetails?.securityDepositPaymentMode,
       securityDepositUtr: allNewContractDetails?.securityDepositUtr,
-      rentAmount: allNewContractDetails?.rentAmount,
       securityDepositLockinPeriod:
         allNewContractDetails?.securityDepositLockinPeriod,
       securityDepositnoticePeriod:
         allNewContractDetails?.securityDepositnoticePeriod,
       securityDepositExitTerm: allNewContractDetails?.securityDepositExitTerm,
       standardDeducition: allNewContractDetails?.standardDeducition,
-      firstMonthvalue: allNewContractDetails?.firstMonthvalue,
-      lastMonthvalue: allNewContractDetails?.lastMonthvalue,
 
       rentAmount: allNewContractDetails?.rentAmount,
       escalation: allNewContractDetails?.escalation,
@@ -1489,128 +1348,14 @@ const MasterDetails = (props) => {
       glName: allNewContractDetails?.glName,
       glEmpId: allNewContractDetails?.glEmpId,
       signedDate: allNewContractDetails?.signedDate,
+
+      monthlyRent: allNewContractDetails?.monthlyRent,
     };
     const { data, errRes } = await EditRentContractDetails(
       props.uniqueID,
       payload
     );
     if (data) {
-      // setBranchDetails({
-      //   branchID: allNewContractDetails?.branchID,
-      //   branchName: allNewContractDetails?.lesseeBranchName,
-      //   areaName: allNewContractDetails?.lesseeAreaName,
-      //   region: allNewContractDetails?.lesseeDivision,
-      //   zone: allNewContractDetails?.lesseeZone,
-      //   state: allNewContractDetails?.lesseeState,
-      //   // ... other fields
-      // });
-
-      // setAllNewContractDetails({
-      //   lessorName: "",
-      //   lessorContactNumber: "",
-      //   lessorEmailAddress: "",
-      //   lessorPanNumber: "",
-      //   lessorGstNumber: "",
-      //   lessorTdsNumber: "",
-      //   paymentMode: "",
-      //   lessorElectricityBillNumber: "",
-      //   lessorTaxNumber: "",
-      //   lessorBankPassBookNumber: "",
-      //   lessorCheuque: "",
-      //   recipiants: [
-      //     {
-      //       recipiantsID: "",
-      //       lessorRecipiantsName: "",
-      //       lessorIfscNumber: "",
-      //       lessorBankName: "",
-      //       lessorBranchName: "",
-      //       lessorAccountNumber: "",
-      //       lessorRentAmount: "",
-      //       panNo: "",
-      //       gstNo: "",
-      //     },
-      //   ],
-      //   lessorDoorNumber: "",
-      //   lessorFloorNumber: "",
-      //   lessorLandMark: "",
-      //   lessorStreet: "",
-      //   lessorWardNo: "",
-      //   lessorArea: "",
-      //   lessorCity: "",
-      //   lessorLocation: "",
-      //   lessorPinCode: "",
-      //   lessorTaluka: "",
-      //   lessorDistrict: "",
-      //   lessorState: "",
-
-      //   lesseeBranchType: "",
-      //   branchID: "",
-      //   lesseeBranchName: "",
-      //   lesseeAreaName: "",
-      //   lesseeDivision: "",
-      //   lesseeZone: "",
-      //   lesseeState: "",
-
-      //   lesseeApproverrenewals: "",
-      //   lesseeApproverRelocation: "",
-      //   lesseeEntityDetails: "",
-      //   premesisLocation: "",
-      //   premesisDoorNumber: "",
-      //   premesisFloorNumber: "",
-      //   premesisWardNo: "",
-      //   premesisLandMark: "",
-      //   premesisStreet: "",
-      //   premesisCity: "",
-      //   premesisPinCode: "",
-      //   premesisTaluka: "",
-      //   premesisDistrict: "",
-      //   northPremesis: "",
-      //   southPremesis: "",
-      //   eastPremesis: "",
-      //   westPremesis: "",
-      //   premesisState: "",
-      //   premesisBuildingType: "",
-      //   agreementSignDate: "",
-      //   agreementTenure: "",
-      //   agreementActivationStatus: "",
-      //   agreementStartDate: "",
-      //   agreementEndDate: "",
-      //   rentStartDate: "",
-      //   rentEndDate: "",
-      //   agreementRefreshStartDate: "",
-      //   agreementRefreshEndDate: "",
-      //   maintaineneCharge: "",
-      //   waterCharge: "",
-      //   electricity: "",
-      //   documentType: "",
-      //   documentPath: "",
-      //   securityDepositAmount: "",
-      //   securityDepositPaymentDate: "",
-      //   securityDepositPaymentMode: "",
-      //   securityDepositUtr: "",
-      //   securityDepositLockinPeriod: "",
-      //   securityDepositnoticePeriod: "",
-      //   securityDepositExitTerm: "",
-      //   standardDeducition: "",
-      //   firstMonthvalue: "",
-      //   lastMonthvalue: "",
-      //   rentAmount: "",
-      //   escalation: "",
-      //   renewalTenure: "",
-      //   lattitude: "",
-      //   longitude: "",
-      //   gpsCoordinates: "",
-      //   tds: "",
-      //   gst: "",
-      //   firstRentDate: "",
-      //   lastRentDate: "",
-      //   plotNumber: "",
-      //   builtupArea: "",
-      //   renewalStatus: "",
-      //   glName: "",
-      //   glEmpId: "",
-      //   signedDate: "",
-      // });
       setIFSCCodes(Array(recipientCount).fill(""));
       setBankAndBranch(Array(recipientCount).fill({ bank: "", branch: "" }));
       props.getContractDetails();
@@ -1688,7 +1433,6 @@ const MasterDetails = (props) => {
         premesisDistrict: props.EditLessorData?.premesisDistrict,
         premesisState: props.EditLessorData?.lesseeState,
         premesisPinCode: props.EditLessorData?.premesisPinCode,
-        // district: props.EditLessorData?.premesisDistrict,
         premesisBuildingType: props.EditLessorData?.premesisBuildingType,
         northPremesis: props.EditLessorData?.northPremesis,
         southPremesis: props.EditLessorData?.southPremesis,
@@ -1719,7 +1463,6 @@ const MasterDetails = (props) => {
         electricity: props.EditLessorData?.electricity,
         documentType: props.EditLessorData?.documentType,
         securityDepositAmount: props.EditLessorData?.securityDepositAmount,
-        rentAmount: props.EditLessorData?.rentAmount,
 
         securityDepositPaymentMode:
           props.EditLessorData?.securityDepositPaymentMode,
@@ -1752,6 +1495,8 @@ const MasterDetails = (props) => {
         glName: props.EditLessorData?.glName,
         glEmpId: props.EditLessorData?.glEmpId,
         signedDate: props.EditLessorData?.signedDate,
+
+        monthlyRent: props?.EditLessorData?.monthlyRent,
       });
       setIFSCCodes(Array(recipientCount).fill(""));
       setBankAndBranch(Array(recipientCount).fill({ bank: "", branch: "" }));
@@ -1837,122 +1582,7 @@ const MasterDetails = (props) => {
         />
       ),
     },
-    // {
-    //   label: (
-    //     <Button onClick={handleClick} sx={{ fontSize: 12 }}>
-    //       Branch Information
-    //     </Button>
-    //   ),
-    //   content: (
-    //     <LesseeInformation
-    //       setActiveStep={setActiveStep}
-    //       activeStep={activeStep}
-    //       allNewContractDetailsErr={allNewContractDetailsErr}
-    //       onSave={handleSaveData}
-    //       // onSave={handleSave}
-    //       allNewContractDetails={allNewContractDetails}
-    //       setAllNewContractDetails={setAllNewContractDetails}
-    //       type={props.type}
-    //       handleAddRentContractInformationError={
-    //         handleAddRentContractInformationError
-    //       }
-    //     />
-    //   ),
-    // },
-    // {
-    //   label: (
-    //     <Button onClick={handleClick} sx={{ fontSize: 12 }}>
-    //       Premises Information
-    //     </Button>
-    //   ),
-    //   content: (
-    //     <PremisesInformation
-    //       setActiveStep={setActiveStep}
-    //       activeStep={activeStep}
-    //       allNewContractDetailsErr={allNewContractDetailsErr}
-    //       onSave={handleSaveData}
-    //       // onSave={handleSave}
-    //       allNewContractDetails={allNewContractDetails}
-    //       setAllNewContractDetails={setAllNewContractDetails}
-    //       type={props.type}
-    //       handleAddRentContractInformationError={
-    //         handleAddRentContractInformationError
-    //       }
-    //     />
-    //   ),
-    // },
-    // {
-    //   label: (
-    //     <Button onClick={handleClick} sx={{ fontSize: 12 }}>
-    //       Agreement Information
-    //     </Button>
-    //   ),
-    //   content: (
-    //     <AgreementDetails
-    //       setActiveStep={setActiveStep}
-    //       activeStep={activeStep}
-    //       onSave={handleSaveData}
-    //       close={props.close}
-    //       allNewContractDetailsErr={allNewContractDetailsErr}
-    //       allNewContractDetails={allNewContractDetails}
-    //       setAllNewContractDetails={setAllNewContractDetails}
-    //       AddAllNewRentContactInformation={AddAllNewRentContactInformation}
-    //       type={props.type}
-    //       editAllNewRentContractDetails={editAllNewRentContractDetails}
-    //       EditLessorData={props.EditLessorData.uniqueID}
-    //       handleAddRentContractInformationError={
-    //         handleAddRentContractInformationError
-    //       }
-    //     />
-    //   ),
-    // },
-    // {
-    //   label: (
-    //     <Button onClick={handleClick} sx={{ fontSize: 12 }}>
-    //       Rent Terms Information
-    //     </Button>
-    //   ),
-    //   content: (
-    //     <RentTermsDetails
-    //       setActiveStep={setActiveStep}
-    //       activeStep={activeStep}
-    //       onSave={handleSaveData}
-    //       // onSave={handleSave}
-    //       allNewContractDetails={allNewContractDetails}
-    //       setAllNewContractDetails={setAllNewContractDetails}
-    //       type={props.type}
-    //       allNewContractDetailsErr={allNewContractDetailsErr}
-    //       handleAddRentContractInformationError={
-    //         handleAddRentContractInformationError
-    //       }
-    //     />
-    //   ),
-    // },
-    // {
-    //   label: (
-    //     <Button onClick={handleClick} sx={{ fontSize: 12 }}>
-    //       GPS Co-ordinate Information
-    //     </Button>
-    //   ),
-    //   content: (
-    //     <GPSInformation
-    //       setActiveStep={setActiveStep}
-    //       activeStep={activeStep}
-    //       onSave={handleSaveData}
-    //       close={props.close}
-    //       allNewContractDetailsErr={allNewContractDetailsErr}
-    //       allNewContractDetails={allNewContractDetails}
-    //       setAllNewContractDetails={setAllNewContractDetails}
-    //       AddAllNewRentContactInformation={AddAllNewRentContactInformation}
-    //       type={props.type}
-    //       editAllNewRentContractDetails={editAllNewRentContractDetails}
-    //       EditLessorData={props.EditLessorData.uniqueID}
-    //       handleAddRentContractInformationError={
-    //         handleAddRentContractInformationError
-    //       }
-    //     />
-    //   ),
-    // },
+
     // // Add more steps as needed
   ];
   const contractStatus = [
@@ -2088,24 +1718,6 @@ const MasterDetails = (props) => {
           <Button onClick={props.close} variant="contained">
             Close
           </Button>
-          {/* <Box>
-            <Button
-              disabled={activeStep && activeStep === 0}
-              onClick={handleBack}
-              variant="contained"
-              sx={{ m: 1 }}
-            >
-              Back
-            </Button>
-            <Button
-              disabled={activeStep && activeStep === 0}
-              onClick={() => handleSaveData(null)}
-              variant="contained"
-              sx={{ m: 1, background: "#238520" }}
-            >
-              {activeStep === 5 ? "Finish" : "Next"}
-            </Button>
-          </Box> */}
         </Modal.Footer>
       </Modal>
     </>
@@ -2113,750 +1725,3 @@ const MasterDetails = (props) => {
 };
 
 export default MasterDetails;
-
-//overflowY: "scroll"
-
-// useEffect(() => {
-//   setAllNewContractDetails({
-//     uniqueID: props.EditLessorData?.uniqueID,
-//     branchID: props.EditLessorData?.branchID,
-//     lessorName: props.EditLessorData?.lessorName,
-//     lessorContactNumber: props.EditLessorData?.lessorContactNumber,
-//     lessorEmailAddress: props.EditLessorData?.lessorEmailAddress,
-//     lessorPanNumber: props.EditLessorData?.lessorPanNumber,
-//     lessorGstNumber: props.EditLessorData?.lessorGstNumber,
-//     lessorTdsNumber: props.EditLessorData?.lessorTdsNumber,
-//     paymentMode: props.EditLessorData?.paymentMode,
-//     // recipiants: [
-//     //   {
-//     //     lessorRecipiantsName: props.EditLessorData?.lessorRecipiantsName,
-//     //     lessorBankName: props.EditLessorData?.lessorBankName,
-//     //     lessorBranchName: props.EditLessorData?.lessorBranchName,
-//     //     lessorIfscNumber: props.EditLessorData?.lessorIfscNumber,
-//     //     lessorAccountNumber: props.EditLessorData?.lessorAccountNumber,
-//     //   },
-//     // ],
-//     lessorElectricityBillNumber:
-//       props.EditLessorData?.lessorElectricityBillNumber,
-//     lessorTaxNumber: props.EditLessorData?.lessorTaxNumber,
-//     lessorBankPassBookNumber: props.EditLessorData?.lessorBankPassBookNumber,
-//     lessorCheuque: props.EditLessorData?.lessorCheuque,
-//     lessorDoorNumber: props.EditLessorData?.lessorDoorNumber,
-//     lessorFloorNumber: props.EditLessorData?.lessorFloorNumber,
-//     lessorWardNo: props.EditLessorData?.lessorWardNo,
-//     lessorLandMark: props.EditLessorData?.lessorLandMark,
-//     lessorStreet: props.EditLessorData?.lessorStreet,
-//     lessorArea: props.EditLessorData?.lessorArea,
-//     lessorCity: props.EditLessorData?.lessorCity,
-//     lessorLocation: props.EditLessorData?.lessorLocation,
-//     lessorPinCode: props.EditLessorData?.lessorPinCode,
-//     lessorTaluka: props.EditLessorData?.lessorTaluka,
-//     lessorDistrict: props.EditLessorData?.lessorDistrict,
-//     lessorState: props.EditLessorData?.lessorState,
-
-//     lesseebranchName: props.EditLessorData?.lesseeBranchName,
-//     lesseeAreaName: props.EditLessorData?.lesseeAreaName,
-//     lesseeDivision: props.EditLessorData?.lesseeDivision,
-//     lesseeZone: props.EditLessorData?.lesseeZone,
-//     lesseeState: props.EditLessorData?.lesseeState,
-//     lesseeBranchType: props.EditLessorData?.lesseeBranchType,
-//     approverRenewal: props.EditLessorData?.lesseeApproverrenewals,
-//     approverRelocation: props.EditLessorData?.lesseeApproverRelocation,
-//     enitityDetails: props.EditLessorData?.lesseeEntityDetails,
-
-//     location: props.EditLessorData?.premesisLocation,
-//     branchName: props.EditLessorData?.premesisBranchName,
-//     areaName: props.EditLessorData?.premesisAreaName,
-//     division: props.EditLessorData?.premesisDivision,
-//     zone: props.EditLessorData?.premesisZone,
-//     state: props.EditLessorData?.premesisState,
-//     buildingType: props.EditLessorData?.premesisBuildingType,
-//     doorNo: props.EditLessorData?.premesisDoorNumber,
-//     floorNo: props.EditLessorData?.premesisFloorNumber,
-//     landMark: props.EditLessorData?.premesisLandMark,
-//     roadName: props.EditLessorData?.premesisStreet,
-//     wardName: props.EditLessorData?.premesisWardNo,
-//     city: props.EditLessorData?.premesisCity,
-//     pincode: props.EditLessorData?.premesisPinCode,
-//     taluk: props.EditLessorData?.premesisTaluka,
-//     district: props.EditLessorData?.premesisDistrict,
-
-//     // agreementSignDate: moment(
-//     //   new Date(props.EditLessorData?.agreementSignDate)
-//     // ).format("YYYY-MM-DD"),
-//     tenurePeriod: props.EditLessorData?.agreementTenure,
-//     activationStatus: props.EditLessorData?.agreementActivationStatus,
-//     agreementStartDate: props.EditLessorData?.agreementStartDate,
-//     agreementEndDate: props.EditLessorData?.agreementEndDate,
-//     rentStarttDate: props.EditLessorData?.rentStartDate,
-//     rentEndDate: props.EditLessorData?.rentEndDate,
-//     refreshStartDate: props.EditLessorData?.agreementRefreshStartDate,
-//     refreshEndDate: props.EditLessorData?.agreementRefreshEndDate,
-//     maintainenceCharges: props.EditLessorData?.maintaineneCharge,
-//     waterCharges: props.EditLessorData?.waterCharge,
-//     electricityCharges: props.EditLessorData?.electricity,
-//     documentType: props.EditLessorData?.documentType,
-//     paymentDate: props.EditLessorData?.securityDepositPaymentDate,
-//     agreementpaymentMode: props.EditLessorData?.securityDepositPaymentMode,
-//     securityDepositAmount: props.EditLessorData?.securityDepositAmount,
-//     monthlyRent: props.EditLessorData?.securityDepositUtr,
-//     firstMonthValue: props.EditLessorData?.firstMonthvalue,
-//     lastMonthValue: props.EditLessorData?.lastMonthvalue,
-//     utrDetails: props.EditLessorData?.securityDepositUtr,
-//     lockinPeriod: props.EditLessorData?.securityDepositLockinPeriod,
-//     noticePeriod: props.EditLessorData?.securityDepositnoticePeriod,
-//     exitterms: props.EditLessorData?.securityDepositExitTerm,
-
-//     rentAmount: props.EditLessorData?.rentAmount,
-//     escalation: props.EditLessorData?.escalation,
-//     renewalTenure: props.EditLessorData?.renewalTenure,
-
-//     lattitude: props.EditLessorData?.lattitude,
-//     longitude: props.EditLessorData?.longitude,
-//     coordinates: props.EditLessorData?.gpsCoordinates,
-//   });
-// }, [props.EditLessorData]);
-
-// const getEditDetails = async () => {
-//   const { data } = await getAllRentContractDetails(props.editLessorData);
-//   // console.log(data?.data, "dtaa");
-//   if (data) {
-//     if (data) {
-//       const sendData = data?.data;
-//       setAllNewContractDetails({
-//         ...sendData,
-//       });
-//     }
-//   }
-// };
-
-// if (allNewContractDetails.agreementSignDate === "") {
-//   errorInForm = true;
-//   errObj.agreementSignDate = "*This field is required";
-// }
-// if (allNewContractDetails.agreementTenure === "") {
-//   errorInForm = true;
-//   errObj.agreementTenure = "*This field is required";
-// }
-// if (allNewContractDetails.agreementStartDate === "") {
-//   errorInForm = true;
-//   errObj.agreementStartDate = "*This field is required";
-// }
-// if (allNewContractDetails.agreementActivationStatus === "") {
-//   errorInForm = true;
-//   errObj.agreementActivationStatus = "*This field is required";
-// }
-// if (allNewContractDetails.agreementStartDate === "") {
-//   errorInForm = true;
-//   errObj.agreementStartDate = "*This field is required";
-// }
-// if (allNewContractDetails.agreementEndDate === "") {
-//   errorInForm = true;
-//   errObj.agreementEndDate = "*This field is required";
-// }
-// if (allNewContractDetails.rentStartDate === "") {
-//   errorInForm = true;
-//   errObj.rentStartDate = "*This field is required";
-// }
-// if (allNewContractDetails.rentEndDate === "") {
-//   errorInForm = true;
-//   errObj.rentEndDate = "*This field is required";
-// }
-// if (allNewContractDetails.maintaineneCharge === "") {
-//   errorInForm = true;
-//   errObj.maintaineneCharge = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.maintaineneCharge) &&
-//   allNewContractDetails.maintaineneCharge !== "") {
-//   errorInForm = true;
-//   errObj.maintaineneCharge = "*Invalid Charges";
-// }
-
-// if (allNewContractDetails.waterCharge === "") {
-//   errorInForm = true;
-//   errObj.waterCharge = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.waterCharge) &&
-//   allNewContractDetails.waterCharge !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.waterCharge = "*Invalid Charges";
-// }
-
-// if (allNewContractDetails.electricity === "") {
-//   errorInForm = true;
-//   errObj.electricity = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.electricity) &&
-//   allNewContractDetails.electricity !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.electricity = "*Invalid Charges";
-// }
-
-// if (allNewContractDetails.documentType === "") {
-//   errorInForm = true;
-//   errObj.documentType = "*This field is required";
-// }
-
-// if (allNewContractDetails.securityDepositAmount === "") {
-//   errorInForm = true;
-//   errObj.securityDepositAmount = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.securityDepositAmount) &&
-//   allNewContractDetails.securityDepositAmount !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.securityDepositAmount = "*Invalid Amount Data";
-// }
-
-// if (allNewContractDetails.securityDepositUtr === "") {
-//   errorInForm = true;
-//   errObj.securityDepositUtr = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.securityDepositUtr) &&
-//   allNewContractDetails.securityDepositUtr !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.securityDepositUtr = "*Invalid Utr Details";
-// }
-
-// if (allNewContractDetails.standardDeducition === "") {
-//   errorInForm = true;
-//   errObj.standardDeducition = "*This  field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.standardDeducition) &&
-//   allNewContractDetails.standardDeducition !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.standardDeducition = "*Invalid Amount ";
-// }
-
-// if (allNewContractDetails.firstMonthvalue === "") {
-//   errorInForm = true;
-//   errObj.firstMonthvalue = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.firstMonthvalue) &&
-//   allNewContractDetails.firstMonthvalue !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.firstMonthvalue = "*Invalid value";
-// }
-
-// if (allNewContractDetails.lastMonthvalue === "") {
-//   errorInForm = true;
-//   errObj.lastMonthvalue = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.lastMonthvalue) &&
-//   allNewContractDetails.lastMonthvalue !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lastMonthvalue = "*Invalid value";
-// }
-
-// if (allNewContractDetails.rentAmount === "") {
-//   errorInForm = true;
-//   errObj.rentAmount = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.rentAmount) &&
-//   allNewContractDetails.rentAmount !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.rentAmount = "*Invalid value";
-// }
-
-// if (allNewContractDetails.escalation === "") {
-//   errorInForm = true;
-//   errObj.escalation = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.escalation) &&
-//   allNewContractDetails.escalation !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.escalation = "*Invalid value";
-// }
-
-// if (allNewContractDetails.renewalTenure === "") {
-//   errorInForm = true;
-//   errObj.renewalTenure = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.renewalTenure) &&
-//   allNewContractDetails.renewalTenure !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.renewalTenure = "*Invalid value";
-// }
-
-// if (allNewContractDetails.lessorName === "") {
-//   errObj.lessorName = "*This field is required";
-//   errorInForm = true;
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lessorName) &&
-//   allNewContractDetails.lessorName !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorName = "*Invalid Name";
-// }
-
-// if (allNewContractDetails.lessorName === "") {
-//   errObj.lessorName = "*This field is required";
-//   errorInForm = true;
-// } else if (!nameWithSpaces.test(allNewContractDetails.lessorName)) {
-//   // Check if the name contains only valid characters (spaces included)
-//   errorInForm = true;
-//   errObj.lessorName = "*Invalid Name";
-// } else {
-//   // Reset the error message if the field is valid
-//   errObj.lessorName = "";
-// }
-
-// if (allNewContractDetails.lessorContactNumber === "") {
-//   errObj.lessorContactNumber = "*This field is required";
-//   errorInForm = true;
-// } else if (
-//   !mobileRegex.test(allNewContractDetails?.lessorContactNumber) &&
-//   allNewContractDetails.lessorContactNumber !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorContactNumber = "*Invalid Number";
-// }
-
-// if (allNewContractDetails.lessorEmailAddress === "") {
-//   errObj.lessorEmailAddress = "*This field is required";
-//   errorInForm = true;
-// } else if (
-//   !emailRegex.test(allNewContractDetails?.lessorEmailAddress) &&
-//   allNewContractDetails.lessorEmailAddress !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorEmailAddress = "*Invalid Email";
-// }
-
-// if (allNewContractDetails.lessorPanNumber === "") {
-//   errorInForm = true;
-//   errObj.lessorPanNumber = "*This field is required";
-// } else if (
-//   !panCardRegex.test(allNewContractDetails?.lessorPanNumber) &&
-//   allNewContractDetails.lessorPanNumber !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorPanNumber = "*Invalid Pan Number";
-// }
-
-// if (allNewContractDetails.lessorGstNumber === "") {
-//   errorInForm = true;
-//   errObj.lessorGstNumber = "*This field is required";
-// } else if (
-//   !gstRegex.test(allNewContractDetails?.lessorGstNumber) &&
-//   allNewContractDetails.lessorGstNumber !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorGstNumber = "*Invalid GST Number";
-// }
-
-// if (allNewContractDetails.lessorDoorNumber === "") {
-//   errorInForm = true;
-//   errObj.lessorDoorNumber = "*This field is required";
-// } else if (
-//   !numberNameWithSpecialCharacters.test(
-//     allNewContractDetails.lessorDoorNumber
-//   ) &&
-//   allNewContractDetails?.lessorDoorNumber !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorDoorNumber = "*Invalid Door Number";
-// }
-
-// if (allNewContractDetails.lessorFloorNumber === "") {
-//   errorInForm = true;
-//   errObj.lessorFloorNumber = "*This field is required";
-// } else if (
-//   !nameWithSpacesAndNumbers.test(
-//     allNewContractDetails?.lessorFloorNumber
-//   ) &&
-//   allNewContractDetails.lessorFloorNumber !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorFloorNumber = "*Invalid Floor Number";
-// }
-
-// if (allNewContractDetails.lessorWardNo === "") {
-//   errorInForm = true;
-//   errObj.lessorWardNo = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.lessorWardNo) &&
-//   allNewContractDetails.lessorWardNo !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorWardNo = "*Invalid Ward No";
-// }
-
-// if (allNewContractDetails.lessorLandMark === "") {
-//   errorInForm = true;
-//   errObj.lessorLandMark = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lessorLandMark) &&
-//   allNewContractDetails.lessorLandMark !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorLandMark = "*Invalid LandMark";
-// }
-
-// if (allNewContractDetails.lessorStreet === "") {
-//   errorInForm = true;
-//   errObj.lessorStreet = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lessorStreet) &&
-//   allNewContractDetails.lessorStreet !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorStreet = "*Invalid Street Name";
-// }
-
-// if (allNewContractDetails.lessorCity === "") {
-//   errorInForm = true;
-//   errObj.lessorCity = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lessorCity) &&
-//   allNewContractDetails.lessorCity !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorCity = "*Invalid City name";
-// }
-
-// if (allNewContractDetails.lessorPinCode === "") {
-//   errorInForm = true;
-//   errObj.lessorPinCode = "*This field is required";
-// } else if (
-//   !pincodeRegex.test(allNewContractDetails?.lessorPinCode) &&
-//   allNewContractDetails.lessorPinCode !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorPinCode = "*Invalid Pincode";
-// }
-
-// if (allNewContractDetails.lessorTaluka === "") {
-//   errorInForm = true;
-//   errObj.lessorTaluka = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lessorTaluka) &&
-//   allNewContractDetails.lessorTaluka !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorTaluka = "*Invalid Taluk Name";
-// }
-
-// if (allNewContractDetails.lessorDistrict === "") {
-//   errorInForm = true;
-//   errObj.lessorDistrict = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lessorDistrict) &&
-//   allNewContractDetails.lessorDistrict !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorDistrict = "*Invalid District Name";
-// }
-
-// if (allNewContractDetails.lessorState === "") {
-//   errorInForm = true;
-//   errObj.lessorState = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lessorState) &&
-//   allNewContractDetails.lessorState !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lessorState = "*Invalid State";
-// }
-
-// if (allNewContractDetails.lesseeBranchName === "") {
-//   errorInForm = true;
-//   errObj.lesseeBranchName = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lesseeBranchName) &&
-//   allNewContractDetails.lesseeBranchName !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lesseeBranchName = "*Invalid Branch name";
-// }
-
-// if (allNewContractDetails.lesseeAreaName === "") {
-//   errorInForm = true;
-//   errObj.lesseeAreaName = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lesseeAreaName) &&
-//   allNewContractDetails.lesseeAreaName !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lesseeAreaName = "*Invalid Area name";
-// }
-
-// if (allNewContractDetails.lesseeDivision === "") {
-//   errorInForm = true;
-//   errObj.lesseeDivision = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lesseeDivision) &&
-//   allNewContractDetails.lesseeDivision !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lesseeDivision = "*Invalid Region name";
-// }
-
-// if (allNewContractDetails.lesseeZone === "") {
-//   errorInForm = true;
-//   errObj.lesseeZone = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lesseeZone) &&
-//   allNewContractDetails.lesseeZone !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lesseeZone = "*Invalid Zone name";
-// }
-
-// if (allNewContractDetails.lesseeState === "") {
-//   errorInForm = true;
-//   errObj.lesseeState = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lesseeState) &&
-//   allNewContractDetails.lesseeState !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lesseeState = "*Invalid State name";
-// }
-
-// if (allNewContractDetails.premesisLocation === "") {
-//   errorInForm = true;
-//   errObj.premesisLocation = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.premesisLocation) &&
-//   allNewContractDetails.premesisLocation !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.premesisLocation = "*Invalid Location";
-// }
-
-// if (allNewContractDetails?.premesisDoorNumber === "") {
-//   errorInForm = true;
-//   errObj.premesisDoorNumber = "*This field is required";
-// } else if (
-//   !numberNameWithSpecialCharacters.test(
-//     allNewContractDetails.premesisDoorNumber
-//   ) &&
-//   allNewContractDetails.premesisDoorNumber !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.premesisDoorNumber = "*Invalid Door Number";
-// }
-
-// if (allNewContractDetails.premesisDoorNumber === "") {
-//   errObj.premesisDoorNumber = "*This field is required";
-//   errorInForm = true;
-// } else if (!numberNameWithSpecialCharacters.test(allNewContractDetails.premesisDoorNumber)) {
-//   // Check if the name contains only valid characters (spaces included)
-//   errorInForm = true;
-//   errObj.premesisDoorNumber = "*Invalid Name";
-// } else {
-//   // Reset the error message if the field is valid
-//   errObj.premesisDoorNumber = "";
-// }
-
-// if (allNewContractDetails?.premesisFloorNumber === "") {
-//   errorInForm = true;
-//   errObj.premesisFloorNumber = "*This field is required";
-// } else if (
-//   !nameWithSpacesAndNumbers.test(
-//     allNewContractDetails?.premesisFloorNumber
-//   ) &&
-//   allNewContractDetails.premesisFloorNumber !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.premesisFloorNumber = "*Invalid Floor Number";
-// }
-
-// if (allNewContractDetails.premesisWardNo === "") {
-//   errorInForm = true;
-//   errObj.premesisWardNo = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.premesisWardNo) &&
-//   allNewContractDetails.premesisWardNo !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.premesisWardNo = "*Invalid Ward No";
-// }
-
-// if (allNewContractDetails.premesisLandMark === "") {
-//   errorInForm = true;
-//   errObj.premesisLandMark = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.premesisLandMark === "") &&
-//   allNewContractDetails.premesisLandMark !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.premesisLandMark = "*Invalid LandMark Data";
-// }
-
-// if (allNewContractDetails.premesisStreet === "") {
-//   errorInForm = true;
-//   errObj.premesisStreet = "*This field is required";
-// } else if (
-//   !nameWithSpacesAndNumbers.test(allNewContractDetails?.premesisStreet) &&
-//   allNewContractDetails.premesisStreet !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.premesisStreet = "*Invalid Street Name";
-// }
-
-// if (allNewContractDetails.premesisCity === "") {
-//   errorInForm = true;
-//   errObj.premesisCity = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.premesisCity) &&
-//   allNewContractDetails.premesisCity !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.premesisCity = "*Invalid City Name";
-// }
-
-// if (allNewContractDetails.premesisPinCode === "") {
-//   errorInForm = true;
-//   errObj.premesisPinCode = "*This field is required";
-// } else if (
-//   !pincodeRegex.test(allNewContractDetails?.premesisPinCode) &&
-//   allNewContractDetails.premesisPinCode !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.premesisPinCode = "*Invalid pincode";
-// }
-
-// if (allNewContractDetails.premesisTaluka === "") {
-//   errorInForm = true;
-//   errObj.premesisTaluka = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.premesisTaluka) &&
-//   allNewContractDetails.premesisTaluka !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.premesisTaluka = "*Invalid Taluk Data";
-// }
-
-// if (allNewContractDetails.premesisDistrict === "") {
-//   errorInForm = true;
-//   errObj.premesisDistrict = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.premesisDistrict) &&
-//   allNewContractDetails.premesisDistrict !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.premesisDistrict = "*Invalid District Name";
-// }
-
-// if (allNewContractDetails.premesisState === "") {
-//   errorInForm = true;
-//   errObj.premesisState = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.premesisState) &&
-//   allNewContractDetails.premesisState !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.premesisState = "*Invalid State Name";
-// }
-
-// if (allNewContractDetails.lesseeBranchName === "") {
-//   errorInForm = true;
-//   errObj.lesseeBranchName = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lesseeBranchName) &&
-//   allNewContractDetails.lesseeBranchName !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lesseeBranchName = "*Invalid Branch Name";
-// }
-
-// if (allNewContractDetails.lesseeAreaName === "") {
-//   errorInForm = true;
-//   errObj.lesseeAreaName = "*This field is required";
-// } else if (
-//   !nameWithSpaces.test(allNewContractDetails?.lesseeAreaName) &&
-//   allNewContractDetails.lesseeAreaName !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lesseeAreaName = "*Invalid Area Name";
-// }
-
-// if (allNewContractDetails.lesseeDivision === "") {
-//   errorInForm = true;
-//   errObj.lesseeDivision = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.lesseeDivision) &&
-//   allNewContractDetails.lesseeDivision !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lesseeDivision = "*Invalid Division";
-// }
-
-// if (allNewContractDetails.lesseeZone === "") {
-//   errorInForm = true;
-//   errObj.lesseeZone = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.lesseeZone) &&
-//   allNewContractDetails.lesseeZone !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lesseeZone = "*Invalid Zone";
-// }
-
-// if (allNewContractDetails.lesseeState === "") {
-//   errorInForm = true;
-//   errObj.lesseeState = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.lesseeState) &&
-//   allNewContractDetails.lesseeState !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lesseeState = "*Invalid Zone";
-// }
-
-// if (allNewContractDetails.premesisState === "") {
-//   errorInForm = true;
-//   errObj.premesisState = "*This field is required";
-// } else if (
-//   !numbersRegex.test(allNewContractDetails?.premesisState) &&
-//   allNewContractDetails.premesisState !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.renewalTenure = "*Invalid State";
-// }
-
-// if (allNewContractDetails.lattitude === "") {
-//   errorInForm = true;
-//   errObj.lattitude = "*This field is required";
-// } else if (
-//   !numbersWithSpecialChatracters.test(allNewContractDetails?.lattitude) &&
-//   allNewContractDetails.lattitude !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.lattitude = "*Invalid value";
-// }
-
-// if (allNewContractDetails.longitude === "") {
-//   errorInForm = true;
-//   errObj.longitude = "*This field is required";
-// } else if (
-//   !numbersWithSpecialChatracters.test(allNewContractDetails?.longitude) &&
-//   allNewContractDetails.longitude !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.longitude = "*Invalid value";
-// }
-
-// if (allNewContractDetails.gpsCoordinates === "") {
-//   errorInForm = true;
-//   errObj.gpsCoordinates = "*This field is required";
-// } else if (
-//   !numbersWithSpecialChatractersAndSeparated.test(
-//     allNewContractDetails?.gpsCoordinates
-//   ) &&
-//   allNewContractDetails.gpsCoordinates !== ""
-// ) {
-//   errorInForm = true;
-//   errObj.gpsCoordinates = "*Invalid value";
-// }n
