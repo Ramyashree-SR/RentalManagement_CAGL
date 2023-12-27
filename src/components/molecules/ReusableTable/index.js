@@ -91,11 +91,12 @@ const ReusableTable = ({ data, columns, sx }) => {
         <TableBody>
           {data?.map((row, index) => (
             <StyledTableRow key={index}>
-              {columns?.map((column) => (
-                <StyledTableCell key={column.id} sx={{ sx }}>
-                  {row[column.id]}
-                </StyledTableCell>
-              ))}
+              {columns &&
+                columns?.map((column) => (
+                  <StyledTableCell key={column.id} sx={{ sx }}>
+                    {row[column.id]}
+                  </StyledTableCell>
+                ))}
             </StyledTableRow>
           ))}
         </TableBody>

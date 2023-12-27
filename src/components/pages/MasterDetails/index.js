@@ -43,7 +43,6 @@ import DropDownComponent from "../../atoms/DropDownComponent";
 import { getBranchID } from "../../services/RentContractsApi";
 
 let errObj = {
-  uniqueID: "",
   lessorName: "",
   lessorContactNumber: "",
   lessorEmailAddress: "",
@@ -51,10 +50,12 @@ let errObj = {
   lessorGstNumber: "",
   lessorTdsNumber: "",
   paymentMode: "",
-  lessorElectricityBillNumber: "",
-  lessorTaxNumber: "",
-  lessorBankPassBookNumber: "",
-  lessorCheuque: "",
+  nationality: "",
+  contractStatus: "",
+  lessorElectricityBillPath: "",
+  lessorTaxNumberPath: "",
+  lessorBankPassBookPath: "",
+  panDocumentPath: "",
   recipiants: [
     {
       lessorRecipiantsName: "",
@@ -67,18 +68,22 @@ let errObj = {
       gstNo: "",
     },
   ],
+  recipiantsID: "",
+  lessorRecipiantsName: "",
   lessorBankName: "",
   lessorIfscNumber: "",
   lessorBranchName: "",
   lessorAccountNumber: "",
+  lessorRentAmount: "",
+  panNo: "",
+  gstNo: "",
+
   lessorDoorNumber: "",
   lessorFloorNumber: "",
   lessorLandMark: "",
   lessorStreet: "",
   lessorWardNo: "",
-  lessorArea: "",
   lessorCity: "",
-  lessorLocation: "",
   lessorPinCode: "",
   lessorTaluka: "",
   lessorDistrict: "",
@@ -117,8 +122,6 @@ let errObj = {
   agreementEndDate: null,
   rentStartDate: null,
   rentEndDate: null,
-  agreementRefreshStartDate: "",
-  agreementRefreshEndDate: "",
   maintaineneCharge: "",
   waterCharge: "",
   electricity: "",
@@ -132,11 +135,7 @@ let errObj = {
   securityDepositnoticePeriod: "",
   securityDepositExitTerm: "",
   standardDeducition: "",
-  firstMonthvalue: "",
-  lastMonthvalue: "",
-  // rentAmount: "",
   escalation: "",
-  // renewalTenure: "",
   lattitude: "",
   longitude: "",
   gpsCoordinates: "",
@@ -146,7 +145,6 @@ let errObj = {
   lastRentDate: "",
   plotNumber: "",
   builtupArea: "",
-  // renewalStatus: "",
   glName: "",
   glEmpId: "",
   signedDate: "",
@@ -166,7 +164,6 @@ const MasterDetails = (props) => {
   const [stepData5, setStepData5] = useState("");
   const [stepData6, setStepData6] = useState("");
   const [allNewContractDetails, setAllNewContractDetails] = useState({
-    uniqueID: "",
     lessorName: "",
     lessorContactNumber: "",
     lessorEmailAddress: "",
@@ -174,10 +171,12 @@ const MasterDetails = (props) => {
     lessorGstNumber: "",
     lessorTdsNumber: "",
     paymentMode: "",
-    lessorElectricityBillNumber: "",
-    lessorTaxNumber: "",
-    lessorBankPassBookNumber: "",
-    lessorCheuque: "",
+    nationality: "",
+    contractStatus: "",
+    lessorElectricityBillPath: "",
+    lessorTaxNumberPath: "",
+    lessorBankPassBookPath: "",
+    panDocumentPath: "",
     recipiants: [
       {
         lessorRecipiantsName: "",
@@ -190,18 +189,22 @@ const MasterDetails = (props) => {
         gstNo: "",
       },
     ],
+    recipiantsID: "",
+    lessorRecipiantsName: "",
     lessorBankName: "",
     lessorIfscNumber: "",
     lessorBranchName: "",
     lessorAccountNumber: "",
+    lessorRentAmount: "",
+    panNo: "",
+    gstNo: "",
+
     lessorDoorNumber: "",
     lessorFloorNumber: "",
     lessorLandMark: "",
     lessorStreet: "",
     lessorWardNo: "",
-    lessorArea: "",
     lessorCity: "",
-    lessorLocation: "",
     lessorPinCode: "",
     lessorTaluka: "",
     lessorDistrict: "",
@@ -240,8 +243,6 @@ const MasterDetails = (props) => {
     agreementEndDate: null,
     rentStartDate: null,
     rentEndDate: null,
-    agreementRefreshStartDate: "",
-    agreementRefreshEndDate: "",
     maintaineneCharge: "",
     waterCharge: "",
     electricity: "",
@@ -255,11 +256,7 @@ const MasterDetails = (props) => {
     securityDepositnoticePeriod: "",
     securityDepositExitTerm: "",
     standardDeducition: "",
-    firstMonthvalue: "",
-    lastMonthvalue: "",
-    // rentAmount: "",
     escalation: "",
-    // renewalTenure: "",
     lattitude: "",
     longitude: "",
     gpsCoordinates: "",
@@ -269,7 +266,6 @@ const MasterDetails = (props) => {
     lastRentDate: "",
     plotNumber: "",
     builtupArea: "",
-    // renewalStatus: "",
     glName: "",
     glEmpId: "",
     signedDate: "",
@@ -302,7 +298,6 @@ const MasterDetails = (props) => {
   });
   useEffect(() => {
     let errObj = {
-      uniqueID: "",
       lessorName: "",
       lessorContactNumber: "",
       lessorEmailAddress: "",
@@ -310,10 +305,12 @@ const MasterDetails = (props) => {
       lessorGstNumber: "",
       lessorTdsNumber: "",
       paymentMode: "",
-      lessorElectricityBillNumber: "",
-      lessorTaxNumber: "",
-      lessorBankPassBookNumber: "",
-      lessorCheuque: "",
+      nationality: "",
+      contractStatus: "",
+      lessorElectricityBillPath: "",
+      lessorTaxNumberPath: "",
+      lessorBankPassBookPath: "",
+      panDocumentPath: "",
       recipiants: [
         {
           lessorRecipiantsName: "",
@@ -326,18 +323,22 @@ const MasterDetails = (props) => {
           gstNo: "",
         },
       ],
+      recipiantsID: "",
+      lessorRecipiantsName: "",
       lessorBankName: "",
       lessorIfscNumber: "",
       lessorBranchName: "",
       lessorAccountNumber: "",
+      lessorRentAmount: "",
+      panNo: "",
+      gstNo: "",
+
       lessorDoorNumber: "",
       lessorFloorNumber: "",
       lessorLandMark: "",
       lessorStreet: "",
       lessorWardNo: "",
-      lessorArea: "",
       lessorCity: "",
-      lessorLocation: "",
       lessorPinCode: "",
       lessorTaluka: "",
       lessorDistrict: "",
@@ -376,8 +377,6 @@ const MasterDetails = (props) => {
       agreementEndDate: null,
       rentStartDate: null,
       rentEndDate: null,
-      agreementRefreshStartDate: "",
-      agreementRefreshEndDate: "",
       maintaineneCharge: "",
       waterCharge: "",
       electricity: "",
@@ -391,11 +390,7 @@ const MasterDetails = (props) => {
       securityDepositnoticePeriod: "",
       securityDepositExitTerm: "",
       standardDeducition: "",
-      firstMonthvalue: "",
-      lastMonthvalue: "",
-      // rentAmount: "",
       escalation: "",
-      // renewalTenure: "",
       lattitude: "",
       longitude: "",
       gpsCoordinates: "",
@@ -405,7 +400,6 @@ const MasterDetails = (props) => {
       lastRentDate: "",
       plotNumber: "",
       builtupArea: "",
-      // renewalStatus: "",
       glName: "",
       glEmpId: "",
       signedDate: "",
@@ -441,10 +435,15 @@ const MasterDetails = (props) => {
           gstNo: "",
         },
       ],
+      recipiantsID: "",
+      lessorRecipiantsName: "",
       lessorBankName: "",
       lessorIfscNumber: "",
       lessorBranchName: "",
       lessorAccountNumber: "",
+      lessorRentAmount: "",
+      panNo: "",
+      gstNo: "",
       lessorDoorNumber: "",
       lessorFloorNumber: "",
       lessorLandMark: "",
@@ -833,25 +832,15 @@ const MasterDetails = (props) => {
     if (!allNewContractDetails.securityDepositAmount) {
       errObj.securityDepositAmount = "This field is required";
     } else if (
-      allNewContractDetails.securityDepositAmount.trim().length !==
-      allNewContractDetails.securityDepositAmount.length
-    ) {
-      errObj.securityDepositAmount = "*Invalid Field";
-    } else if (
       !numbersRegex.test(allNewContractDetails.securityDepositAmount)
     ) {
-      errObj.securityDepositAmount = "*Invalid Field";
+      errObj.securityDepositAmount = "";
     }
 
     if (!allNewContractDetails.monthlyRent) {
       errObj.monthlyRent = "This field is required";
-    } else if (
-      allNewContractDetails.monthlyRent.trim().length !==
-      allNewContractDetails.monthlyRent.length
-    ) {
-      errObj.monthlyRent = "*Invalid Field";
     } else if (!numbersRegex.test(allNewContractDetails.monthlyRent)) {
-      errObj.monthlyRent = "*Invalid Field";
+      errObj.monthlyRent = "";
     }
 
     if (!allNewContractDetails.escalation) {
@@ -1000,9 +989,7 @@ const MasterDetails = (props) => {
       lessorWardNo: allNewContractDetails?.lessorWardNo,
       lessorLandMark: allNewContractDetails?.lessorLandMark,
       lessorStreet: allNewContractDetails?.lessorStreet,
-      // lessorArea: allNewContractDetails?.lessorArea,
       lessorCity: allNewContractDetails?.lessorCity,
-      // lessorLocation: allNewContractDetails?.lessorLocation,
       lessorPinCode: allNewContractDetails?.lessorPinCode,
       lessorTaluka: allNewContractDetails?.lessorTaluka,
       lessorDistrict: allNewContractDetails?.lessorDistrict,
@@ -1100,7 +1087,6 @@ const MasterDetails = (props) => {
         // ... other fields
       });
       setAllNewContractDetails({
-        uniqueID: "",
         lessorName: "",
         lessorContactNumber: "",
         lessorEmailAddress: "",
@@ -1108,10 +1094,12 @@ const MasterDetails = (props) => {
         lessorGstNumber: "",
         lessorTdsNumber: "",
         paymentMode: "",
-        lessorElectricityBillNumber: "",
-        lessorTaxNumber: "",
-        lessorBankPassBookNumber: "",
-        lessorCheuque: "",
+        nationality: "",
+        contractStatus: "",
+        lessorElectricityBillPath: "",
+        lessorTaxNumberPath: "",
+        lessorBankPassBookPath: "",
+        panDocumentPath: "",
         recipiants: [
           {
             lessorRecipiantsName: "",
@@ -1124,18 +1112,22 @@ const MasterDetails = (props) => {
             gstNo: "",
           },
         ],
+        recipiantsID: "",
+        lessorRecipiantsName: "",
         lessorBankName: "",
         lessorIfscNumber: "",
         lessorBranchName: "",
         lessorAccountNumber: "",
+        lessorRentAmount: "",
+        panNo: "",
+        gstNo: "",
+
         lessorDoorNumber: "",
         lessorFloorNumber: "",
         lessorLandMark: "",
         lessorStreet: "",
         lessorWardNo: "",
-        lessorArea: "",
         lessorCity: "",
-        lessorLocation: "",
         lessorPinCode: "",
         lessorTaluka: "",
         lessorDistrict: "",
@@ -1174,8 +1166,6 @@ const MasterDetails = (props) => {
         agreementEndDate: null,
         rentStartDate: null,
         rentEndDate: null,
-        agreementRefreshStartDate: "",
-        agreementRefreshEndDate: "",
         maintaineneCharge: "",
         waterCharge: "",
         electricity: "",
@@ -1189,11 +1179,7 @@ const MasterDetails = (props) => {
         securityDepositnoticePeriod: "",
         securityDepositExitTerm: "",
         standardDeducition: "",
-        firstMonthvalue: "",
-        lastMonthvalue: "",
-        // rentAmount: "",
         escalation: "",
-        // renewalTenure: "",
         lattitude: "",
         longitude: "",
         gpsCoordinates: "",
@@ -1203,7 +1189,6 @@ const MasterDetails = (props) => {
         lastRentDate: "",
         plotNumber: "",
         builtupArea: "",
-        // renewalStatus: "",
         glName: "",
         glEmpId: "",
         signedDate: "",
@@ -1235,19 +1220,30 @@ const MasterDetails = (props) => {
       lessorPanNumber: allNewContractDetails?.lessorPanNumber,
       lessorGstNumber: allNewContractDetails?.lessorGstNumber,
       paymentMode: allNewContractDetails?.paymentMode,
-      recipiants: allNewContractDetails.recipiants.map((recipient, index) => ({
-        recipiantsID: recipient?.recipiantsID,
-        lessorRecipiantsName: recipient?.lessorRecipiantsName,
-        lessorIfscNumber: recipient?.lessorIfscNumber || ifscCodes?.[index],
-        lessorBankName:
-          recipient?.lessorBankName || bankAndBranch?.[index].bank, // Use bank name from state
-        lessorBranchName:
-          recipient?.lessorBranchName || bankAndBranch?.[index].branch,
-        lessorAccountNumber: recipient?.lessorAccountNumber,
-        lessorRentAmount: recipient?.lessorRentAmount,
-        panNo: recipient?.panNo,
-        gstNo: recipient?.gstNo,
-      })),
+      // recipiants: allNewContractDetails?.recipiants?.map(
+      //   (recipient, index) => ({
+      //     lessorRecipiantsName: recipient?.lessorRecipiantsName,
+      //     lessorIfscNumber: recipient?.lessorIfscNumber || ifscCodes?.[index],
+      //     lessorBankName:
+      //       recipient?.lessorBankName || bankAndBranch?.[index].bank, // Use bank name from state
+      //     lessorBranchName:
+      //       recipient?.lessorBranchName || bankAndBranch?.[index].branch, // Use branch name from state
+      //     // Use IFSC code from state
+      //     lessorAccountNumber: recipient?.lessorAccountNumber,
+      //     lessorRentAmount: recipient?.lessorRentAmount,
+      //     panNo: recipient?.panNo,
+      //     gstNo: recipient?.gstNo,
+      //   })
+      // ),
+      recipiantsID: allNewContractDetails?.recipiantsID,
+      lessorRecipiantsName: allNewContractDetails?.lessorRecipiantsName,
+      lessorBankName: allNewContractDetails?.lessorBankName,
+      lessorIfscNumber: allNewContractDetails?.lessorIfscNumber,
+      lessorBranchName: allNewContractDetails?.lessorBranchName,
+      lessorAccountNumber: allNewContractDetails?.lessorAccountNumber,
+      lessorRentAmount: allNewContractDetails?.lessorRentAmount,
+      panNo: allNewContractDetails?.panNo,
+      gstNo: allNewContractDetails?.gstNo,
       lessorDoorNumber: allNewContractDetails?.lessorDoorNumber,
       lessorFloorNumber: allNewContractDetails?.lessorFloorNumber,
       lessorWardNo: allNewContractDetails?.lessorWardNo,
@@ -1380,22 +1376,30 @@ const MasterDetails = (props) => {
         lessorPanNumber: props.EditLessorData?.lessorPanNumber,
         lessorGstNumber: props.EditLessorData?.lessorGstNumber,
         paymentMode: props.EditLessorData?.paymentMode,
-        recipiants: props.EditLessorData?.recipiants.map(
-          (recipient, index) => ({
-            recipiantsID: recipient?.recipiantsID,
-            lessorRecipiantsName: recipient?.lessorRecipiantsName,
-            lessorIfscNumber: recipient?.lessorIfscNumber || ifscCodes?.[index],
-            lessorBankName:
-              recipient?.lessorBankName || bankAndBranch?.[index].bank, // Use bank name from state
-            lessorBranchName:
-              recipient?.lessorBranchName || bankAndBranch?.[index].branch,
-            lessorAccountNumber: recipient?.lessorAccountNumber,
-            lessorRentAmount: recipient?.lessorRentAmount,
-            panNo: recipient?.panNo,
-            gstNo: recipient?.gstNo,
-          })
-        ),
-
+        // recipiants: props.EditLessorData?.recipiants.map(
+        //   (recipient, index) => ({
+        //     recipiantsID: recipient?.recipiantsID,
+        //     lessorRecipiantsName: recipient?.lessorRecipiantsName,
+        //     lessorIfscNumber: recipient?.lessorIfscNumber || ifscCodes?.[index],
+        //     lessorBankName:
+        //       recipient?.lessorBankName || bankAndBranch?.[index].bank, // Use bank name from state
+        //     lessorBranchName:
+        //       recipient?.lessorBranchName || bankAndBranch?.[index].branch,
+        //     lessorAccountNumber: recipient?.lessorAccountNumber,
+        //     lessorRentAmount: recipient?.lessorRentAmount,
+        //     panNo: recipient?.panNo,
+        //     gstNo: recipient?.gstNo,
+        //   })
+        // ),
+        recipiantsID: props.EditLessorData?.recipiantsID,
+        lessorRecipiantsName: props.EditLessorData?.lessorRecipiantsName,
+        lessorBankName: props.EditLessorData?.lessorBankName,
+        lessorIfscNumber: props.EditLessorData?.lessorIfscNumber,
+        lessorBranchName: props.EditLessorData?.lessorBranchName,
+        lessorAccountNumber: props.EditLessorData?.lessorAccountNumber,
+        lessorRentAmount: props.EditLessorData?.lessorRentAmount,
+        panNo: props.EditLessorData?.panNo,
+        gstNo: props.EditLessorData?.gstNo,
         lessorDoorNumber: props.EditLessorData?.lessorDoorNumber,
         lessorFloorNumber: props.EditLessorData?.lessorFloorNumber,
         lessorWardNo: props.EditLessorData?.lessorWardNo,

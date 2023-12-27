@@ -39,22 +39,20 @@ import MenuComponent from "../../molecules/MenuComponent";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.root}`]: {
-   padding:"5px",
-   width:8
+    padding: "5px",
+    width: 8,
   },
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme?.palette?.info.dark,
     color: theme.palette?.common?.white,
     fontSize: 12,
     fontWeight: 650,
-   
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 11,
     fontWeight: 700,
     backgroundColor: "#FFFFFF", //#CFE8F7, #C5EBF6 ,#D5F7DC
     fontFamily: "sans-serif",
-    
   },
 }));
 
@@ -122,7 +120,8 @@ const TableComponent = ({
   activationStatusFilter,
   handleActivationStatusFilterChange,
   handleEdit,
-  setOpenProvisionsMoadal,
+  openProvisionsModal,
+  setOpenProvisionsModal,
   setOpenRentDueModal,
   openRentDueModal,
   branchIDforDue,
@@ -134,6 +133,8 @@ const TableComponent = ({
   setRentStartDate,
   setAgreementTenure,
   setRentEndDate,
+  monthlyRent,
+  setMonthlyRent
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
@@ -185,14 +186,13 @@ const TableComponent = ({
     setBranchModal(true);
   };
 
-  const changeProvisions = (rowData) => {
-    if (
-      activationStatusFilter === "open" ||
-      activationStatusFilter === "Open"
-    ) {
-      setOpenProvisionsMoadal(true);
-    }
-    setSelectedItem(rowData);
+  const changeProvisions = () => {
+    // if (
+    //   (activationStatusFilter === "All" && "agreementActivationStatus" === "open") ||
+    //   activationStatusFilter === "Open"
+    // ) {
+    setOpenProvisionsModal(true);
+    // }
   };
 
   const handleRentDueDetails = () => {
@@ -216,7 +216,7 @@ const TableComponent = ({
     }
     return options;
   }, []);
-
+  // console.log(activationStatusFilter,"activationStatusFilter");
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer
@@ -249,12 +249,11 @@ const TableComponent = ({
                       <select
                         value={activationStatusFilter || "All"}
                         onChange={handleActivationStatusFilterChange}
-                       
                       >
                         {/* <option value=""></option> */}
-                        <option value="All" >All</option>
+                        <option value="All">All</option>
                         {filterOptions?.map((option) => (
-                          <option key={option} value={option}  >
+                          <option key={option} value={option}>
                             {option}
                           </option>
                         ))}
@@ -336,7 +335,13 @@ const TableComponent = ({
                                       handleEditRow(e, row);
                                       setUniqueID(row.uniqueID);
                                     }}
-                                    handleEditProvisions={changeProvisions}
+                                    handleEditProvisions={() => {
+                                      changeProvisions();
+                                      setAgreementTenure(row.agreementTenure);
+                                      setRentStartDate(row.rentStartDate);
+                                      setRentEndDate(row.rentEndDate);
+                                      setMonthlyRent(row.monthlyRent);
+                                    }}
                                     handleRentDue={() => {
                                       handleRentDueDetails();
                                       setUniqueID(row.uniqueID);
@@ -353,6 +358,8 @@ const TableComponent = ({
                                     rentEndDate={rentEndDate}
                                     agreementTenure={agreementTenure}
                                     rentContractDetails={rentContractDetails}
+                                    openProvisionsModal={openProvisionsModal}
+                                    monthlyRent={monthlyRent}
                                   />
                                 )}
 

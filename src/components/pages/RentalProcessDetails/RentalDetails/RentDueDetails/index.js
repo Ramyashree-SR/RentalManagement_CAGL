@@ -15,9 +15,9 @@ const RentDueDetails = (props) => {
     rentStartDate,
     rentEndDate,
     agreementTenure,
-    uniqueID
+    uniqueID,
   } = props;
-  console.log(props, "props");
+  // console.log(props, "props");
   const userData = [
     { id: 1, col1: "1", col2: "3/16", col3: "open", col4: "Branch" },
     { id: 2, col1: "1", col2: "3/16", col3: "open", col4: "Branch" },
@@ -60,6 +60,9 @@ const RentDueDetails = (props) => {
               sx={{ fontSize: 15, fontWeight: 700 }}
             >
               <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
+                Contract ID : {uniqueID}
+              </Typography>
+              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
                 Branch ID : {branchIDforDue}
               </Typography>
               <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
@@ -70,10 +73,6 @@ const RentDueDetails = (props) => {
               </Typography>
               <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
                 Tenure : {agreementTenure}
-              </Typography>
-
-              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Contract ID : {uniqueID}
               </Typography>
             </Grid>
             <ReusableTable data={rentDueDetails} columns={rentDueData} />

@@ -27,6 +27,7 @@ import Provisions from "../../pages/RentalProcessDetails/RentalDetails/Provision
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import LockClockIcon from "@mui/icons-material/LockClock";
 import LockIcon from "@mui/icons-material/Lock";
+import { AddRentProvisionDetails } from "../../services/ProvisionsApi";
 
 const ColorIcon = styled(Icon)(({ theme }) => ({
   //   color: theme.palette?.getContrastText(pink[900]),
@@ -47,11 +48,22 @@ export default function MenuComponent({
   rentStartDate,
   rentEndDate,
   agreementTenure,
+  openProvisionsModal,
+  setOpenProvisionsModal,
+  setMonthlyRent,
+  monthlyRent,
 }) {
   const [fullscreen, setFullscreen] = useState(true);
   const [rentDueDetails, setRentDueDetails] = useState([]);
-
-  const [openProvisionsMoadal, setOpenProvisionsMoadal] = useState(false);
+  const [addProvisions, setAddProvisions] = useState({
+    provisionID: "",
+    contractID: "",
+    year: "",
+    month: "",
+    provisionAmount: "",
+    remark: "",
+    dateTime: "",
+  });
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -67,6 +79,7 @@ export default function MenuComponent({
 
   const getAllRentDueDetailsByBranchID = async () => {
     const { data } = await getRentDueDetails(uniqueID);
+    // console.log(data.data,"data");
     if (data) {
       if (data) {
         let getData = data?.data;
@@ -74,6 +87,31 @@ export default function MenuComponent({
       } else {
         setRentDueDetails([]);
       }
+    }
+  };
+
+  const AddProvisionFortheMonth = async () => {
+    let payload = {
+      provisionID: addProvisions.provisionID,
+      contractID: uniqueID,
+      year: addProvisions.year.label,
+      month: addProvisions.month.label,
+      provisionAmount: monthlyRent,
+      remark: addProvisions.remark,
+      dateTime: addProvisions.dateTime,
+    };
+    const { data } = await AddRentProvisionDetails(payload);
+    console.log(data?.data, "data");
+    if (data) {
+      setAddProvisions({
+        provisionID: "",
+        contractID: "",
+        year: "",
+        month: "",
+        provisionAmount: "",
+        remark: "",
+        dateTime: "",
+      });
     }
   };
 
@@ -186,10 +224,20 @@ export default function MenuComponent({
         uniqueID={uniqueID}
         agreementTenure={agreementTenure}
       />
+
       <Provisions
-        show={openProvisionsMoadal}
-        close={() => setOpenProvisionsMoadal(false)}
+        show={openProvisionsModal}
+        close={() => setOpenProvisionsModal(false)}
         fullscreen={fullscreen}
+        branchIDforDue={branchIDforDue}
+        rentEndDate={rentEndDate}
+        rentStartDate={rentStartDate}
+        agreementTenure={agreementTenure}
+        addProvisions={addProvisions}
+        setAddProvisions={setAddProvisions}
+        AddProvisionFortheMonth={AddProvisionFortheMonth}
+        monthlyRent={monthlyRent}
+        uniqueID={uniqueID}
       />
     </React.Fragment>
   );

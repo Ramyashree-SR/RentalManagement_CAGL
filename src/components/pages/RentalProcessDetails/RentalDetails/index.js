@@ -40,7 +40,10 @@ import {
 } from "../../../services/FilterApis";
 import { makeStyles } from "@mui/styles";
 import { blue, green } from "@mui/material/colors";
-import { getRentDueDetails } from "../../../services/RentDueApi";
+import {
+  getAllRentDueDetails,
+  getRentDueDetails,
+} from "../../../services/RentDueApi";
 
 const useStyles = makeStyles({
   customTextField: {
@@ -99,6 +102,7 @@ const RentalDetails = (props) => {
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [openRentActualModal, setOpenRentActualModal] = useState(false);
   const [openVarianceModal, setOpenVarianceModal] = useState(false);
+  const [openProvisionsModal, setOpenProvisionsModal] = useState(false);
   const [openRentDueModal, setOpenRentDueModal] = useState(false);
   const [openRentDueDataModal, setOpenRentDueDataModal] = useState(false);
 
@@ -106,7 +110,7 @@ const RentalDetails = (props) => {
   const [uniqueID, setUniqueID] = useState(null);
   // console.log(uniqueID, "uniqueID");
   const [rentContractDetails, setRentContractDetails] = useState([]);
-  console.log(rentContractDetails, "rentContractDetails");
+  // console.log(rentContractDetails, "rentContractDetails");
   // const [stateFilter, setStateFilter] = useState(
   //   ...new Set(rentContractDetails?.map((item) => item.lesseeState))
   // );
@@ -127,13 +131,14 @@ const RentalDetails = (props) => {
   const [branchIDforDue, setbranchIDforDue] = useState("");
   // console.log(branchIDforDue, "branchIDforDue");
   const [rentDueDataByBranchId, setRentDueDataByBranchId] = useState([]);
+  // console.log(rentDueDataByBranchId, "rentDueDataByBranchId");
   // const [rentDetailsForDue, setrentDetailsForDue] = useState([]);
   // console.log(rentDetailsForDue, "rentDetailsForDue");
 
-  const [rentStartDate,setRentStartDate ] = useState(null)
-  const [rentEndDate, setRentEndDate] = useState(null)
-  const [agreementTenure, setAgreementTenure] = useState(null)
-
+  const [rentStartDate, setRentStartDate] = useState(null);
+  const [rentEndDate, setRentEndDate] = useState(null);
+  const [agreementTenure, setAgreementTenure] = useState(null);
+  const [monthlyRent, setMonthlyRent] = useState(null);
   // const [rentstartDate, setRentstartDate] = useState("")
   const handleStateChange = (value) => {
     // console.log(value.target.outerText, "newValue");
@@ -269,9 +274,9 @@ const RentalDetails = (props) => {
     });
     setbranchIDforDue(value.target.outerText);
     getAllContractDetails(value.target.outerText);
-    if (value.target.outerText) {
-      getAllRentDueDetailsByBranchID(value.target.outerText);
-    }
+    // if (value.target.outerText) {
+    //   getAllRentDueDetailsByBranchID(value.target.outerText);
+    // }
   };
 
   const getBranchId = async () => {
@@ -282,7 +287,6 @@ const RentalDetails = (props) => {
         data?.data?.map((val) => {
           branchIDData.push([val]);
         });
-
         setBranchFilter(branchIDData);
       } else {
         setBranchFilter([]);
@@ -317,13 +321,15 @@ const RentalDetails = (props) => {
     getAllRentDueDetailsByBranchID();
   }, [branchIDforDue]);
 
+  // console.log(branchIDforDue, "branchIDforDue");
+
   const getAllRentDueDetailsByBranchID = async () => {
-    const { data } = await getRentDueDetails(branchIDforDue);
-    
+    const { data } = await getAllRentDueDetails(branchIDforDue);
+    console.log(data, "allData");
     if (data) {
       if (data) {
         let getData = data?.data;
-        setRentDueDataByBranchId({getData});
+        setRentDueDataByBranchId(getData);
       } else {
         setRentDueDataByBranchId([]);
       }
@@ -497,12 +503,14 @@ const RentalDetails = (props) => {
                 getAllRentDueDetailsByBranchID={getAllRentDueDetailsByBranchID}
                 branchFilter={branchFilter}
                 handleBranchID={handleBranchID}
+                rentContractDetails={rentContractDetails}
+                activationStatusFilter={activationStatusFilter}
+                handleActivationStatusFilterChange={
+                  handleActivationStatusFilterChange
+                }
+                lesseeBranchName={rentContractDetails?.lesseeBranchName}
               />
-              {/* <Provisions
-                show={openProvisionsMoadal}
-                close={() => setOpenProvisionsMoadal(false)}
-                fullscreen={fullscreen}
-              /> */}
+
               {/* <Variance
                 show={openVarianceModal}
                 close={() => setOpenVarianceModal(false)}
@@ -752,8 +760,6 @@ const RentalDetails = (props) => {
           Variance
         </MenuItem>
       </Menu>
-
-   
       <Box
         sm={12}
         xs={12}
@@ -788,7 +794,8 @@ const RentalDetails = (props) => {
             handleActivationStatusFilterChange
           }
           openRentDueModal={openRentDueModal}
-          // setOpenProvisionsMoadal={setOpenProvisionsMoadal}
+          openProvisionsModal={openProvisionsModal}
+          setOpenProvisionsModal={setOpenProvisionsModal}
           setOpenRentDueModal={setOpenRentDueModal}
           branchIDforDue={branchIDforDue}
           // rentContractDetails={rentContractDetails.rentStartDate}
@@ -798,6 +805,8 @@ const RentalDetails = (props) => {
           setRentEndDate={setRentEndDate}
           agreementTenure={agreementTenure}
           setAgreementTenure={setAgreementTenure}
+          monthlyRent={monthlyRent}
+          setMonthlyRent={setMonthlyRent}
         />
       </Box>
     </Box>
