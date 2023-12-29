@@ -52,6 +52,9 @@ export default function MenuComponent({
   setOpenProvisionsModal,
   setMonthlyRent,
   monthlyRent,
+  lessorName,
+  activationStatusFilter,
+  lesseeBranchName,
 }) {
   const [fullscreen, setFullscreen] = useState(true);
   const [rentDueDetails, setRentDueDetails] = useState([]);
@@ -74,10 +77,10 @@ export default function MenuComponent({
   };
 
   useEffect(() => {
-    getAllRentDueDetailsByBranchID();
+    getAllRentDueDetailsByUniqueID();
   }, [uniqueID]);
 
-  const getAllRentDueDetailsByBranchID = async () => {
+  const getAllRentDueDetailsByUniqueID = async () => {
     const { data } = await getRentDueDetails(uniqueID);
     // console.log(data.data,"data");
     if (data) {
@@ -90,7 +93,9 @@ export default function MenuComponent({
     }
   };
 
-  const AddProvisionFortheMonth = async () => {
+ 
+
+  const AddProvisionFortheMonth = async (params) => {
     let payload = {
       provisionID: addProvisions.provisionID,
       contractID: uniqueID,
@@ -100,8 +105,8 @@ export default function MenuComponent({
       remark: addProvisions.remark,
       dateTime: addProvisions.dateTime,
     };
-    const { data } = await AddRentProvisionDetails(payload);
-    console.log(data?.data, "data");
+    const { data } = await AddRentProvisionDetails(params, payload);
+    // console.log(data?.data, "data");
     if (data) {
       setAddProvisions({
         provisionID: "",
@@ -114,7 +119,7 @@ export default function MenuComponent({
       });
     }
   };
-
+  console.log(uniqueID, "uniqueID");
   return (
     <React.Fragment>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
@@ -191,7 +196,7 @@ export default function MenuComponent({
         <MenuItem
           onClick={() => {
             handleRentDue();
-            getAllRentDueDetailsByBranchID();
+            getAllRentDueDetailsByUniqueID();
           }}
           sx={{ fontSize: 13, fontWeight: 600, color: blue[900] }}
         >
@@ -204,13 +209,16 @@ export default function MenuComponent({
           <Settings fontSize="small" sx={{ color: blue[900] }} />
           &nbsp;Rent Actual
         </MenuItem> */}
-        <MenuItem
-          onClick={handleEditProvisions}
-          sx={{ fontSize: 13, fontWeight: 600, color: blue[900] }}
-        >
-          <LockIcon fontSize="small" sx={{ color: blue[900] }} />
-          &nbsp; Provisions
-        </MenuItem>
+
+        {activationStatusFilter === "Open" ? (
+          <MenuItem
+            onClick={handleEditProvisions}
+            sx={{ fontSize: 13, fontWeight: 600, color: blue[900] }}
+          >
+            <LockIcon fontSize="small" sx={{ color: blue[900] }} />
+            &nbsp; Provisions
+          </MenuItem>
+        ) : null}
       </Menu>
       <RentDueDetails
         show={openRentDueModal}
@@ -224,21 +232,24 @@ export default function MenuComponent({
         uniqueID={uniqueID}
         agreementTenure={agreementTenure}
       />
-
-      <Provisions
-        show={openProvisionsModal}
-        close={() => setOpenProvisionsModal(false)}
-        fullscreen={fullscreen}
-        branchIDforDue={branchIDforDue}
-        rentEndDate={rentEndDate}
-        rentStartDate={rentStartDate}
-        agreementTenure={agreementTenure}
-        addProvisions={addProvisions}
-        setAddProvisions={setAddProvisions}
-        AddProvisionFortheMonth={AddProvisionFortheMonth}
-        monthlyRent={monthlyRent}
-        uniqueID={uniqueID}
-      />
+      {activationStatusFilter === "Open" && (
+        <Provisions
+          show={openProvisionsModal}
+          close={() => setOpenProvisionsModal(false)}
+          fullscreen={fullscreen}
+          branchIDforDue={branchIDforDue}
+          rentEndDate={rentEndDate}
+          rentStartDate={rentStartDate}
+          agreementTenure={agreementTenure}
+          addProvisions={addProvisions}
+          setAddProvisions={setAddProvisions}
+          AddProvisionFortheMonth={AddProvisionFortheMonth}
+          monthlyRent={monthlyRent}
+          uniqueID={uniqueID}
+          lessorName={lessorName}
+          lesseeBranchName={lesseeBranchName}
+        />
+      )}
     </React.Fragment>
   );
 }

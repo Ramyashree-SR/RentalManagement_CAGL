@@ -23,21 +23,6 @@ const RentDueDetails = (props) => {
     { id: 2, col1: "1", col2: "3/16", col3: "open", col4: "Branch" },
   ];
 
-  // const [rentDueDetails, setRentDueDetails] = useState([]);
-
-  // useEffect(() => {
-  //   getAllRentDueDetailsByBranchID();
-  // }, []);
-
-  // const getAllRentDueDetailsByBranchID = async () => {
-  //   const { data } = await getRentDueDetails(uniqueID);
-  //   console.log(data, "data");
-  //   if (data) {
-  //     let getData = data?.data;
-  //     setRentDueDetails(getData);
-  //   }
-  // };
-
   return (
     <>
       <Modal
@@ -75,7 +60,10 @@ const RentDueDetails = (props) => {
                 Tenure : {agreementTenure}
               </Typography>
             </Grid>
-            <ReusableTable data={rentDueDetails} columns={rentDueData} />
+
+            {uniqueID && (
+              <ReusableTable data={rentDueDetails} columns={rentDueData} />
+            )}
           </Box>
         </Modal.Body>
         <Modal.Footer>

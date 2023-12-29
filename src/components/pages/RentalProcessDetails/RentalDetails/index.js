@@ -62,6 +62,8 @@ const useStyles = makeStyles({
   optionStyle: {
     width: "100%",
     display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     margin: "0px 5px",
     padding: "6px 6px",
     // borderBottom: "0.5px solid #DDEDF4",
@@ -126,6 +128,8 @@ const RentalDetails = (props) => {
   const [filterBranchName, setFilterBranchName] = useState([]);
   const [branchTypeFilter, setBranchTypeFilter] = useState("All"); // Specify the filter for 'Name'
   const [activationStatusFilter, setActivationStatusFilter] = useState("All");
+  const [activationStatusFilterDue, setActivationStatusFilterDue] =
+    useState("");
   const [branchFilter, setBranchFilter] = useState("");
   const [branchNameFilter, setBranchNameFilter] = useState("");
   const [branchIDforDue, setbranchIDforDue] = useState("");
@@ -139,7 +143,10 @@ const RentalDetails = (props) => {
   const [rentEndDate, setRentEndDate] = useState(null);
   const [agreementTenure, setAgreementTenure] = useState(null);
   const [monthlyRent, setMonthlyRent] = useState(null);
+  const [lessorName, setLessorName] = useState(null);
+  const [lesseeBranchName, setLesseeBranchName] = useState(null);
   // const [rentstartDate, setRentstartDate] = useState("")
+
   const handleStateChange = (value) => {
     // console.log(value.target.outerText, "newValue");
     setFilterState({
@@ -252,7 +259,6 @@ const RentalDetails = (props) => {
       let getData = data?.data;
       setRentContractDetails(getData);
       setbranchIDforDue(getData);
-      // setrentDetailsForDue(getData);
     }
   };
 
@@ -274,9 +280,9 @@ const RentalDetails = (props) => {
     });
     setbranchIDforDue(value.target.outerText);
     getAllContractDetails(value.target.outerText);
-    // if (value.target.outerText) {
-    //   getAllRentDueDetailsByBranchID(value.target.outerText);
-    // }
+    if (value.target.outerText) {
+      getAllRentDueDetailsByBranchID(value.target.outerText);
+    }
   };
 
   const getBranchId = async () => {
@@ -317,15 +323,38 @@ const RentalDetails = (props) => {
     setActivationStatusFilter(e.target.value);
   };
 
-  useEffect(() => {
-    getAllRentDueDetailsByBranchID();
-  }, [branchIDforDue]);
+  // const handleActivationStatusFilterChangeDue = (e) => {
+  //   setActivationStatusFilterDue(e.target.value);
+  // };
+  const handleActivationStatusFilterChangeDue = (name, selectedValue) => {
+    // Assuming filterOptions is an array of possible activation status values
+    // You may need to customize this logic based on your actual data structure
 
-  // console.log(branchIDforDue, "branchIDforDue");
+    let value = selectedValue?.label;
+    setRentDueDataByBranchId({
+      ...rentDueDataByBranchId,
+      [name]: value,
+    });
+    // Check if 'All' is selected
+    if (value === "All") {
+      // Show all data without filtering
+      setRentDueDataByBranchId(rentDueDataByBranchId);
+    } else {
+      // Filter the data based on the selected activation status
+      const filteredData = rentDueDataByBranchId?.filter((item) => {
+        return item?.status === value;
+      });
 
-  const getAllRentDueDetailsByBranchID = async () => {
-    const { data } = await getAllRentDueDetails(branchIDforDue);
-    console.log(data, "allData");
+      // Update your state or whatever data structure you are using for the table
+      setRentDueDataByBranchId(filteredData);
+    }
+    // Also, update the state for the activation status filter
+    setActivationStatusFilterDue(value);
+  };
+
+  const getAllRentDueDetailsByBranchID = async (branchID) => {
+    const { data } = await getAllRentDueDetails(branchID);
+    // console.log(data, "allData");
     if (data) {
       if (data) {
         let getData = data?.data;
@@ -500,13 +529,13 @@ const RentalDetails = (props) => {
                 fullscreen={fullscreen}
                 branchIDforDue={branchIDforDue}
                 rentDueDataByBranchId={rentDueDataByBranchId}
-                getAllRentDueDetailsByBranchID={getAllRentDueDetailsByBranchID}
+                // getAllRentDueDetailsByBranchID={getAllRentDueDetailsByBranchID}
                 branchFilter={branchFilter}
                 handleBranchID={handleBranchID}
                 rentContractDetails={rentContractDetails}
-                activationStatusFilter={activationStatusFilter}
-                handleActivationStatusFilterChange={
-                  handleActivationStatusFilterChange
+                activationStatusFilterDue={activationStatusFilterDue}
+                handleActivationStatusFilterChangeDue={
+                  handleActivationStatusFilterChangeDue
                 }
                 lesseeBranchName={rentContractDetails?.lesseeBranchName}
               />
@@ -807,6 +836,10 @@ const RentalDetails = (props) => {
           setAgreementTenure={setAgreementTenure}
           monthlyRent={monthlyRent}
           setMonthlyRent={setMonthlyRent}
+          lessorName={lessorName}
+          setLessorName={setLessorName}
+          setLesseeBranchName={setLesseeBranchName}
+          lesseeBranchName={lesseeBranchName}
         />
       </Box>
     </Box>

@@ -18,7 +18,7 @@ const getAllRentDueDetails = (params) => {
   return serviceUtil
     .get(`getduereportBid?value=${params}`)
     .then((res) => {
-      //   console.log(res, "res");
+        console.log(res, "res");
       const data = res.data;
       return { data };
     })

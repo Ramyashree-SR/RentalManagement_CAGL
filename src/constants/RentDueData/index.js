@@ -6,8 +6,9 @@ const rentDueData = [
     minWidth: 100,
     align: "center",
   },
-  { id: "escalation", label: "Escalation (%)", minWidth: 70, align: "center" },
+  { id: "escalation", label: "Esc (%)", minWidth: 70, align: "center" },
   { id: "year", label: "Year", minWidth: 70, align: "center" },
+  { id: "status", label: "Status", minWidth: 70, align: "center" },
   {
     id: "january",
     label: "January",

@@ -18,10 +18,36 @@ const RentDue = (props) => {
     handleBranchID,
     lesseeBranchName,
     rentContractDetails,
-    activationStatusFilter,
+    activationStatusFilterDue,
     getAllRentDueDetailsByBranchID,
+    handleActivationStatusFilterChangeDue,
   } = props;
+  const [monthlyTotal, setMonthlyTotal] = useState({});
 
+  // Calculate monthly totals
+  const calculateMonthlyTotal = () => {
+    const total = {};
+    rentDueDataByBranchId.forEach((entry) => {
+      Object.keys(entry).forEach((month) => {
+        if (
+          month !== "rentDueID" &&
+          month !== "startDate" &&
+          month !== "endDate" &&
+          month !== "year" &&
+          month !== "escalation" &&
+          month !== "contractID"
+        ) {
+          total[month] = (total[month] || 0) + entry[month];
+        }
+      });
+    });
+    setMonthlyTotal(total);
+  };
+
+  // Calculate totals on component mount
+  useEffect(() => {
+    calculateMonthlyTotal();
+  }, [rentDueDataByBranchId]);
   // const userData = [
   //   { id: 1, col1: "1", col2: "3/16", col3: "open", col4: "Branch" },
   //   { id: 2, col1: "1", col2: "3/16", col3: "open", col4: "Branch" },
@@ -62,6 +88,12 @@ const RentDue = (props) => {
   // };
   // console.log(BranchID,"BranchID");
 
+  let activationStatus = [
+    { id: "1", label: "All" },
+    { id: "2", label: "Open" },
+    { id: "3", label: "Closed" },
+  ];
+
   const months = [
     { id: 1, label: "January" },
     { id: 2, label: "February" },
@@ -77,32 +109,27 @@ const RentDue = (props) => {
     { id: 12, label: "December" },
   ];
 
-  let activationStatus = [
-    { id: "1", label: "Open" },
-    { id: "2", label: "Close" },
-  ];
+  // const filteredData = rentDueDataByBranchId?.filter((item) => {
+  //   if (activationStatusFilterDue === "") {
+  //     return []; // Show all rows if 'all' is selected
+  //   }
+  //   return item["status"] === activationStatusFilterDue; // Customize the filtering condition based on your data structure
+  // });
 
-  const handleActivationStatus = () => {};
-  const filteredData = rentContractDetails?.filter((item) => {
-    if (activationStatusFilter === "All") {
-      return true; // Show all rows if 'all' is selected
-    }
-    return item["agreementActivationStatus"] === activationStatusFilter; // Customize the filtering condition based on your data structure
-  });
+  // const filterOptions = rentDueDataByBranchId?.reduce((options, item) => {
+  //   if (!options.includes(item["status"])) {
+  //     options?.push(item["status"]);
+  //   }
+  //   return options;
+  // }, []);
 
-  const filterOptions = rentContractDetails?.reduce((options, item) => {
-    if (!options.includes(item["agreementActivationStatus"])) {
-      options?.push(item["agreementActivationStatus"]);
-    }
-    return options;
-  }, []);
   return (
     <>
       <Modal
         show={props.show}
         close={props.close}
         fullscreen={props.fullscreen}
-        aria-labelledby="contained-modal-title-vcenter"
+        // aria-labelledby="contained-modal-title-vcenter"
         centered
         className="w-100"
       >
@@ -112,7 +139,7 @@ const RentDue = (props) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Box>
+          <Box sx={{ height: "100%", width: "100%" }}>
             <Grid
               container
               className="d-flex m-2"
@@ -125,7 +152,7 @@ const RentDue = (props) => {
             <Grid
               item
               className="d-flex"
-              sx={{ fontSize: 15, fontWeight: 700 }}
+              sx={{ fontSize: 15, fontWeight: 700, position: "fixed", mt: -2 }}
             >
               <Autocomplete
                 size="small"
@@ -136,18 +163,19 @@ const RentDue = (props) => {
                   "& .MuiOutlinedInput-root:hover": {
                     "& > fieldset": {
                       borderColor: green[900],
+                      borderWidth:"1px"
                     },
                   },
                   "& .MuiOutlinedInput-root:focus": {
                     "& > fieldset": {
-                      // outline: "none",
                       borderColor: "#E4E7EB",
+                      borderWidth:"1px"
                     },
                   },
                   "& .MuiOutlinedInput-root": {
                     "& > fieldset": {
                       borderColor: "#E4E7EB",
-                      // borderRadius: "100px",
+                      borderWidth:"1px"
                     },
                     width: 200,
                   },
@@ -171,15 +199,16 @@ const RentDue = (props) => {
 
               <DropDownComponent
                 label="ActivationStatus"
-                placeholder="Enter Activation Status"
+                placeholder="select"
                 sx={{ width: 200 }}
                 size="small"
-                options={activationStatus}
-                // onSelect={handleActivationStatus}
-                name="agreementActivationStatus"
-                value={activationStatusFilter || "All"}
-                onChange={(value) =>
-                  handleActivationStatus("agreementActivationStatus", value)
+                options={
+                  Array.isArray(activationStatus) ? activationStatus : []
+                }
+                name="status"
+                value={activationStatusFilterDue || "All"}
+                onChange={(val) =>
+                  handleActivationStatusFilterChangeDue("status", val)
                 }
               />
 
@@ -188,21 +217,42 @@ const RentDue = (props) => {
                 placeholder="Months"
                 size="small"
                 options={months}
-                sx={{ width: 200, ml: 1 }}
-                // value={months}
+                sx={{ width: 200, ml: 1, mt: 0 }}
+                value={lesseeBranchName}
               />
               {/* </Grid> */}
             </Grid>
-            {branchIDforDue ? (
-              <ReusableTable
-                data={rentDueDataByBranchId}
-                columns={rentDueData}
-              />
-            ) : null}
+
+            <Box
+              sm={12}
+              xs={12}
+              sx={{
+                background: "#232323",
+                // height: "90%",
+                width: "97%",
+                position: "fixed",
+                mt: 4,
+              }}
+            >
+              {branchIDforDue && (
+                <ReusableTable
+                  data={rentDueDataByBranchId}
+                  columns={rentDueData}
+                  sx={{
+                    height: "370px",
+                    width: "100%",
+                    overFlowX: "scroll",
+                    overFlowY: "scroll",
+                  }}
+                />
+              )}
+            </Box>
           </Box>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={props.close}>Close</Button>
+          <Button onClick={props.close} variant="contained">
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

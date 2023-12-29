@@ -28,7 +28,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.body}`]: {
     fontSize: 12,
     fontWeight: 700,
-    backgroundColor: "#FFFFFF", //#CFE8F7, #C5EBF6 ,#D5F7DC
+    backgroundColor: "#D5F7DC", //#CFE8F7, #C5EBF6 ,#D5F7DC
     fontFamily: "sans-serif",
   },
 }));
@@ -64,6 +64,9 @@ const ColorIcon = styled(Button)(({ theme }) => ({
 
 const useStyles = makeStyles({
   tableHeader: {
+    // display: "flex",
+    // alignItems: "center",
+    // justifyContent: "center",
     fontWeight: "600 !important",
     fontSize: "12px !important",
     borderBottom: "1px solid #70B3D1 !important",
@@ -74,17 +77,28 @@ const useStyles = makeStyles({
     color: "#373737",
     fontWeight: "500",
     fontSize: "12px",
+    // display: "flex",
+    // alignItems: "center",
+    // justifyContent: "center",
   },
 });
 
 const ReusableTable = ({ data, columns, sx }) => {
+  const classes = useStyles();
   return (
-    <TableContainer component={Paper}>
-      <Table>
+    <TableContainer component={Paper} sx={{
+     ...sx
+    }}>
+      <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <StyledTableRow>
             {columns?.map((column) => (
-              <StyledTableCell key={column.id}>{column.label}</StyledTableCell>
+              <StyledTableCell
+                key={column.id}
+                classes={{ root: classes.tableHeader }}
+              >
+                {column.label}
+              </StyledTableCell>
             ))}
           </StyledTableRow>
         </TableHead>
@@ -93,7 +107,11 @@ const ReusableTable = ({ data, columns, sx }) => {
             <StyledTableRow key={index}>
               {columns &&
                 columns?.map((column) => (
-                  <StyledTableCell key={column.id} sx={{ sx }}>
+                  <StyledTableCell
+                    key={column.id}
+                    sx={{ sx }}
+                    classes={{ root: classes.tableHeader }}
+                  >
                     {row[column.id]}
                   </StyledTableCell>
                 ))}

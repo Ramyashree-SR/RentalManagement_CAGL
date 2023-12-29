@@ -134,7 +134,11 @@ const TableComponent = ({
   setAgreementTenure,
   setRentEndDate,
   monthlyRent,
-  setMonthlyRent
+  setMonthlyRent,
+  lessorName,
+  setLessorName,
+  setLesseeBranchName,
+  lesseeBranchName,
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
@@ -205,7 +209,7 @@ const TableComponent = ({
   // Apply the filter
   const filteredData = data?.filter((item) => {
     if (activationStatusFilter === "All") {
-      return true; // Show all rows if 'all' is selected
+      return item; // Show all rows if 'all' is selected
     }
     return item["agreementActivationStatus"] === activationStatusFilter; // Customize the filtering condition based on your data structure
   });
@@ -216,7 +220,8 @@ const TableComponent = ({
     }
     return options;
   }, []);
-  // console.log(activationStatusFilter,"activationStatusFilter");
+
+  console.log(activationStatusFilter, "activationStatusFilter");
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer
@@ -341,6 +346,9 @@ const TableComponent = ({
                                       setRentStartDate(row.rentStartDate);
                                       setRentEndDate(row.rentEndDate);
                                       setMonthlyRent(row.monthlyRent);
+                                      setUniqueID(row.uniqueID);
+                                      setLessorName(row.lessorName);
+                                      setLesseeBranchName(row.lesseeBranchName);
                                     }}
                                     handleRentDue={() => {
                                       handleRentDueDetails();
@@ -360,6 +368,14 @@ const TableComponent = ({
                                     rentContractDetails={rentContractDetails}
                                     openProvisionsModal={openProvisionsModal}
                                     monthlyRent={monthlyRent}
+                                    activationStatusFilter={
+                                      activationStatusFilter
+                                    }
+                                    setOpenProvisionsModal={
+                                      setOpenProvisionsModal
+                                    }
+                                    lessorName={lessorName}
+                                    lesseeBranchName={lesseeBranchName}
                                   />
                                 )}
 

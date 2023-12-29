@@ -3,40 +3,27 @@ import React, { useState } from "react";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import InputBoxComponent from "../../../../atoms/InputBoxComponent";
 import DropDownComponent from "../../../../atoms/DropDownComponent";
+import { red } from "@mui/material/colors";
 
 const Provisions = (props) => {
   const {
     rentEndDate,
     rentStartDate,
     branchIDforDue,
-    agreementTenure,
+    lessorName,
     AddProvisionFortheMonth,
     addProvisions,
     setAddProvisions,
     monthlyRent,
     uniqueID,
+    lesseeBranchName,
   } = props;
   // console.log(props, "props");
-  const [selectedYear, setSelectedYear] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState(null);
-  // Parse the provided rent end date
-  const endDateObject = new Date(rentEndDate);
 
-  // Check if the provided rent end date is valid
-  if (isNaN(endDateObject.getTime())) {
-    // Handle invalid date
-    console.error("Invalid date format");
-    return null;
-  }
-
-  // Extract the year from the rent end date
-  const currentYear = endDateObject?.getFullYear();
-
-  // Generate an array of years, including the current year
-  const yearOptions = Array.from({ length: 101 }, (_, index) => ({
-    value: currentYear - index, // currentYear - index
-    label: `${currentYear - index}`,
-  }));
+  //  const yearOptions = Array.from({ length: 101 }, (_, index) => ({
+  //   value: currentYear, // currentYear
+  //   label: `${currentYear}`,
+  // }));
 
   const handleChange = (name, newValue) => {
     setAddProvisions({
@@ -59,7 +46,7 @@ const Provisions = (props) => {
     { id: 11, label: "November" },
     { id: 12, label: "December" },
   ];
-
+  const [selectedMonth, setSelectedMonth] = useState(null);
   const handleMonthChange = (name, newValue) => {
     setAddProvisions({
       ...addProvisions,
@@ -80,6 +67,48 @@ const Provisions = (props) => {
     });
   };
 
+  const typeProvision = [
+    { id: 1, label: "Make" },
+    { id: 2, label: "Reverse" },
+  ];
+
+  const [typeProvisionsData, setTypeProvisionsData] = useState("");
+  const handleTypeChange = (value) => {
+    console.log(value, "value");
+    setTypeProvisionsData(value?.label);
+  };
+
+  // Parse the provided rent end date
+  // const endDateObject = new Date(rentEndDate);
+  const endDateObject = new Date();
+
+  // Check if the provided rent end date is valid
+  if (isNaN(endDateObject.getTime())) {
+    // Handle invalid date
+    console.error("Invalid date format");
+    return null;
+  }
+
+  // Extract the year from the rent end date
+  const currentYear = endDateObject?.getFullYear();
+  const currentMonths = months[endDateObject?.getMonth()];
+
+  // const monthOptions = Array.from({ length: 101 }, (_, index) => ({
+  //   value: currentYear, // currentYear
+  //   label: `${currentYear}`,
+  // }));
+
+  // Generate an array of years, including the current MOnth
+  const yearOptions = Array.from({ length: 1 }, (_, index) => ({
+    value: currentYear, // currentYear
+    label: `${currentYear}`,
+  }));
+
+  const MonthOptions = Array.from({ length: 1 }, (_, index) => ({
+    value: currentMonths.label, // currentMonths
+    label: `${currentMonths.label}`,
+  }));
+
   return (
     <>
       <Modal
@@ -99,7 +128,7 @@ const Provisions = (props) => {
           <Container>
             <Row>
               <Col xs={12}>
-                <Grid className="d-flex m-2">
+                {/* <Grid className="d-flex m-2">
                   <InputBoxComponent
                     label="Branch ID"
                     placeholder=" Branch ID"
@@ -126,91 +155,186 @@ const Provisions = (props) => {
                     sx={{ width: 200 }}
                     value={agreementTenure}
                   />
+                </Grid> */}
+                <Grid
+                  className="d-flex flex-row m-2"
+                  sx={{ fontSize: 15, fontWeight: 700 }}
+                >
+                  <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
+                    <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
+                      Contract ID :&nbsp;&nbsp;
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: 15, fontWeight: 700, color: red[900] }}
+                    >
+                      {uniqueID}
+                    </Typography>
+                  </Grid>
+                  <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
+                    <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
+                      Branch ID :&nbsp;&nbsp;
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: 15, fontWeight: 700, color: red[900] }}
+                    >
+                      {branchIDforDue}
+                    </Typography>
+                  </Grid>
+                  <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
+                    <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
+                      Branch Name :&nbsp;&nbsp;
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: 15, fontWeight: 700, color: red[900] }}
+                    >
+                      {lesseeBranchName}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid
+                  className="d-flex flex-row m-2"
+                  sx={{ fontSize: 15, fontWeight: 700 }}
+                >
+                  <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
+                    <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
+                      Rent Start Date :&nbsp;&nbsp;
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: 15, fontWeight: 700, color: red[900] }}
+                    >
+                      {rentStartDate}
+                    </Typography>
+                  </Grid>
+                  <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
+                    <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
+                      Rent End Date :&nbsp;&nbsp;
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: 15, fontWeight: 700, color: red[900] }}
+                    >
+                      {rentEndDate}
+                    </Typography>
+                  </Grid>
+                  <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
+                    <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
+                      Lessor Name :&nbsp;&nbsp;
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: 15, fontWeight: 700, color: red[900] }}
+                    >
+                      {" "}
+                      {lessorName}
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Col>
+              <hr />
               <Col xs={12}>
                 <Grid className="d-flex m-2">
-                  <Typography>Provision for the month :</Typography>
-                </Grid>
-                {/* <Grid className="d-flex px-2 ml-4 mt-4">
-                  <InputBoxComponent
-                    label="Contract ID"
-                    placeholder="Contract ID"
-                    sx={{ width: 200 }}
-                    value={uniqueID}
-                    onChange={(e) => updateChange(e)}
-                  />
-
-                  <InputBoxComponent
-                    label="Provision ID"
-                    placeholder="Provision ID"
-                    sx={{ width: 200 }}
-                    value={addProvisions.provisionID}
-                    onChange={(e) => updateChange(e)}
-                  />
-                </Grid> */}
-                <Grid className="d-flex  ">
-                  <DropDownComponent
-                    label="Month"
-                    placeholder="Select "
-                    sx={{ width: 300, ml: 0 }}
-                    size="small"
-                    options={months}
-                    name="month"
-                    value={addProvisions.month}
-                    onChange={(val) => {
-                      handleMonthChange("month", val);
-                    }}
-                  />
+                  <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
+                    Provision for the month :
+                  </Typography>
 
                   <DropDownComponent
-                    label="Year"
+                    label="Provision Type"
                     placeholder="Select "
-                    sx={{ width: 300, ml: 0 }}
+                    sx={{ width: 200, ml: 3 }}
                     size="small"
-                    options={yearOptions}
-                    value={addProvisions?.year}
-                    onChange={(val) => {
-                      handleChange("year", val);
-                    }}
-                  />
-
-                  <InputBoxComponent
-                    label="Provision Amount"
-                    placeholder="Provision Amount"
-                    sx={{ width: 300, ml: 0 ,mt:-1.3}}
-                    value={monthlyRent}
-                    onChange={(e) => updateChange(e)}
+                    options={typeProvision}
+                    // value={typeProvisionsData}
+                    onChange={handleTypeChange}
                   />
                 </Grid>
 
-                <Grid className="d-flex flex-row mt-4">
-                  <InputBoxComponent
-                    textLabel="Remarks :"
-                    placeholder="Type here..."
-                    sx={{ width: 400 }}
-                    rows={4}
-                    name="remark"
-                    value={addProvisions?.remark}
-                    multiline
-                    onChange={(e) => updateChange(e)}
-                  />
+                {typeProvisionsData === "Make" ||
+                typeProvisionsData === "Reverse" ? (
+                  <Grid className="d-flex  ">
+                    <DropDownComponent
+                      label="Year"
+                      placeholder="Select "
+                      sx={{ width: 200, ml: 0 }}
+                      size="small"
+                      options={yearOptions}
+                      value={addProvisions?.year}
+                      onChange={(val) => {
+                        handleChange("year", val);
+                      }}
+                    />
+                    <DropDownComponent
+                      label="Month"
+                      placeholder="Select "
+                      sx={{ width: 200, ml: 0 }}
+                      size="small"
+                      options={MonthOptions}
+                      name="month"
+                      value={addProvisions?.month}
+                      onChange={(val) => {
+                        handleMonthChange("month", val);
+                      }}
+                    />
 
-                  <Button
-                    onClick={() => {
-                      AddProvisionFortheMonth();
-                      // handleClose();
-                    }}
-                  >
-                    Make Provision
-                  </Button>
+                    <InputBoxComponent
+                      label="Provision Amount"
+                      placeholder="Provision Amount"
+                      sx={{ width: 200, ml: 0, mt: -1.3 }}
+                      value={monthlyRent}
+                      onChange={(e) => updateChange(e)}
+                    />
+                  </Grid>
+                ) : null}
+                {typeProvisionsData === "Make" ||
+                typeProvisionsData === "Reverse" ? (
+                  <Grid className="d-flex flex-row mt-2">
+                    <InputBoxComponent
+                      textLabel="Remarks :"
+                      placeholder="Type here..."
+                      sx={{ width: 400 }}
+                      rows={4}
+                      name="remark"
+                      value={addProvisions?.remark}
+                      multiline
+                      onChange={(e) => updateChange(e)}
+                    />
+                  </Grid>
+                ) : null}
+                <Grid className="d-flex flex-row mt-4 ">
+                  {typeProvisionsData === "Make" ? (
+                    <Grid>
+                      <Button
+                        onClick={() => {
+                          AddProvisionFortheMonth();
+                          // handleClose();
+                        }}
+                        variant="contained"
+                        sx={{ m: 1, background: "#238520" }}
+                      >
+                        Provision
+                      </Button>
+                    </Grid>
+                  ) : null}
+                  {typeProvisionsData === "Reverse" ? (
+                    <Grid className="d-flex " sx={{ ml: 2 }}>
+                      <Button
+                        onClick={() => {
+                          AddProvisionFortheMonth();
+                          // handleClose();
+                        }}
+                        variant="contained"
+                        sx={{ m: 1, background: "#238520" }}
+                      >
+                        Reverse
+                      </Button>
+                    </Grid>
+                  ) : null}
                 </Grid>
               </Col>
             </Row>
           </Container>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={props.close}>Close</Button>
+          <Button onClick={props.close} variant="contained">
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     </>
@@ -218,3 +342,32 @@ const Provisions = (props) => {
 };
 
 export default Provisions;
+{
+  /* <InputBoxComponent
+                    label="Month"
+                    placeholder="Month"
+                    sx={{ width: 300, ml: 0, mt: -1.3 }}
+                    value={addProvisions?.month}
+                    onChange={(e) => updateChange(e)}
+                  /> */
+}
+
+{
+  /* <InputBoxComponent
+                    label="Year"
+                    placeholder="Year"
+                    sx={{ width: 300, ml: 0, mt: -1.3 }}
+                    value={addProvisions.year}
+                    onChange={(e) => updateChange(e)}
+                  /> */
+}
+
+{
+  /* <InputBoxComponent
+                    label="Contract ID"
+                    placeholder="Contract ID"
+                    sx={{ width: 200, mt: -1.3 }}
+                    value={uniqueID}
+                    onChange={(e) => updateChange(e)}
+                  /> */
+}
