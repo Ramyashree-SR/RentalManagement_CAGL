@@ -3,12 +3,17 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import ReusableTable from "../../../../molecules/ReusableTable";
 import { rentDueData } from "../../../../../constants/RentDueData";
-import { getRentDueDetails } from "../../../../services/RentDueApi";
+import {
+  getRentDueDetails,
+  getRentDueExcelDetails,
+} from "../../../../services/RentDueApi";
 import { Typography } from "antd";
 import DropDownComponent from "../../../../atoms/DropDownComponent";
 import { getBranchID } from "../../../../services/RentContractsApi";
-import { green } from "@mui/material/colors";
+import { deepOrange, green } from "@mui/material/colors";
 import InputBoxComponent from "../../../../atoms/InputBoxComponent";
+import ExcelExport from "../../../../../ExcelExport";
+import axios from "axios";
 
 const RentDue = (props) => {
   const {
@@ -23,7 +28,8 @@ const RentDue = (props) => {
     handleActivationStatusFilterChangeDue,
   } = props;
   const [monthlyTotal, setMonthlyTotal] = useState({});
-
+  const [dataToExcel, setDataToExcel] = useState([]);
+  console.log(dataToExcel, dataToExcel);
   // Calculate monthly totals
   const calculateMonthlyTotal = () => {
     const total = {};
@@ -123,6 +129,19 @@ const RentDue = (props) => {
   //   return options;
   // }, []);
 
+  const fileName = "Rent Due Excel"; // here enter filename for your excel file
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await getRentDueExcelDetails(branchIDforDue);
+      console.log(data, "duedata");
+      if (data) {
+        setDataToExcel(data);
+      }
+    };
+    fetchData();
+  }, [branchIDforDue]);
+
   return (
     <>
       <Modal
@@ -142,87 +161,116 @@ const RentDue = (props) => {
           <Box sx={{ height: "100%", width: "100%" }}>
             <Grid
               container
-              className="d-flex m-2"
+              className="d-flex m-3 "
               sx={{ fontSize: 15, fontWeight: 700 }}
             >
               {/* <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
                 Branch ID : {branchIDforDue}
               </Typography> */}
-            </Grid>
-            <Grid
-              item
-              className="d-flex"
-              sx={{ fontSize: 15, fontWeight: 700, position: "fixed", mt: -2 }}
-            >
-              <Autocomplete
-                size="small"
+
+              <Grid
+                item
+                className="d-flex"
                 sx={{
-                  // backgroundColor: "#FAFAFA",
-                  // background: "#C5EBF6 ", //#C5EBF6 #D5F7DC
-                  // borderRadius: "100px",
-                  "& .MuiOutlinedInput-root:hover": {
-                    "& > fieldset": {
-                      borderColor: green[900],
-                      borderWidth:"1px"
-                    },
-                  },
-                  "& .MuiOutlinedInput-root:focus": {
-                    "& > fieldset": {
-                      borderColor: "#E4E7EB",
-                      borderWidth:"1px"
-                    },
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& > fieldset": {
-                      borderColor: "#E4E7EB",
-                      borderWidth:"1px"
-                    },
-                    width: 200,
-                  },
+                  fontSize: 15,
+                  fontWeight: 700,
+                  position: "fixed",
+                  mt: -2,
+                  flexBasis: "80%",
                 }}
-                options={Array.isArray(branchFilter) ? branchFilter : []}
-                // getOptionLabel={(option) => (option ? option.label : "")} // Handle null option
-                value={branchIDforDue}
-                onChange={handleBranchID}
-                renderInput={(params) => (
-                  <TextField {...params} label="Branch ID" variant="outlined" />
-                )}
-              />
-              {/* </Grid> */}
-              {/* <Grid item className="d-flex px-1 py-1" > */}
-              <InputBoxComponent
-                label="Branch Name"
-                placeholder="Branch Name"
-                sx={{ width: 200, ml: 1, mt: -1.5 }}
-                value={lesseeBranchName}
-              />
+              >
+                <Autocomplete
+                  size="small"
+                  sx={{
+                    // backgroundColor: "#FAFAFA",
+                    // background: "#C5EBF6 ", //#C5EBF6 #D5F7DC
+                    // borderRadius: "100px",
+                    "& .MuiOutlinedInput-root:hover": {
+                      "& > fieldset": {
+                        borderColor: green[900],
+                        borderWidth: "1px",
+                      },
+                    },
+                    "& .MuiOutlinedInput-root:focus": {
+                      "& > fieldset": {
+                        borderColor: "#E4E7EB",
+                        borderWidth: "1px",
+                      },
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& > fieldset": {
+                        borderColor: "#E4E7EB",
+                        borderWidth: "1px",
+                      },
+                      width: 200,
+                    },
+                  }}
+                  options={Array.isArray(branchFilter) ? branchFilter : []}
+                  // getOptionLabel={(option) => (option ? option.label : "")} // Handle null option
+                  value={branchIDforDue}
+                  onChange={handleBranchID}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Branch ID"
+                      variant="outlined"
+                    />
+                  )}
+                />
+                {/* </Grid> */}
+                {/* <Grid item className="d-flex px-1 py-1" > */}
+                <InputBoxComponent
+                  label="Branch Name"
+                  placeholder="Branch Name"
+                  sx={{ width: 200, ml: 1, mt: -1.5 }}
+                  value={lesseeBranchName}
+                />
 
-              <DropDownComponent
-                label="ActivationStatus"
-                placeholder="select"
-                sx={{ width: 200 }}
-                size="small"
-                options={
-                  Array.isArray(activationStatus) ? activationStatus : []
-                }
-                name="status"
-                value={activationStatusFilterDue || "All"}
-                onChange={(val) =>
-                  handleActivationStatusFilterChangeDue("status", val)
-                }
-              />
+                <DropDownComponent
+                  label="ActivationStatus"
+                  placeholder="select"
+                  sx={{ width: 200 }}
+                  size="small"
+                  options={
+                    Array.isArray(activationStatus) ? activationStatus : []
+                  }
+                  name="status"
+                  value={activationStatusFilterDue || "All"}
+                  onChange={(val) =>
+                    handleActivationStatusFilterChangeDue("status", val)
+                  }
+                />
 
-              <DropDownComponent
-                label="Months"
-                placeholder="Months"
-                size="small"
-                options={months}
-                sx={{ width: 200, ml: 1, mt: 0 }}
-                value={lesseeBranchName}
-              />
-              {/* </Grid> */}
+                <DropDownComponent
+                  label="Months"
+                  placeholder="Months"
+                  size="small"
+                  options={months}
+                  sx={{ width: 200, ml: 1, mt: 0 }}
+                  value={lesseeBranchName}
+                />
+                {/* </Grid> */}
+              </Grid>
+              <Grid
+                item
+                className="d-flex align-items-end justify-content-end"
+                sx={{ flexBasis: "100%", mt: -2 }}
+              >
+                <ExcelExport
+                  excelData={dataToExcel}
+                  fileName={fileName}
+                  sx={{
+                    mr: 1,
+                    backgroundColor: deepOrange[600],
+                    width: 120,
+                    height: 40,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+              </Grid>
             </Grid>
-
             <Box
               sm={12}
               xs={12}
@@ -231,7 +279,7 @@ const RentDue = (props) => {
                 // height: "90%",
                 width: "97%",
                 position: "fixed",
-                mt: 4,
+                mt: 0,
               }}
             >
               {branchIDforDue && (
@@ -244,6 +292,7 @@ const RentDue = (props) => {
                     overFlowX: "scroll",
                     overFlowY: "scroll",
                   }}
+                  showTotal={true}
                 />
               )}
             </Box>

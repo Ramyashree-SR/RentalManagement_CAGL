@@ -28,6 +28,11 @@ import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import LockClockIcon from "@mui/icons-material/LockClock";
 import LockIcon from "@mui/icons-material/Lock";
 import { AddRentProvisionDetails } from "../../services/ProvisionsApi";
+import PaymentReportDetails from "../../pages/RentalProcessDetails/RentalDetails/PaymentReportDetails";
+import PaymentReport from "./../../pages/RentalProcessDetails/RentalDetails/PaymentReport/index";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import { getRentPaymentReportDetails } from "../../services/PaymentReportApi";
+import ProvisionsDetails from "../../pages/RentalProcessDetails/RentalDetails/ProvisionsDetails";
 
 const ColorIcon = styled(Icon)(({ theme }) => ({
   //   color: theme.palette?.getContrastText(pink[900]),
@@ -40,6 +45,7 @@ export default function MenuComponent({
   handleEdit = () => {},
   handleEditProvisions = () => {},
   handleRentDue = () => {},
+  handleEditReport = () => {},
   openRentDueModal,
   setOpenRentDueModal,
   uniqueID,
@@ -55,6 +61,8 @@ export default function MenuComponent({
   lessorName,
   activationStatusFilter,
   lesseeBranchName,
+  openPaymentReportData,
+  setOpenPaymentReportData,
 }) {
   const [fullscreen, setFullscreen] = useState(true);
   const [rentDueDetails, setRentDueDetails] = useState([]);
@@ -67,6 +75,7 @@ export default function MenuComponent({
     remark: "",
     dateTime: "",
   });
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -93,8 +102,6 @@ export default function MenuComponent({
     }
   };
 
- 
-
   const AddProvisionFortheMonth = async (params) => {
     let payload = {
       provisionID: addProvisions.provisionID,
@@ -119,7 +126,7 @@ export default function MenuComponent({
       });
     }
   };
-  console.log(uniqueID, "uniqueID");
+
   return (
     <React.Fragment>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
@@ -219,6 +226,19 @@ export default function MenuComponent({
             &nbsp; Provisions
           </MenuItem>
         ) : null}
+
+        {activationStatusFilter === "Open" ? (
+          <MenuItem
+            onClick={() => {
+              handleEditReport();
+              // getAllPaymentReportDetailsOfMonth();
+            }}
+            sx={{ fontSize: 13, fontWeight: 600, color: blue[900] }}
+          >
+            <ReceiptIcon fontSize="small" sx={{ color: blue[900] }} />
+            &nbsp; Payment Report
+          </MenuItem>
+        ) : null}
       </Menu>
       <RentDueDetails
         show={openRentDueModal}
@@ -233,7 +253,7 @@ export default function MenuComponent({
         agreementTenure={agreementTenure}
       />
       {activationStatusFilter === "Open" && (
-        <Provisions
+        <ProvisionsDetails
           show={openProvisionsModal}
           close={() => setOpenProvisionsModal(false)}
           fullscreen={fullscreen}
@@ -246,6 +266,20 @@ export default function MenuComponent({
           AddProvisionFortheMonth={AddProvisionFortheMonth}
           monthlyRent={monthlyRent}
           uniqueID={uniqueID}
+          lessorName={lessorName}
+          lesseeBranchName={lesseeBranchName}
+        />
+      )}
+
+      {activationStatusFilter === "Open" && (
+        <PaymentReportDetails
+          show={openPaymentReportData}
+          close={() => setOpenPaymentReportData(false)}
+          fullscreen={fullscreen}
+          uniqueID={uniqueID}
+          branchIDforDue={branchIDforDue}
+          rentEndDate={rentEndDate}
+          rentStartDate={rentStartDate}
           lessorName={lessorName}
           lesseeBranchName={lesseeBranchName}
         />

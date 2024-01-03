@@ -33,7 +33,10 @@ import {
   panCardRegex,
   pincodeRegex,
 } from "../../../constants/RegexConstacts";
-import { EditRentContractDetails } from "../../services/EditContractApi";
+import {
+  EditRentContractDetails,
+  EditRentRenewContractDetails,
+} from "../../services/EditContractApi";
 import {
   datePickerFormat,
   formatDateToBackEndReqirement,
@@ -41,6 +44,7 @@ import {
 import { useToasts } from "react-toast-notifications";
 import DropDownComponent from "../../atoms/DropDownComponent";
 import { getBranchID } from "../../services/RentContractsApi";
+import { getRentContractDetailsOnBranchID } from "../../services/BranchDetails";
 
 let errObj = {
   lessorName: "",
@@ -958,7 +962,21 @@ const MasterDetails = (props) => {
     }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
+  const contractStatus = [
+    { id: "New/Relocate", label: "New/Relocate" },
+    { id: "Renewal", label: "Renewal" },
+  ];
 
+  const [rentContractStatus, setRentContractStatus] = useState([]);
+
+  const handleContractChange = (value) => {
+    setAllNewContractDetails({
+      ...allNewContractDetails,
+      contractStatus: value,
+    });
+    setRentContractStatus(value);
+    // editAllRenewRentContractDetails(value);
+  };
   const AddAllNewRentContactInformation = async () => {
     let payload = {
       branchID: allNewContractDetails?.branchID,
@@ -984,6 +1002,9 @@ const MasterDetails = (props) => {
           gstNo: recipient?.gstNo,
         })
       ),
+      nationality: allNewContractDetails?.nationality,
+      contractStatus: allNewContractDetails?.contractStatus?.label,
+
       lessorDoorNumber: allNewContractDetails?.lessorDoorNumber,
       lessorFloorNumber: allNewContractDetails?.lessorFloorNumber,
       lessorWardNo: allNewContractDetails?.lessorWardNo,
@@ -995,7 +1016,7 @@ const MasterDetails = (props) => {
       lessorDistrict: allNewContractDetails?.lessorDistrict,
       lessorState: allNewContractDetails?.lessorState,
 
-      lesseeBranchType: allNewContractDetails?.lesseeBranchType?.label,
+      lesseeBranchType: allNewContractDetails?.lesseeBranchType.label,
       lesseeBranchName: allNewContractDetails?.branchName,
       lesseeAreaName: allNewContractDetails?.areaName,
       lesseeDivision: allNewContractDetails?.region,
@@ -1235,6 +1256,8 @@ const MasterDetails = (props) => {
       //     gstNo: recipient?.gstNo,
       //   })
       // ),
+      nationality: allNewContractDetails?.nationality,
+      contractStatus: allNewContractDetails?.contractStatus?.label,
       recipiantsID: allNewContractDetails?.recipiantsID,
       lessorRecipiantsName: allNewContractDetails?.lessorRecipiantsName,
       lessorBankName: allNewContractDetails?.lessorBankName,
@@ -1391,6 +1414,8 @@ const MasterDetails = (props) => {
         //     gstNo: recipient?.gstNo,
         //   })
         // ),
+        nationality: props.EditLessorData?.nationality,
+        contractStatus: props.EditLessorData?.contractStatus,
         recipiantsID: props.EditLessorData?.recipiantsID,
         lessorRecipiantsName: props.EditLessorData?.lessorRecipiantsName,
         lessorBankName: props.EditLessorData?.lessorBankName,
@@ -1507,6 +1532,174 @@ const MasterDetails = (props) => {
     }
   }, [props.EditLessorData]);
 
+  useEffect(() => {
+    if (rentContractStatus?.label === "Renewal") {
+      setAllNewContractDetails({
+        uniqueID: props.EditLessorRenewData?.uniqueID,
+        branchID: props.EditLessorRenewData?.branchID,
+        lessorName: props.EditLessorRenewData?.lessorName,
+        lessorContactNumber: props.EditLessorRenewData?.lessorContactNumber,
+        lessorEmailAddress: props.EditLessorRenewData?.lessorEmailAddress,
+        lessorPanNumber: props.EditLessorRenewData?.lessorPanNumber,
+        lessorGstNumber: props.EditLessorRenewData?.lessorGstNumber,
+        paymentMode: props.EditLessorRenewData?.paymentMode,
+        // recipiants: props.EditLessorRenewData?.recipiants.map(
+        //   (recipient, index) => ({
+        //     recipiantsID: recipient?.recipiantsID,
+        //     lessorRecipiantsName: recipient?.lessorRecipiantsName,
+        //     lessorIfscNumber: recipient?.lessorIfscNumber || ifscCodes?.[index],
+        //     lessorBankName:
+        //       recipient?.lessorBankName || bankAndBranch?.[index].bank, // Use bank name from state
+        //     lessorBranchName:
+        //       recipient?.lessorBranchName || bankAndBranch?.[index].branch,
+        //     lessorAccountNumber: recipient?.lessorAccountNumber,
+        //     lessorRentAmount: recipient?.lessorRentAmount,
+        //     panNo: recipient?.panNo,
+        //     gstNo: recipient?.gstNo,
+        //   })
+        // ),
+        nationality: props.EditLessorRenewData?.nationality,
+        contractStatus: props.EditLessorRenewData?.contractStatus,
+        recipiantsID: props.EditLessorRenewData?.recipiantsID,
+        lessorRecipiantsName: props.EditLessorRenewData?.lessorRecipiantsName,
+        lessorBankName: props.EditLessorRenewData?.lessorBankName,
+        lessorIfscNumber: props.EditLessorRenewData?.lessorIfscNumber,
+        lessorBranchName: props.EditLessorRenewData?.lessorBranchName,
+        lessorAccountNumber: props.EditLessorRenewData?.lessorAccountNumber,
+        lessorRentAmount: props.EditLessorRenewData?.lessorRentAmount,
+        panNo: props.EditLessorRenewData?.panNo,
+        gstNo: props.EditLessorRenewData?.gstNo,
+        lessorDoorNumber: props.EditLessorRenewData?.lessorDoorNumber,
+        lessorFloorNumber: props.EditLessorRenewData?.lessorFloorNumber,
+        lessorWardNo: props.EditLessorRenewData?.lessorWardNo,
+        lessorLandMark: props.EditLessorRenewData?.lessorLandMark,
+        lessorStreet: props.EditLessorRenewData?.lessorStreet,
+        lessorArea: props.EditLessorRenewData?.lessorArea,
+        lessorCity: props.EditLessorRenewData?.lessorCity,
+        lessorLocation: props.EditLessorRenewData?.lessorLocation,
+        lessorPinCode: props.EditLessorRenewData?.lessorPinCode,
+        lessorTaluka: props.EditLessorRenewData?.lessorTaluka,
+        lessorDistrict: props.EditLessorRenewData?.lessorDistrict,
+        lessorState: props.EditLessorRenewData?.lessorState,
+
+        lesseeBranchType: props.EditLessorRenewData?.lesseeBranchType,
+        lesseeBranchName: props.EditLessorRenewData?.lesseeBranchName,
+        lesseeAreaName: props.EditLessorRenewData?.lesseeAreaName,
+        lesseeDivision: props.EditLessorRenewData?.lesseeDivision,
+        lesseeZone: props.EditLessorRenewData?.lesseeZone,
+        lesseeState: props.EditLessorRenewData?.lesseeState,
+
+        lesseeApproverrenewals:
+          props.EditLessorRenewData?.lesseeApproverrenewals,
+        lesseeApproverRelocation:
+          props.EditLessorRenewData?.lesseeApproverRelocation,
+        lesseeEntityDetails: props.EditLessorRenewData?.lesseeEntityDetails,
+
+        premesisLocation: props.EditLessorRenewData?.premesisLocation,
+        premesisDoorNumber: props.EditLessorRenewData?.premesisDoorNumber,
+        premesisFloorNumber: props.EditLessorRenewData?.premesisFloorNumber,
+        premesisWardNo: props.EditLessorRenewData?.premesisWardNo,
+        premesisLandMark: props.EditLessorRenewData?.premesisLandMark,
+        premesisStreet: props.EditLessorRenewData?.premesisStreet,
+        buildingType: props.EditLessorRenewData?.premesisBuildingType,
+        premesisCity: props.EditLessorRenewData?.premesisCity,
+        premesisTaluka: props.EditLessorRenewData?.premesisTaluka,
+        premesisDistrict: props.EditLessorRenewData?.premesisDistrict,
+        premesisState: props.EditLessorRenewData?.lesseeState,
+        premesisPinCode: props.EditLessorRenewData?.premesisPinCode,
+        premesisBuildingType: props.EditLessorRenewData?.premesisBuildingType,
+        northPremesis: props.EditLessorRenewData?.northPremesis,
+        southPremesis: props.EditLessorRenewData?.southPremesis,
+        eastPremesis: props.EditLessorRenewData?.eastPremesis,
+        westPremesis: props.EditLessorRenewData?.westPremesis,
+        // agreementSignDate: datePickerFormat(
+        //   props.EditLessorRenewData?.agreementSignDate
+        // ),
+        agreementSignDate: new Date(
+          props.EditLessorRenewData?.agreementSignDate
+        ),
+        agreementTenure: props.EditLessorRenewData?.agreementTenure,
+        agreementActivationStatus:
+          props.EditLessorRenewData?.agreementActivationStatus,
+        // agreementStartDate: datePickerFormat(
+        //   props.EditLessorRenewData?.agreementStartDate
+        // ),
+        agreementStartDate: new Date(
+          props.EditLessorRenewData?.agreementStartDate
+        ),
+        // agreementEndDate: datePickerFormat(
+        //   props.EditLessorRenewData?.agreementEndDate
+        // ),
+        agreementEndDate: new Date(props.EditLessorRenewData?.agreementEndDate),
+        rentStartDate: new Date(props.EditLessorRenewData?.rentStartDate),
+        // rentStartDate: props.EditLessorRenewData?.rentStartDate,
+        // rentEndDate: datePickerFormat(props.EditLessorRenewData?.rentEndDate),
+        rentEndDate: new Date(props.EditLessorRenewData?.rentEndDate),
+
+        maintaineneCharge: props.EditLessorRenewData?.maintaineneCharge,
+        waterCharge: props.EditLessorRenewData?.waterCharge,
+        electricity: props.EditLessorRenewData?.electricity,
+        documentType: props.EditLessorRenewData?.documentType,
+        securityDepositAmount: props.EditLessorRenewData?.securityDepositAmount,
+
+        securityDepositPaymentMode:
+          props.EditLessorRenewData?.securityDepositPaymentMode,
+        securityDepositUtr: props.EditLessorRenewData?.securityDepositUtr,
+        securityDepositLockinPeriod:
+          props.EditLessorRenewData?.securityDepositLockinPeriod,
+        securityDepositnoticePeriod:
+          props.EditLessorRenewData?.securityDepositnoticePeriod,
+        securityDepositExitTerm:
+          props.EditLessorRenewData?.securityDepositExitTerm,
+        standardDeducition: props.EditLessorRenewData?.standardDeducition,
+        firstMonthvalue: props.EditLessorRenewData?.firstMonthvalue,
+        lastMonthvalue: props.EditLessorRenewData?.lastMonthvalue,
+
+        rentAmount: props.EditLessorRenewData?.rentAmount,
+        escalation: props.EditLessorRenewData?.escalation,
+        renewalTenure: props.EditLessorRenewData?.renewalTenure,
+
+        lattitude: props.EditLessorRenewData?.lattitude,
+        longitude: props.EditLessorRenewData?.longitude,
+        gpsCoordinates: props.EditLessorRenewData?.gpsCoordinates,
+
+        firstRentDate: props.EditLessorRenewData?.firstRentDate,
+        lastRentDate: props.EditLessorRenewData?.lastRentDate,
+        plotNumber: props.EditLessorRenewData?.plotNumber,
+        builtupArea: props.EditLessorRenewData?.builtupArea,
+        renewalStatus: props.EditLessorRenewData?.renewalStatus,
+        tds: props.EditLessorRenewData?.tds,
+        gst: props.EditLessorRenewData?.gst,
+
+        glName: props.EditLessorRenewData?.glName,
+        glEmpId: props.EditLessorRenewData?.glEmpId,
+        signedDate: props.EditLessorRenewData?.signedDate,
+
+        monthlyRent: props?.EditLessorRenewData?.monthlyRent,
+      });
+      setIFSCCodes(Array(recipientCount).fill(""));
+      setBankAndBranch(Array(recipientCount).fill({ bank: "", branch: "" }));
+    }
+  }, [props.EditLessorRenewData]);
+
+  useEffect(() => {
+    editAllRenewRentContractDetails();
+  }, [props.branchIDforDue]);
+
+  const editAllRenewRentContractDetails = async () => {
+    const { data, errRes } = await EditRentRenewContractDetails(
+      props.branchIDforDue
+    );
+    // console.log(props.branchIDforDue, "data");
+    // console.log(data, "resdata");
+    if (data) {
+      if (data) {
+        let renewData = data?.data;
+        setAllNewContractDetails(renewData);
+      }
+    }
+  };
+
   const steps = [
     {
       label: (
@@ -1582,28 +1775,17 @@ const MasterDetails = (props) => {
           close={props.close}
           AddAllNewRentContactInformation={AddAllNewRentContactInformation}
           editAllNewRentContractDetails={editAllNewRentContractDetails}
+          // editAllRenewRentContractDetails={editAllRenewRentContractDetails}
           EditLessorData={props.EditLessorData.uniqueID}
+          contractStatus={allNewContractDetails?.contractStatus?.label}
         />
       ),
     },
 
     // // Add more steps as needed
   ];
-  const contractStatus = [
-    { id: "New/Relocate", label: "New/Relocate" },
-    { id: "Renewal", label: "Renewal" },
-  ];
 
-  const [rentContractStatus, setRentContractStatus] = useState([]);
-
-  const handleContractChange = (value) => {
-    setAllNewContractDetails({
-      ...allNewContractDetails,
-      contractStatus: value,
-    });
-    setRentContractStatus(value);
-  };
-
+  // console.log(allNewContractDetails?.contractStatus?.label, "contractStatus");
   return (
     <>
       <Modal
@@ -1619,8 +1801,9 @@ const MasterDetails = (props) => {
             id="contained-modal-title-vcenter"
             className="d-flex  align-items-end justify-content-end "
           >
-            {props.type === "edit"
-              ? "Edit New Rent Contract Information"
+            {props.type === "edit" ||
+            allNewContractDetails?.contractStatus?.label === "Renewal"
+              ? "Edit Rent Contract Information"
               : "Add New Rent Contract Information"}
           </Modal.Title>
 

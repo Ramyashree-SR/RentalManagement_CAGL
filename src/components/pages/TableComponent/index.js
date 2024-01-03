@@ -139,6 +139,9 @@ const TableComponent = ({
   setLessorName,
   setLesseeBranchName,
   lesseeBranchName,
+  setEditLessorRenewData,
+  setOpenPaymentReportData,
+  openPaymentReportData,
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
@@ -163,6 +166,7 @@ const TableComponent = ({
     setModalType("edit");
     setOpenLessorModal(true);
     setEditLessorData(rowData);
+    setEditLessorRenewData(rowData);
     setOpenEditLessorModal(true);
   };
 
@@ -206,22 +210,28 @@ const TableComponent = ({
     setAgreementModal(true);
   };
 
+  const handlePaymentReport = () => {
+    setOpenPaymentReportData(true);
+  };
   // Apply the filter
-  const filteredData = data?.filter((item) => {
-    if (activationStatusFilter === "All") {
-      return item; // Show all rows if 'all' is selected
-    }
-    return item["agreementActivationStatus"] === activationStatusFilter; // Customize the filtering condition based on your data structure
-  });
+  const filteredData =
+    data &&
+    data?.filter((item) => {
+      if (activationStatusFilter === "All") {
+        return item; // Show all rows if 'all' is selected
+      }
+      return item["agreementActivationStatus"] === activationStatusFilter; // Customize the filtering condition based on your data structure
+    });
 
-  const filterOptions = data?.reduce((options, item) => {
-    if (!options.includes(item["agreementActivationStatus"])) {
-      options?.push(item["agreementActivationStatus"]);
-    }
-    return options;
-  }, []);
+  const filterOptions =
+    data &&
+    data?.reduce((options, item) => {
+      if (!options.includes(item["agreementActivationStatus"])) {
+        options?.push(item["agreementActivationStatus"]);
+      }
+      return options;
+    }, []);
 
-  console.log(activationStatusFilter, "activationStatusFilter");
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer
@@ -339,6 +349,7 @@ const TableComponent = ({
                                     handleEdit={(e) => {
                                       handleEditRow(e, row);
                                       setUniqueID(row.uniqueID);
+                                      setEditLessorRenewData(e, row);
                                     }}
                                     handleEditProvisions={() => {
                                       changeProvisions();
@@ -356,6 +367,16 @@ const TableComponent = ({
                                       setAgreementTenure(row.agreementTenure);
                                       setRentStartDate(row.rentStartDate);
                                       setRentEndDate(row.rentEndDate);
+                                    }}
+                                    handleEditReport={() => {
+                                      handlePaymentReport();
+                                      setUniqueID(row.uniqueID);
+                                      setRentStartDate(row.rentStartDate);
+                                      setRentEndDate(row.rentEndDate);
+                                      setMonthlyRent(row.monthlyRent);
+                                      setUniqueID(row.uniqueID);
+                                      setLessorName(row.lessorName);
+                                      setLesseeBranchName(row.lesseeBranchName);
                                     }}
                                     openRentDueModal={openRentDueModal}
                                     setOpenRentDueModal={setOpenRentDueModal}
@@ -376,6 +397,12 @@ const TableComponent = ({
                                     }
                                     lessorName={lessorName}
                                     lesseeBranchName={lesseeBranchName}
+                                    openPaymentReportData={
+                                      openPaymentReportData
+                                    }
+                                    setOpenPaymentReportData={
+                                      setOpenPaymentReportData
+                                    }
                                   />
                                 )}
 

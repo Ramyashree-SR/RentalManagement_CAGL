@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -64,9 +64,6 @@ const ColorIcon = styled(Button)(({ theme }) => ({
 
 const useStyles = makeStyles({
   tableHeader: {
-    // display: "flex",
-    // alignItems: "center",
-    // justifyContent: "center",
     fontWeight: "600 !important",
     fontSize: "12px !important",
     borderBottom: "1px solid #70B3D1 !important",
@@ -77,18 +74,45 @@ const useStyles = makeStyles({
     color: "#373737",
     fontWeight: "500",
     fontSize: "12px",
-    // display: "flex",
-    // alignItems: "center",
-    // justifyContent: "center",
   },
 });
 
-const ReusableTable = ({ data, columns, sx }) => {
+const ReusableTable = ({ data, columns, sx, showTotal }) => {
   const classes = useStyles();
+
+  // const [monthlyTotal, setMonthlyTotal] = useState({});
+
+  // Calculate monthly totals
+  // useEffect(() => {
+  //   const total = {};
+  //   data?.forEach((entry) => {
+  //     Object.keys(entry)?.forEach((month) => {
+  //       if (
+  //         month !== "rentDueID" &&
+  //         month !== "startDate" &&
+  //         month !== "endDate" &&
+  //         month !== "year" &&
+  //         month !== "escalation" &&
+  //         month !== "contractID" &&
+  //         month !== "status"
+  //       ) {
+  //         total[month] = (total[month] || 0) + entry[month];
+  //       }
+  //     });
+  //   });
+  //   setMonthlyTotal(total);
+  // }, [data]);
+
+  // const calculateTotal = (row) => {
+  //   return Object.values(row).reduce((acc, value) => acc + value, 0);
+  // };
   return (
-    <TableContainer component={Paper} sx={{
-     ...sx
-    }}>
+    <TableContainer
+      component={Paper}
+      sx={{
+        ...sx,
+      }}
+    >
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <StyledTableRow>
@@ -103,21 +127,33 @@ const ReusableTable = ({ data, columns, sx }) => {
           </StyledTableRow>
         </TableHead>
         <TableBody>
-          {data?.map((row, index) => (
-            <StyledTableRow key={index}>
-              {columns &&
-                columns?.map((column) => (
-                  <StyledTableCell
-                    key={column.id}
-                    sx={{ sx }}
-                    classes={{ root: classes.tableHeader }}
-                  >
-                    {row[column.id]}
-                  </StyledTableCell>
-                ))}
-            </StyledTableRow>
-          ))}
+          {data &&
+            data?.length &&
+            data?.map((row, index) => (
+              <StyledTableRow key={index}>
+                {columns &&
+                  columns?.map((column) => (
+                    <StyledTableCell
+                      key={column.id}
+                      sx={{ sx }}
+                      classes={{ root: classes.tableHeader }}
+                    >
+                      {row[column.id]}
+                    </StyledTableCell>
+                  ))}
+              </StyledTableRow>
+            ))}
         </TableBody>
+        {/* {showTotal && (
+          <StyledTableRow>
+            <StyledTableCell>Total</StyledTableCell>
+            {Object.keys(monthlyTotal).map((month) => (
+              <StyledTableCell key={month}>
+                ₹{monthlyTotal[month]}
+              </StyledTableCell>
+            ))}
+          </StyledTableRow>
+        )} */}
       </Table>
     </TableContainer>
   );

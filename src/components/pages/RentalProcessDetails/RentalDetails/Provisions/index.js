@@ -128,34 +128,6 @@ const Provisions = (props) => {
           <Container>
             <Row>
               <Col xs={12}>
-                {/* <Grid className="d-flex m-2">
-                  <InputBoxComponent
-                    label="Branch ID"
-                    placeholder=" Branch ID"
-                    sx={{ width: 200 }}
-                    value={branchIDforDue}
-                  />
-
-                  <InputBoxComponent
-                    label="Rent Start Date"
-                    placeholder="Rent Start Date"
-                    sx={{ width: 200 }}
-                    value={rentStartDate}
-                  />
-                  <InputBoxComponent
-                    label="Rent End Date"
-                    placeholder="Rent End Date"
-                    sx={{ width: 200 }}
-                    value={rentEndDate}
-                  />
-
-                  <InputBoxComponent
-                    label="Tenure Period"
-                    placeholder=" Tenure Period"
-                    sx={{ width: 200 }}
-                    value={agreementTenure}
-                  />
-                </Grid> */}
                 <Grid
                   className="d-flex flex-row m-2"
                   sx={{ fontSize: 15, fontWeight: 700 }}
@@ -232,10 +204,10 @@ const Provisions = (props) => {
               <Col xs={12}>
                 <Grid className="d-flex m-2">
                   <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
-                    Provision for the month :
+                    List of Branch with Provisions:
                   </Typography>
 
-                  <DropDownComponent
+                  {/* <DropDownComponent
                     label="Provision Type"
                     placeholder="Select "
                     sx={{ width: 200, ml: 3 }}
@@ -243,7 +215,7 @@ const Provisions = (props) => {
                     options={typeProvision}
                     // value={typeProvisionsData}
                     onChange={handleTypeChange}
-                  />
+                  /> */}
                 </Grid>
 
                 {typeProvisionsData === "Make" ||

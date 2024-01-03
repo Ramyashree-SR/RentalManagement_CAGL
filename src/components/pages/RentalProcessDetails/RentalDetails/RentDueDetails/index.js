@@ -7,21 +7,14 @@ import { getRentDueDetails } from "../../../../services/RentDueApi";
 import { Typography } from "antd";
 
 const RentDueDetails = (props) => {
-  // const [rentDueDetails, setRentDueDetails] = useState([]);
   const {
     branchIDforDue,
     rentDueDetails,
-    rentContractDetails,
     rentStartDate,
     rentEndDate,
     agreementTenure,
     uniqueID,
   } = props;
-  // console.log(props, "props");
-  const userData = [
-    { id: 1, col1: "1", col2: "3/16", col3: "open", col4: "Branch" },
-    { id: 2, col1: "1", col2: "3/16", col3: "open", col4: "Branch" },
-  ];
 
   return (
     <>

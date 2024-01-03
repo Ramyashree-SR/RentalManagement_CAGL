@@ -39,6 +39,7 @@ const LesseeInformation = ({
   handleAddRentContractInformationError,
   branchDetails,
   setBranchDetails,
+  contractStatus,
 }) => {
   const [address, setAddress] = useState("");
   const [branchData, setBranchData] = useState([]);

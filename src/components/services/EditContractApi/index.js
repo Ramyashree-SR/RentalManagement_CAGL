@@ -1,6 +1,6 @@
 import serviceUtil from "../ServiceUtil";
 
-const EditRentContractDetails = (params,payload) => {
+const EditRentContractDetails = (params, payload) => {
   return serviceUtil
     .put(`editcontracts?uniqueID=${params}`, payload)
     .then((res) => {
@@ -17,4 +17,21 @@ const EditRentContractDetails = (params,payload) => {
     });
 };
 
-export { EditRentContractDetails };
+const EditRentRenewContractDetails = (params, payload) => {
+  return serviceUtil
+    .get(`renewalDetails?BranchID=${params}`)
+    .then((res) => {
+      console.log(params, "params");
+      console.log(res, "RenewEditres");
+      const data = res && res.data;
+      return { data };
+    })
+    .catch((err) => {
+      const errRes = (err && err.response && err.response.data) || {
+        message: "ERROR",
+      };
+      return { errRes };
+    });
+};
+
+export { EditRentContractDetails, EditRentRenewContractDetails };

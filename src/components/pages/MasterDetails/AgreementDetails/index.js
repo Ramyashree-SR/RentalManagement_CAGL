@@ -116,15 +116,10 @@ const AgreementDetails = ({
 
   let activationStatus = [
     { id: "1", label: "Open" },
-    { id: "2", label: "Close" },
+    { id: "2", label: "Closed" },
   ];
 
-  let RenewRelocateStatus = [
-    { id: "New", label: "New" },
-    { id: "Renewal", label: "Renewal" },
-    { id: "Relocation", label: "Relocation" }, //payment for maintenence charges if any
-  ];
-
+ 
   let LockinPeriod = [
     { id: "1", label: "1years" },
     { id: "2", label: "2years" },

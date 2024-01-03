@@ -39,6 +39,8 @@ const GeneralInformation = ({
   handleAddRentContractInformationError,
   AddAllNewRentContactInformation,
   editAllNewRentContractDetails,
+  editAllRenewRentContractDetails,
+  contractStatus,
   EditLessorData,
 }) => {
   const [address, setAddress] = useState("");
@@ -219,7 +221,6 @@ const GeneralInformation = ({
       AddAllNewRentContactInformation();
       close();
     }
-    
   };
 
   const handleBack = () => {
@@ -777,7 +778,8 @@ const GeneralInformation = ({
         >
           Back
         </Button>
-        {type === "edit" ? (
+        {type === "edit" ||
+        (type === "edit" && contractStatus === "Renewal") ? (
           <Button
             // disabled={activeStep && activeStep === 0}
             onClick={() => {

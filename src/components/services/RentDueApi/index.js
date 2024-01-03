@@ -18,7 +18,7 @@ const getAllRentDueDetails = (params) => {
   return serviceUtil
     .get(`getduereportBid?value=${params}`)
     .then((res) => {
-        console.log(res, "res");
+        // console.log(res, "res");
       const data = res.data;
       return { data };
     })
@@ -28,4 +28,18 @@ const getAllRentDueDetails = (params) => {
     });
 };
 
-export { getRentDueDetails, getAllRentDueDetails };
+const getRentDueExcelDetails = (params) => {
+  return serviceUtil
+    .get(`getduereportBid?value=${params}`)
+    .then((res) => {
+        // console.log(res, "res");
+      const data = res.data;
+      return { data };
+    })
+    .catch((err) => {
+      const errRes = err;
+      return { errRes };
+    });
+};
+
+export { getRentDueDetails, getAllRentDueDetails,getRentDueExcelDetails };

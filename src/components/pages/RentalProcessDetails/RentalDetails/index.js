@@ -44,6 +44,7 @@ import {
   getAllRentDueDetails,
   getRentDueDetails,
 } from "../../../services/RentDueApi";
+import { EditRentRenewContractDetails } from "../../../services/EditContractApi";
 
 const useStyles = makeStyles({
   customTextField: {
@@ -61,9 +62,7 @@ const useStyles = makeStyles({
   },
   optionStyle: {
     width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+
     margin: "0px 5px",
     padding: "6px 6px",
     // borderBottom: "0.5px solid #DDEDF4",
@@ -98,10 +97,12 @@ const RentalDetails = (props) => {
   const [openEditLessorModal, setOpenEditLessorModal] = useState(false);
   const [EditLessorData, setEditLessorData] = useState({});
   // console.log(EditLessorData, "EditLessorData ");
+  const [EditLessorRenewData, setEditLessorRenewData] = useState({});
   const [modalType, setModalType] = useState("");
   // console.log("modalType", modalType);
   const [searchText, setSearchText] = useState("");
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
+  const [openPaymentReportData, setOpenPaymentReportData] = useState(false);
   const [openRentActualModal, setOpenRentActualModal] = useState(false);
   const [openVarianceModal, setOpenVarianceModal] = useState(false);
   const [openProvisionsModal, setOpenProvisionsModal] = useState(false);
@@ -145,7 +146,7 @@ const RentalDetails = (props) => {
   const [monthlyRent, setMonthlyRent] = useState(null);
   const [lessorName, setLessorName] = useState(null);
   const [lesseeBranchName, setLesseeBranchName] = useState(null);
-  // const [rentstartDate, setRentstartDate] = useState("")
+  const [rentRenewContract, setRentRenewContract] = useState([]);
 
   const handleStateChange = (value) => {
     // console.log(value.target.outerText, "newValue");
@@ -323,13 +324,7 @@ const RentalDetails = (props) => {
     setActivationStatusFilter(e.target.value);
   };
 
-  // const handleActivationStatusFilterChangeDue = (e) => {
-  //   setActivationStatusFilterDue(e.target.value);
-  // };
   const handleActivationStatusFilterChangeDue = (name, selectedValue) => {
-    // Assuming filterOptions is an array of possible activation status values
-    // You may need to customize this logic based on your actual data structure
-
     let value = selectedValue?.label;
     setRentDueDataByBranchId({
       ...rentDueDataByBranchId,
@@ -464,7 +459,9 @@ const RentalDetails = (props) => {
                 setOpenLessorModal(true);
                 setModalType("add");
                 setOpenEditLessorModal(false);
+                setEditLessorRenewData(null);
                 setEditLessorData(null);
+                setRentRenewContract(null);
               }}
               sx={{ width: 200 }}
             />
@@ -483,7 +480,7 @@ const RentalDetails = (props) => {
               disabled={openEditLessorModal ? "edit" : "add"}
               uniqueID={uniqueID}
               EditLessorData={openEditLessorModal && EditLessorData}
-              // setEditLessorData={setEditLessorData}
+              EditLessorRenewData={openLessorModal && EditLessorRenewData}
             />
 
             <Box>
@@ -512,11 +509,12 @@ const RentalDetails = (props) => {
                   Menu
                 </Typography>
               </IconButton>
-              {/* <PaymentReport
+              <PaymentReport
                 show={openPaymentModal}
                 close={() => setOpenPaymentModal(false)}
                 fullscreen={fullscreen}
-              /> */}
+                uniqueID={uniqueID}
+              />
 
               {/* <RentActual
                 show={openRentActualModal}
@@ -529,7 +527,6 @@ const RentalDetails = (props) => {
                 fullscreen={fullscreen}
                 branchIDforDue={branchIDforDue}
                 rentDueDataByBranchId={rentDueDataByBranchId}
-                // getAllRentDueDetailsByBranchID={getAllRentDueDetailsByBranchID}
                 branchFilter={branchFilter}
                 handleBranchID={handleBranchID}
                 rentContractDetails={rentContractDetails}
@@ -539,7 +536,11 @@ const RentalDetails = (props) => {
                 }
                 lesseeBranchName={rentContractDetails?.lesseeBranchName}
               />
-
+              <Provisions
+                show={openProvisionsModal}
+                close={() => setOpenProvisionsModal(false)}
+                fullscreen={fullscreen}
+              />
               {/* <Variance
                 show={openVarianceModal}
                 close={() => setOpenVarianceModal(false)}
@@ -771,14 +772,14 @@ const RentalDetails = (props) => {
           Rent Actual
         </MenuItem>
 
-        {/* <MenuItem
+        <MenuItem
           onClick={() => {
-            setOpenProvisionsMoadal(true);
+            setOpenProvisionsModal(true);
             handleClose();
           }}
         >
           Provisions
-        </MenuItem> */}
+        </MenuItem>
 
         <MenuItem
           onClick={() => {
@@ -840,6 +841,9 @@ const RentalDetails = (props) => {
           setLessorName={setLessorName}
           setLesseeBranchName={setLesseeBranchName}
           lesseeBranchName={lesseeBranchName}
+          setEditLessorRenewData={setEditLessorRenewData}
+          openPaymentReportData={openPaymentReportData}
+          setOpenPaymentReportData={setOpenPaymentReportData}
         />
       </Box>
     </Box>
