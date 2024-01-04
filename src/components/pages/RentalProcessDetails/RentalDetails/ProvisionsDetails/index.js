@@ -17,6 +17,8 @@ const ProvisionsDetails = (props) => {
     monthlyRent,
     uniqueID,
     lesseeBranchName,
+    typeProvisionsData,
+    setTypeProvisionsData,
   } = props;
   // console.log(props, "props");
 
@@ -72,9 +74,8 @@ const ProvisionsDetails = (props) => {
     { id: 2, label: "Reverse" },
   ];
 
-  const [typeProvisionsData, setTypeProvisionsData] = useState("");
   const handleTypeChange = (value) => {
-    console.log(value, "value");
+    // console.log(value, "value");
     setTypeProvisionsData(value?.label);
   };
 
@@ -241,7 +242,8 @@ const ProvisionsDetails = (props) => {
                     sx={{ width: 200, ml: 3 }}
                     size="small"
                     options={typeProvision}
-                    // value={typeProvisionsData}
+                    name="provisiontype"
+                    value={addProvisions?.provisiontype}
                     onChange={handleTypeChange}
                   />
                 </Grid>
@@ -371,4 +373,3 @@ export default ProvisionsDetails;
                     onChange={(e) => updateChange(e)}
                   /> */
 }
-

@@ -23,7 +23,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: theme.palette?.common?.white,
     fontSize: 12,
     fontWeight: 650,
+    // fontFamily:"san-serif",
     padding: "3px",
+    fontFamily: "sans-serif",
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 12,

@@ -68,13 +68,16 @@ export default function MenuComponent({
   const [rentDueDetails, setRentDueDetails] = useState([]);
   const [addProvisions, setAddProvisions] = useState({
     provisionID: "",
+    provisiontype: "",
     contractID: "",
+    branchID: "",
     year: "",
     month: "",
     provisionAmount: "",
     remark: "",
     dateTime: "",
   });
+  const [typeProvisionsData, setTypeProvisionsData] = useState(null);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -102,21 +105,27 @@ export default function MenuComponent({
     }
   };
 
-  const AddProvisionFortheMonth = async (params) => {
+  // console.log(typeProvisionsData,"typeProvisionsData");
+
+  const AddProvisionFortheMonth = async () => {
     let payload = {
       provisionID: addProvisions.provisionID,
+      provisiontype: typeProvisionsData,
       contractID: uniqueID,
+      branchID: branchIDforDue,
       year: addProvisions.year.label,
       month: addProvisions.month.label,
       provisionAmount: monthlyRent,
       remark: addProvisions.remark,
       dateTime: addProvisions.dateTime,
     };
-    const { data } = await AddRentProvisionDetails(params, payload);
+    const { data } = await AddRentProvisionDetails(typeProvisionsData, payload);
     // console.log(data?.data, "data");
     if (data) {
       setAddProvisions({
         provisionID: "",
+        provisiontype: "",
+        branchID: "",
         contractID: "",
         year: "",
         month: "",
@@ -268,6 +277,8 @@ export default function MenuComponent({
           uniqueID={uniqueID}
           lessorName={lessorName}
           lesseeBranchName={lesseeBranchName}
+          setTypeProvisionsData={setTypeProvisionsData}
+          typeProvisionsData={typeProvisionsData}
         />
       )}
 

@@ -1,9 +1,13 @@
 import { Button, Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import InputBoxComponent from "../../../../atoms/InputBoxComponent";
 import DropDownComponent from "../../../../atoms/DropDownComponent";
 import { red } from "@mui/material/colors";
+import { getBranchWiseProvisionsList } from "../../../../services/ProvisionsListApi";
+import ReusableTable from "../../../../molecules/ReusableTable";
+import { ProvisionsColumns } from "../../../../../constants/ProvisionList";
+import PaymentTableComponent from "../../../../molecules/PaymentTableComponent";
 
 const Provisions = (props) => {
   const {
@@ -18,65 +22,27 @@ const Provisions = (props) => {
     uniqueID,
     lesseeBranchName,
   } = props;
-  // console.log(props, "props");
 
-  //  const yearOptions = Array.from({ length: 101 }, (_, index) => ({
-  //   value: currentYear, // currentYear
-  //   label: `${currentYear}`,
-  // }));
+  const [dataSelect, setDataSelect] = useState(null);
+  const [inputValue, setInputValue] = useState("");
+  const [provisionsList, setProvisionsList] = useState([]);
+  const [selectedYear, setSelectedYear] = useState([]);
 
-  const handleChange = (name, newValue) => {
-    setAddProvisions({
-      ...addProvisions,
-      [name]: newValue,
-    });
+  let flag = [{ id: "All", label: "All" }];
+
+  const handleChange = (newValue) => {
+    console.log(newValue, "newValue");
+    setSelectedYear(newValue.label);
   };
 
-  const months = [
-    { id: 1, label: "January" },
-    { id: 2, label: "February" },
-    { id: 3, label: "March" },
-    { id: 4, label: "April" },
-    { id: 5, label: "May" },
-    { id: 6, label: "June" },
-    { id: 7, label: "July" },
-    { id: 8, label: "August" },
-    { id: 9, label: "September" },
-    { id: 10, label: "October" },
-    { id: 11, label: "November" },
-    { id: 12, label: "December" },
-  ];
-  const [selectedMonth, setSelectedMonth] = useState(null);
-  const handleMonthChange = (name, newValue) => {
-    setAddProvisions({
-      ...addProvisions,
-      [name]: newValue,
-    });
-    if (newValue && newValue.month) {
-      // Access newValue.month here
-      setSelectedMonth(newValue);
-    } else {
-      console.error("newValue or newValue.month is undefined");
-    }
+  const handleSelectChange = (value) => {
+    // console.log(value, "value");
+    setDataSelect(value.label);
   };
 
-  const updateChange = (e) => {
-    setAddProvisions({
-      ...addProvisions,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const typeProvision = [
-    { id: 1, label: "Make" },
-    { id: 2, label: "Reverse" },
-  ];
-
-  const [typeProvisionsData, setTypeProvisionsData] = useState("");
-  const handleTypeChange = (value) => {
-    console.log(value, "value");
-    setTypeProvisionsData(value?.label);
-  };
+  useEffect(() => {
+    getProvisionListDetails();
+  }, [inputValue, selectedYear]);
 
   // Parse the provided rent end date
   // const endDateObject = new Date(rentEndDate);
@@ -91,23 +57,53 @@ const Provisions = (props) => {
 
   // Extract the year from the rent end date
   const currentYear = endDateObject?.getFullYear();
-  const currentMonths = months[endDateObject?.getMonth()];
-
-  // const monthOptions = Array.from({ length: 101 }, (_, index) => ({
-  //   value: currentYear, // currentYear
-  //   label: `${currentYear}`,
-  // }));
 
   // Generate an array of years, including the current MOnth
-  const yearOptions = Array.from({ length: 1 }, (_, index) => ({
-    value: currentYear, // currentYear
-    label: `${currentYear}`,
+  const yearOptions = Array.from({ length: 10 }, (_, index) => ({
+    value: currentYear - index, // currentYear
+    label: `${currentYear - index}`,
   }));
 
-  const MonthOptions = Array.from({ length: 1 }, (_, index) => ({
-    value: currentMonths.label, // currentMonths
-    label: `${currentMonths.label}`,
-  }));
+  // const getProvisionListDetails = async () => {
+  //   // let params = id ? id : "All";
+  //   const { data } = await getBranchWiseProvisionsList(
+  //     dataSelect,
+  //     selectedYear
+  //   );
+  //   // console.log(data?.data?.data, "Provisionsdata");
+  //   if (data) {
+  //     if (data) {
+  //       let getData = data?.data;
+  //       setProvisionsList(getData);
+  //     } else {
+  //       setProvisionsList([]);
+  //     }
+  //   }
+  // };
+  const getProvisionListDetails = async () => {
+    // let params = id ? id : "All";
+    const { data } = await getBranchWiseProvisionsList(
+      inputValue,
+      selectedYear
+    );
+    // console.log(data?.data?.data, "Provisionsdata");
+    if (data) {
+      if (data) {
+        let getData = data?.data;
+        setProvisionsList(getData);
+      } else {
+        setProvisionsList([]);
+      }
+    }
+  };
+
+  const handleBranchIDChange = (e) => {
+    // setProvisionsList({
+    //   ...provisionsList,
+    //   [e.target.name]: e.target.value,
+    // });
+    setInputValue(e.target.value);
+  };
 
   return (
     <>
@@ -127,177 +123,49 @@ const Provisions = (props) => {
         <Modal.Body>
           <Container>
             <Row>
-              <Col xs={12}>
-                <Grid
-                  className="d-flex flex-row m-2"
-                  sx={{ fontSize: 15, fontWeight: 700 }}
-                >
-                  <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
-                    <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                      Contract ID :&nbsp;&nbsp;
-                    </Typography>
-                    <Typography
-                      sx={{ fontSize: 15, fontWeight: 700, color: red[900] }}
-                    >
-                      {uniqueID}
-                    </Typography>
-                  </Grid>
-                  <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
-                    <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                      Branch ID :&nbsp;&nbsp;
-                    </Typography>
-                    <Typography
-                      sx={{ fontSize: 15, fontWeight: 700, color: red[900] }}
-                    >
-                      {branchIDforDue}
-                    </Typography>
-                  </Grid>
-                  <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
-                    <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                      Branch Name :&nbsp;&nbsp;
-                    </Typography>
-                    <Typography
-                      sx={{ fontSize: 15, fontWeight: 700, color: red[900] }}
-                    >
-                      {lesseeBranchName}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Grid
-                  className="d-flex flex-row m-2"
-                  sx={{ fontSize: 15, fontWeight: 700 }}
-                >
-                  <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
-                    <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                      Rent Start Date :&nbsp;&nbsp;
-                    </Typography>
-                    <Typography
-                      sx={{ fontSize: 15, fontWeight: 700, color: red[900] }}
-                    >
-                      {rentStartDate}
-                    </Typography>
-                  </Grid>
-                  <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
-                    <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                      Rent End Date :&nbsp;&nbsp;
-                    </Typography>
-                    <Typography
-                      sx={{ fontSize: 15, fontWeight: 700, color: red[900] }}
-                    >
-                      {rentEndDate}
-                    </Typography>
-                  </Grid>
-                  <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
-                    <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                      Lessor Name :&nbsp;&nbsp;
-                    </Typography>
-                    <Typography
-                      sx={{ fontSize: 15, fontWeight: 700, color: red[900] }}
-                    >
-                      {" "}
-                      {lessorName}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Col>
-              <hr />
-              <Col xs={12}>
-                <Grid className="d-flex m-2">
-                  <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
-                    List of Branch with Provisions:
-                  </Typography>
+              <Col xs={12}></Col>
 
-                  {/* <DropDownComponent
-                    label="Provision Type"
-                    placeholder="Select "
-                    sx={{ width: 200, ml: 3 }}
-                    size="small"
-                    options={typeProvision}
-                    // value={typeProvisionsData}
-                    onChange={handleTypeChange}
-                  /> */}
-                </Grid>
+              <Col xs={12}>
+                <Grid className="d-flex flex-column ">
+                  <Grid className="d-flex m-2">
+                    <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
+                      List of Branch with Provisions:
+                    </Typography>
+                  </Grid>
+                  {/* <hr /> */}
+                  <Grid className="d-flex m-2">
+                    <InputBoxComponent
+                      label="ID"
+                      placeholder="Enter ID"
+                      sx={{ width: 200, mt: -1.5 }}
+                      name="inputValue"
+                      value={inputValue}
+                      onChange={(e) => {
+                        handleBranchIDChange(e);
+                      }}
+                    />
 
-                {typeProvisionsData === "Make" ||
-                typeProvisionsData === "Reverse" ? (
-                  <Grid className="d-flex  ">
                     <DropDownComponent
                       label="Year"
                       placeholder="Select "
-                      sx={{ width: 200, ml: 0 }}
+                      sx={{ width: 200 }}
                       size="small"
                       options={yearOptions}
-                      value={addProvisions?.year}
-                      onChange={(val) => {
-                        handleChange("year", val);
-                      }}
+                      value={selectedYear}
+                      onChange={handleChange}
                     />
-                    <DropDownComponent
-                      label="Month"
-                      placeholder="Select "
-                      sx={{ width: 200, ml: 0 }}
-                      size="small"
-                      options={MonthOptions}
-                      name="month"
-                      value={addProvisions?.month}
-                      onChange={(val) => {
-                        handleMonthChange("month", val);
-                      }}
-                    />
+                  </Grid>
 
-                    <InputBoxComponent
-                      label="Provision Amount"
-                      placeholder="Provision Amount"
-                      sx={{ width: 200, ml: 0, mt: -1.3 }}
-                      value={monthlyRent}
-                      onChange={(e) => updateChange(e)}
+                  {selectedYear && (
+                    <ReusableTable
+                      data={provisionsList}
+                      columns={ProvisionsColumns}
                     />
-                  </Grid>
-                ) : null}
-                {typeProvisionsData === "Make" ||
-                typeProvisionsData === "Reverse" ? (
-                  <Grid className="d-flex flex-row mt-2">
-                    <InputBoxComponent
-                      textLabel="Remarks :"
-                      placeholder="Type here..."
-                      sx={{ width: 400 }}
-                      rows={4}
-                      name="remark"
-                      value={addProvisions?.remark}
-                      multiline
-                      onChange={(e) => updateChange(e)}
-                    />
-                  </Grid>
-                ) : null}
-                <Grid className="d-flex flex-row mt-4 ">
-                  {typeProvisionsData === "Make" ? (
-                    <Grid>
-                      <Button
-                        onClick={() => {
-                          AddProvisionFortheMonth();
-                          // handleClose();
-                        }}
-                        variant="contained"
-                        sx={{ m: 1, background: "#238520" }}
-                      >
-                        Provision
-                      </Button>
-                    </Grid>
-                  ) : null}
-                  {typeProvisionsData === "Reverse" ? (
-                    <Grid className="d-flex " sx={{ ml: 2 }}>
-                      <Button
-                        onClick={() => {
-                          AddProvisionFortheMonth();
-                          // handleClose();
-                        }}
-                        variant="contained"
-                        sx={{ m: 1, background: "#238520" }}
-                      >
-                        Reverse
-                      </Button>
-                    </Grid>
-                  ) : null}
+                  )}
+                  {/* <PaymentTableComponent
+                    data={provisionsList}
+                    columns={ProvisionsColumns}
+                  /> */}
                 </Grid>
               </Col>
             </Row>

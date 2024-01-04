@@ -226,18 +226,19 @@ const PaymentReportDetails = (props) => {
               onChange={handleMonthChange}
             />
           </Grid>
-
-          <PaymentTableComponent
-            data={[getPaymentReport]}
-            columns={paymentColumn}
-            sx={{
-              // height: "300px",
-              width: "100%",
-              overFlowX: "scroll",
-              overFlowY: "scroll",
-              mt: 4,
-            }}
-          />
+          {selectedMonth && (
+            <PaymentTableComponent
+              data={[getPaymentReport]}
+              columns={paymentColumn}
+              sx={{
+                // height: "300px",
+                width: "100%",
+                overFlowX: "scroll",
+                overFlowY: "scroll",
+                mt: 4,
+              }}
+            />
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={props.close}>Close</Button>
