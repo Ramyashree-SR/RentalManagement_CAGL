@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import InputBoxComponent from "../../../../atoms/InputBoxComponent";
@@ -121,19 +121,17 @@ const Provisions = (props) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Container>
+          {/* <Container>
             <Row>
-              <Col xs={12}></Col>
-
-              <Col xs={12}>
-                <Grid className="d-flex flex-column ">
-                  <Grid className="d-flex m-2">
+              <Col xs={12}> */}
+                <Grid className="d-flex flex-column m-2" sx={{ position: "fixed" }}>
+                  <Grid className="d-flex">
                     <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
                       List of Branch with Provisions:
                     </Typography>
                   </Grid>
                   {/* <hr /> */}
-                  <Grid className="d-flex m-2">
+                  <Grid className="d-flex ">
                     <InputBoxComponent
                       label="ID"
                       placeholder="Enter ID"
@@ -155,21 +153,34 @@ const Provisions = (props) => {
                       onChange={handleChange}
                     />
                   </Grid>
-
+                </Grid>
+                <Box
+                  sm={12}
+                  xs={12}
+                  sx={{
+                    marginLeft: "1px auto auto 1px",
+                    // flexBasis: "80%",
+                    // background: "#fff",
+                    // height: "100%",
+                    // width: "100%",
+                    // position: "fixed",
+                  }}
+                >
                   {selectedYear && (
                     <ReusableTable
                       data={provisionsList}
                       columns={ProvisionsColumns}
+                      sx={{ height: 320, mt: 10 }}
                     />
                   )}
-                  {/* <PaymentTableComponent
+                </Box>
+                {/* <PaymentTableComponent
                     data={provisionsList}
                     columns={ProvisionsColumns}
                   /> */}
-                </Grid>
-              </Col>
+              {/* </Col>
             </Row>
-          </Container>
+          </Container> */}
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={props.close} variant="contained">

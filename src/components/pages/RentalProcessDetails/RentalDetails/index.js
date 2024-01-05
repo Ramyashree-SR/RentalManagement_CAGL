@@ -179,11 +179,6 @@ const RentalDetails = (props) => {
     }
   };
   const handleDistrictChange = (value) => {
-    // console.log(value, "value");
-    // setFilterDistrict({
-    //   ...filterDistrict,
-    //   premesisDistrict: value,
-    // });
     setFilterDistrict(value);
     getContractDetails(value);
   };
@@ -191,7 +186,6 @@ const RentalDetails = (props) => {
   const getBranchDistrictByState = async (state) => {
     const { data } = await getDistrictByStateFilter(state);
     if (data) {
-      // if (data) {
       let districtData = [];
       data?.data.map((val) => {
         districtData.push([val]);
@@ -200,7 +194,6 @@ const RentalDetails = (props) => {
     } else {
       setDistrictFilter([]);
     }
-    // }
   };
 
   useEffect(() => {
@@ -248,10 +241,6 @@ const RentalDetails = (props) => {
     setOpenPaymentModal(true);
   };
 
-  // useEffect(() => {
-  //   getContractDetails();
-  // }, []);
-
   const getContractDetails = async (district, id) => {
     console.log(id, "id");
     let paramsData = id ? id : "All";
@@ -281,9 +270,8 @@ const RentalDetails = (props) => {
     });
     setbranchIDforDue(value.target.outerText);
     getAllContractDetails(value.target.outerText);
-    if (value.target.outerText) {
-      getAllRentDueDetailsByBranchID(value.target.outerText);
-    }
+
+    getAllRentDueDetailsByBranchID(value.target.outerText);
   };
 
   const getBranchId = async () => {
@@ -347,9 +335,12 @@ const RentalDetails = (props) => {
     setActivationStatusFilterDue(value);
   };
 
+  // useEffect(() => {
+  //   getAllRentDueDetailsByBranchID();
+  // }, [branchIDforDue]);
+
   const getAllRentDueDetailsByBranchID = async (branchID) => {
-    const { data } = await getAllRentDueDetails(branchID);
-    // console.log(data, "allData");
+    const { data } = await getAllRentDueDetails(branchID );
     if (data) {
       if (data) {
         let getData = data?.data;
@@ -749,6 +740,7 @@ const RentalDetails = (props) => {
           onClick={() => {
             handleClose();
             setOpenRentDueDataModal(true);
+            getAllRentDueDetailsByBranchID();
           }}
         >
           Branch Rent Due
@@ -872,28 +864,6 @@ export default RentalDetails;
 //     branchID: value,
 //   });
 // };
-
-// useEffect(() => {
-//   if (filterTable?.branchID) {
-//     const getFilterData = () => {
-//       let branchIdData = rentContractDetailsCopy.filter((item) => {
-//         if (item.branchID) {
-//           return item?.branchID
-//             .toString()
-//             .includes(filterTable?.branchID.toString());
-//         }
-//       });
-//       return branchIdData;
-//     };
-//     if (getFilterData) {
-//       setRentContractDetails(getFilterData);
-//     } else {
-//       setRentContractDetails([]);
-//     }
-//   } else {
-//     setRentContractDetails([...rentContractDetailsCopy]);
-//   }
-// }, [filterTable?.branchID]);
 
 // let array = [];
 // data?.data.map((val) => {

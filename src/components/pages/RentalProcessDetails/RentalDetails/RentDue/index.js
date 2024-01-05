@@ -54,45 +54,6 @@ const RentDue = (props) => {
   useEffect(() => {
     calculateMonthlyTotal();
   }, [rentDueDataByBranchId]);
-  // const userData = [
-  //   { id: 1, col1: "1", col2: "3/16", col3: "open", col4: "Branch" },
-  //   { id: 2, col1: "1", col2: "3/16", col3: "open", col4: "Branch" },
-  // ];
-  // const [BranchID, setBranchID] = useState([]);
-
-  // useEffect(() => {
-  //   getBranchId();
-  // }, []);
-
-  // const handleBranchID = (value) => {
-  //   setBranchID({
-  //     ...BranchID,
-  //     branchID: value.target.outerText,
-  //   });
-  //   if(value.target.outerText){
-  //     getAllRentDueDetailsByBranchID(value.target.outerText)
-  //   }
-
-  //   // setbranchIDforDue(value.target.outerText);
-  //   // getAllContractDetails(value.target.outerText);
-  // };
-
-  // const getBranchId = async () => {
-  //   const { data } = await getBranchID();
-  //   if (data) {
-  //     if (data) {
-  //       let branchIDData = [];
-  //       data?.data.map((val) => {
-  //         branchIDData.push([val]);
-  //       });
-  //     //  let id=data?.data
-  //       setBranchID(branchIDData);
-  //     } else {
-  //       setBranchID([]);
-  //     }
-  //   }
-  // };
-  // console.log(BranchID,"BranchID");
 
   let activationStatus = [
     { id: "1", label: "All" },
@@ -115,26 +76,12 @@ const RentDue = (props) => {
     { id: 12, label: "December" },
   ];
 
-  // const filteredData = rentDueDataByBranchId?.filter((item) => {
-  //   if (activationStatusFilterDue === "") {
-  //     return []; // Show all rows if 'all' is selected
-  //   }
-  //   return item["status"] === activationStatusFilterDue; // Customize the filtering condition based on your data structure
-  // });
-
-  // const filterOptions = rentDueDataByBranchId?.reduce((options, item) => {
-  //   if (!options.includes(item["status"])) {
-  //     options?.push(item["status"]);
-  //   }
-  //   return options;
-  // }, []);
-
   const fileName = "Rent Due Excel"; // here enter filename for your excel file
 
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await getRentDueExcelDetails(branchIDforDue);
-      console.log(data, "duedata");
+      // console.log(data, "duedata");
       if (data) {
         setDataToExcel(data);
       }
@@ -165,7 +112,7 @@ const RentDue = (props) => {
               sx={{ fontSize: 15, fontWeight: 700 }}
             >
               {/* <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Branch ID : {branchIDforDue}
+                Branch Name : {lesseeBranchName}
               </Typography> */}
 
               <Grid
@@ -219,12 +166,12 @@ const RentDue = (props) => {
                 />
                 {/* </Grid> */}
                 {/* <Grid item className="d-flex px-1 py-1" > */}
-                <InputBoxComponent
+                {/* <InputBoxComponent
                   label="Branch Name"
                   placeholder="Branch Name"
                   sx={{ width: 200, ml: 1, mt: -1.5 }}
                   value={lesseeBranchName}
-                />
+                /> */}
 
                 <DropDownComponent
                   label="ActivationStatus"
@@ -287,7 +234,7 @@ const RentDue = (props) => {
                   data={rentDueDataByBranchId}
                   columns={rentDueData}
                   sx={{
-                    height: "370px",
+                    height: 360,
                     width: "100%",
                     overFlowX: "scroll",
                     overFlowY: "scroll",

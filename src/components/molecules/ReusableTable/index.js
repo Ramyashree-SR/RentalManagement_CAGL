@@ -10,20 +10,21 @@ import {
   styled,
   Button,
   tableCellClasses,
+  TablePagination,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { deepOrange, green, pink } from "@mui/material/colors";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.root}`]: {
-    padding: "5px",
+    padding: "7px",
   },
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme?.palette?.success.dark,
     color: theme.palette?.common?.white,
     fontSize: 12,
     fontWeight: 650,
-    padding: "3px",
+    padding: "5px",
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 12,
@@ -68,94 +69,146 @@ const useStyles = makeStyles({
     fontSize: "12px !important",
     borderBottom: "1px solid #70B3D1 !important",
     borderRight: "1px solid #70B3D1  !!!important",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   tableRow: {
     border: "none !important",
     color: "#373737",
     fontWeight: "500",
     fontSize: "12px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
 const ReusableTable = ({ data, columns, sx, showTotal }) => {
   const classes = useStyles();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [monthlyTotal, setMonthlyTotal] = useState({});
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-  // const [monthlyTotal, setMonthlyTotal] = useState({});
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   // Calculate monthly totals
-  // useEffect(() => {
-  //   const total = {};
-  //   data?.forEach((entry) => {
-  //     Object.keys(entry)?.forEach((month) => {
-  //       if (
-  //         month !== "rentDueID" &&
-  //         month !== "startDate" &&
-  //         month !== "endDate" &&
-  //         month !== "year" &&
-  //         month !== "escalation" &&
-  //         month !== "contractID" &&
-  //         month !== "status"
-  //       ) {
-  //         total[month] = (total[month] || 0) + entry[month];
-  //       }
-  //     });
-  //   });
-  //   setMonthlyTotal(total);
-  // }, [data]);
+  useEffect(() => {
+    const total = {};
+    data?.forEach((entry) => {
+      Object?.keys(entry)?.forEach((month) => {
+        if (
+          month !== "rentDueID" &&
+          month !== "contractID" &&
+          month !== "year" &&
+          month !== "escalation" &&
+          month !== "status"
+        ) {
+          total[month] = (total[month] || 0) + entry[month];
+        }
+      });
+    });
+    setMonthlyTotal(total);
+  }, [data]);
 
-  // const calculateTotal = (row) => {
-  //   return Object.values(row).reduce((acc, value) => acc + value, 0);
-  // };
+  const calculateTotal = (row) => {
+    return Object.values(row).reduce((acc, value) => acc + value, 0);
+  };
   return (
-    <TableContainer
-      component={Paper}
-      sx={{
-        ...sx,
-      }}
-    >
-      <Table stickyHeader aria-label="sticky table">
-        <TableHead>
-          <StyledTableRow>
-            {columns?.map((column) => (
-              <StyledTableCell
-                key={column.id}
-                classes={{ root: classes.tableHeader }}
-              >
-                {column.label}
-              </StyledTableCell>
-            ))}
-          </StyledTableRow>
-        </TableHead>
-        <TableBody>
-          {data &&
-            data?.length &&
-            data?.map((row, index) => (
-              <StyledTableRow key={index}>
+    <>
+      <TableContainer
+        component={Paper}
+        sx={{
+          ...sx,
+        }}
+      >
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <StyledTableRow>
+              {columns?.map((column) => (
+                <StyledTableCell
+                  key={column.id}
+                  classes={{ root: classes.tableHeader }}
+                >
+                  {column.label}
+                </StyledTableCell>
+              ))}
+            </StyledTableRow>
+          </TableHead>
+          <TableBody>
+            {data &&
+              data?.length &&
+              data
+                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                ?.map((row, index) => (
+                  <StyledTableRow key={index}>
+                    {columns &&
+                      columns?.map((column) => (
+                        <StyledTableCell
+                          key={column.id}
+                          sx={{ sx }}
+                          classes={{ root: classes.tableHeader }}
+                        >
+                          {row[column.id]}
+                        </StyledTableCell>
+                      ))}
+                  </StyledTableRow>
+                ))}
+            {/* {showTotal && (
+            <StyledTableRow>
+              <StyledTableCell>Total</StyledTableCell>
+              {Object.keys(monthlyTotal).map((month) => (
+                <StyledTableCell key={month}>
+                  ₹{monthlyTotal[month]}
+                </StyledTableCell>
+              ))}
+            </StyledTableRow>
+          )} */}
+
+            {showTotal && (
+              <StyledTableRow>
+                <StyledTableCell>Total</StyledTableCell>
                 {columns &&
-                  columns?.map((column) => (
-                    <StyledTableCell
-                      key={column.id}
-                      sx={{ sx }}
-                      classes={{ root: classes.tableHeader }}
-                    >
-                      {row[column.id]}
-                    </StyledTableCell>
-                  ))}
+                  columns?.map((column) => {
+                    if (
+                      ["contractID", "escalation", "year", "status"].includes(
+                        column.id
+                      )
+                    ) {
+                      return (
+                        <StyledTableCell key={column.id}>-</StyledTableCell>
+                      );
+                    } else if (column.id in monthlyTotal) {
+                      return (
+                        <StyledTableCell key={column.id}>
+                          ₹ {monthlyTotal[column.id]}
+                        </StyledTableCell>
+                      );
+                    }
+                    return null;
+                  })}
               </StyledTableRow>
-            ))}
-        </TableBody>
-        {/* {showTotal && (
-          <StyledTableRow>
-            <StyledTableCell>Total</StyledTableCell>
-            {Object.keys(monthlyTotal).map((month) => (
-              <StyledTableCell key={month}>
-                ₹{monthlyTotal[month]}
-              </StyledTableCell>
-            ))}
-          </StyledTableRow>
-        )} */}
-      </Table>
-    </TableContainer>
+            )}
+          </TableBody>
+        </Table>
+      
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10, 15, 100]}
+        component="div"
+        count={data?.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    </>
   );
 };
 

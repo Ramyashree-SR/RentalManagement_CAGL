@@ -88,13 +88,12 @@ export default function MenuComponent({
     setAnchorEl(null);
   };
 
-  useEffect(() => {
-    getAllRentDueDetailsByUniqueID();
-  }, [uniqueID]);
+  // useEffect(() => {
+  //   getAllRentDueDetailsByUniqueID();
+  // }, []);
 
   const getAllRentDueDetailsByUniqueID = async () => {
     const { data } = await getRentDueDetails(uniqueID);
-    // console.log(data.data,"data");
     if (data) {
       if (data) {
         let getData = data?.data;
@@ -104,8 +103,6 @@ export default function MenuComponent({
       }
     }
   };
-
-  // console.log(typeProvisionsData,"typeProvisionsData");
 
   const AddProvisionFortheMonth = async () => {
     let payload = {
@@ -120,7 +117,6 @@ export default function MenuComponent({
       dateTime: addProvisions.dateTime,
     };
     const { data } = await AddRentProvisionDetails(typeProvisionsData, payload);
-    // console.log(data?.data, "data");
     if (data) {
       setAddProvisions({
         provisionID: "",
@@ -179,7 +175,6 @@ export default function MenuComponent({
             "& .MuiAvatar-root": {
               width: 32,
               height: 32,
-              //   ml: -0.1,
               mr: 2,
               background: "#CFE8F7",
             },
@@ -216,15 +211,9 @@ export default function MenuComponent({
           }}
           sx={{ fontSize: 13, fontWeight: 600, color: blue[900] }}
         >
-          {/* <ListItemIcon> */}
           <PendingActionsIcon fontSize="small" sx={{ color: blue[900] }} />
-          {/* </ListItemIcon> */}
           &nbsp; Rent Due
         </MenuItem>
-        {/* <MenuItem onClick={handleClose} sx={{ fontSize: 13, fontWeight: 600 }}>
-          <Settings fontSize="small" sx={{ color: blue[900] }} />
-          &nbsp;Rent Actual
-        </MenuItem> */}
 
         {activationStatusFilter === "Open" ? (
           <MenuItem
