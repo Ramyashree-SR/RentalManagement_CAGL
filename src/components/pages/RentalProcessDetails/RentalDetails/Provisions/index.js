@@ -8,6 +8,7 @@ import { getBranchWiseProvisionsList } from "../../../../services/ProvisionsList
 import ReusableTable from "../../../../molecules/ReusableTable";
 import { ProvisionsColumns } from "../../../../../constants/ProvisionList";
 import PaymentTableComponent from "../../../../molecules/PaymentTableComponent";
+import { ExportToCSV } from "../../../../ExportToCSV";
 
 const Provisions = (props) => {
   const {
@@ -124,61 +125,85 @@ const Provisions = (props) => {
           {/* <Container>
             <Row>
               <Col xs={12}> */}
-                <Grid className="d-flex flex-column m-2" sx={{ position: "fixed" }}>
-                  <Grid className="d-flex">
-                    <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
-                      List of Branch with Provisions:
-                    </Typography>
-                  </Grid>
-                  {/* <hr /> */}
-                  <Grid className="d-flex ">
-                    <InputBoxComponent
-                      label="ID"
-                      placeholder="Enter ID"
-                      sx={{ width: 200, mt: -1.5 }}
-                      name="inputValue"
-                      value={inputValue}
-                      onChange={(e) => {
-                        handleBranchIDChange(e);
-                      }}
-                    />
+          <Grid className="d-flex flex-column m-2" sx={{ position: "fixed" }}>
+            <Grid className="d-flex " sx={{ mt: -1.5 }}>
+              <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
+                List of Branch with Provisions:
+              </Typography>
+            </Grid>
+            {/* <hr /> */}
+            <Grid className="d-flex" sx={{ mt: 0.5 }}>
+              <InputBoxComponent
+                label="ID"
+                placeholder="Enter ID"
+                sx={{ width: 200, mt: -1 }}
+                name="inputValue"
+                value={inputValue}
+                onChange={(e) => {
+                  handleBranchIDChange(e);
+                }}
+              />
 
-                    <DropDownComponent
-                      label="Year"
-                      placeholder="Select "
-                      sx={{ width: 200 }}
-                      size="small"
-                      options={yearOptions}
-                      value={selectedYear}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                </Grid>
-                <Box
-                  sm={12}
-                  xs={12}
+              <DropDownComponent
+                label="Year"
+                placeholder="Select "
+                sx={{ width: 200, mt: 0.5 }}
+                size="small"
+                options={yearOptions}
+                value={selectedYear}
+                onChange={handleChange}
+              />
+
+              <Grid
+                item
+                className="d-flex flex-row align-items-end justify-content-end"
+                sx={{
+                  mt: 0.1,
+                  ml: 10,
+                  width: 120,
+                  height: 40,
+                }}
+              >
+                {/* <ExcelExport
+                  excelData={dataToExcel}
+                  fileName={fileName}
                   sx={{
-                    marginLeft: "1px auto auto 1px",
-                    // flexBasis: "80%",
-                    // background: "#fff",
-                    // height: "100%",
-                    // width: "100%",
-                    // position: "fixed",
+                    mr: 1,
+                    backgroundColor: deepOrange[600],
+                    width: 120,
+                    height: 40,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
-                >
-                  {selectedYear && (
-                    <ReusableTable
-                      data={provisionsList}
-                      columns={ProvisionsColumns}
-                      sx={{ height: 320, mt: 10 }}
-                    />
-                  )}
-                </Box>
-                {/* <PaymentTableComponent
+                /> */}
+                <ExportToCSV
+                  excelData={provisionsList}
+                  fileName={"ProvisionsList"}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Box
+            sm={12}
+            xs={12}
+            sx={{
+              marginLeft: "1px auto auto 1px",
+            }}
+          >
+            {selectedYear && (
+              <ReusableTable
+                data={provisionsList}
+                columns={ProvisionsColumns}
+                sx={{ height: 320, mt: 10 }}
+              />
+            )}
+          </Box>
+          {/* <PaymentTableComponent
                     data={provisionsList}
                     columns={ProvisionsColumns}
                   /> */}
-              {/* </Col>
+          {/* </Col>
             </Row>
           </Container> */}
         </Modal.Body>

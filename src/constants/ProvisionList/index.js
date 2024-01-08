@@ -1,5 +1,5 @@
 const ProvisionsColumns = [
-  { id: "provisionID", label: "Provision ID", align: "center" },
+  // { id: "provisionID", label: "Provision ID", align: "center" },
   { id: "contractID", label: "ID", align: "center" },
   { id: "branchID", label: "Branch ID", align: "center" },
   { id: "provisiontype", label: "Provision Type", align: "center" },

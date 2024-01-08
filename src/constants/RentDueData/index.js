@@ -1,5 +1,5 @@
 const rentDueData = [
-  { id: "rentDueID", label: "Rent Due ID", minWidth: 70, align: "center" },
+  // { id: "rentDueID", label: "Rent Due ID", minWidth: 70, align: "center" },
   {
     id: "contractID",
     label: "Contract ID",

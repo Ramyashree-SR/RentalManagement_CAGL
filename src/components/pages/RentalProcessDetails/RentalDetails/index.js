@@ -340,7 +340,7 @@ const RentalDetails = (props) => {
   // }, [branchIDforDue]);
 
   const getAllRentDueDetailsByBranchID = async (branchID) => {
-    const { data } = await getAllRentDueDetails(branchID );
+    const { data } = await getAllRentDueDetails(branchID);
     if (data) {
       if (data) {
         let getData = data?.data;
@@ -507,11 +507,11 @@ const RentalDetails = (props) => {
                 uniqueID={uniqueID}
               />
 
-              {/* <RentActual
+              <RentActual
                 show={openRentActualModal}
                 close={() => setOpenRentActualModal(false)}
                 fullscreen={fullscreen}
-              /> */}
+              />
               <RentDue
                 show={openRentDueDataModal}
                 close={() => setOpenRentDueDataModal(false)}
@@ -582,7 +582,12 @@ const RentalDetails = (props) => {
             classes={{ paper: classes.listBox }}
             options={stateFilter}
             getOptionLabel={(option) =>
-              option && typeof option === "object" ? option.label : option
+              option?.label ? option?.label : option || ""
+            }
+            isOptionEqualToValue={(option, value) =>
+              value === undefined ||
+              value === "" ||
+              option?.label === value?.label
             }
             renderOption={(props, option) => renderOption(props, option)}
             renderInput={(params) => (
@@ -626,9 +631,15 @@ const RentalDetails = (props) => {
             }}
             classes={{ paper: classes.listBox }}
             options={Array.isArray(districtFilter) ? districtFilter : []}
-            // value={filterDistrict?.premesisDistrict}
+            getOptionLabel={(option) =>
+              option?.label ? option?.label : option || ""
+            }
+            isOptionEqualToValue={(option, value) =>
+              value === undefined ||
+              value === "" ||
+              option?.label === value?.label
+            }
             onChange={(event, newValue) => {
-              // Handle newValue as needed
               handleDistrictChange(newValue);
             }}
             renderOption={(props, option) => renderOption(props, option)}
@@ -670,6 +681,14 @@ const RentalDetails = (props) => {
             }}
             classes={{ paper: classes.listBox }}
             options={Array.isArray(branchFilter) ? branchFilter : []}
+            getOptionLabel={(option) =>
+              option?.label ? option?.label : option || ""
+            }
+            isOptionEqualToValue={(option, value) =>
+              value === undefined ||
+              value === "" ||
+              option?.label === value?.label
+            }
             value={filterBranch?.branchID}
             onChange={handleBranchID}
             renderOption={(props, option) => renderOption(props, option)}
@@ -712,6 +731,14 @@ const RentalDetails = (props) => {
             }}
             classes={{ paper: classes.listBox }}
             options={Array.isArray(branchNameFilter) ? branchNameFilter : []}
+            getOptionLabel={(option) =>
+              option?.label ? option?.label : option || ""
+            }
+            isOptionEqualToValue={(option, value) =>
+              value === undefined ||
+              value === "" ||
+              option?.label === value?.label
+            }
             value={filterBranchName?.branchName}
             onChange={handleBranchName}
             renderOption={(props, option) => renderOption(props, option)}

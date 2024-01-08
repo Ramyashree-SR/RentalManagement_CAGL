@@ -1,9 +1,8 @@
 import React from "react";
-// import Button from "react-bootstrap/Button";
-import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import { Button, Tooltip } from "@mui/material";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
+import FileSaver from "file-saver";
 
 const ExcelExport = ({ excelData, fileName, sx }) => {
   const fileType =
@@ -32,21 +31,4 @@ const ExcelExport = ({ excelData, fileName, sx }) => {
 };
 
 export default ExcelExport;
-//   const [csvData, setCsvData] = React.useState([
-//     { Name: "Gowri" },
-//     { Name: "Siva" },
-//     { Name: "Teja" },
-//     { Name: "USA" },
-//   ]);
-//   const [fileName, setFileName] = React.useState("Reports");
-//   const fileType =
-//     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-//   const fileExtension = ".xlsx";
 
-//   const exportToCSV = (csvData, fileName) => {
-//     const ws = XLSX.utils.json_to_sheet(csvData);
-//     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-//     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-//     const data = new Blob([excelBuffer], { type: fileType });
-//     FileSaver.saveAs(data, fileName + fileExtension);
-//   };

@@ -119,7 +119,6 @@ const AgreementDetails = ({
     { id: "2", label: "Closed" },
   ];
 
- 
   let LockinPeriod = [
     { id: "1", label: "1years" },
     { id: "2", label: "2years" },
@@ -313,10 +312,11 @@ const AgreementDetails = ({
   };
 
   const handleActivationStatus = (name, value) => {
-    setAllNewContractDetails({
-      ...allNewContractDetails,
+    // console.log(name, value, "name, value");
+    setAllNewContractDetails((prevDetails) => ({
+      ...prevDetails,
       [name]: value,
-    });
+    }));
   };
 
   const handleAgreementSignDate = (val) => {
@@ -591,11 +591,10 @@ const AgreementDetails = ({
                 sx={{ width: 300, ml: 0 }}
                 size="small"
                 options={activationStatus}
-                // onSelect={handleActivationStatus}
                 name="agreementActivationStatus"
                 value={allNewContractDetails?.agreementActivationStatus}
-                onChange={(value) =>
-                  handleActivationStatus("agreementActivationStatus", value)
+                onChange={(val) =>
+                  handleActivationStatus("agreementActivationStatus", val)
                 }
               />
               {/* <DropDownComponent

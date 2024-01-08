@@ -14,6 +14,7 @@ import { deepOrange, green } from "@mui/material/colors";
 import InputBoxComponent from "../../../../atoms/InputBoxComponent";
 import ExcelExport from "../../../../../ExcelExport";
 import axios from "axios";
+import { ExportToCSV } from "../../../../ExportToCSV";
 
 const RentDue = (props) => {
   const {
@@ -22,14 +23,12 @@ const RentDue = (props) => {
     branchFilter,
     handleBranchID,
     lesseeBranchName,
-    rentContractDetails,
     activationStatusFilterDue,
-    getAllRentDueDetailsByBranchID,
     handleActivationStatusFilterChangeDue,
   } = props;
   const [monthlyTotal, setMonthlyTotal] = useState({});
   const [dataToExcel, setDataToExcel] = useState([]);
-  console.log(dataToExcel, dataToExcel);
+  // console.log(dataToExcel, dataToExcel);
   // Calculate monthly totals
   const calculateMonthlyTotal = () => {
     const total = {};
@@ -81,21 +80,32 @@ const RentDue = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await getRentDueExcelDetails(branchIDforDue);
-      // console.log(data, "duedata");
+      // console.log(data?.data, "duedata");
       if (data) {
-        setDataToExcel(data);
+        if (data) {
+          let getDueData = data?.data;
+          setDataToExcel(getDueData);
+        } else {
+          setDataToExcel([]);
+        }
       }
     };
     fetchData();
   }, [branchIDforDue]);
 
+  // const [rentExcelData, setrentExcelData] = useState([])
+  // const getRentExcelData=rentDueDataByBranchId?.map((item)=>{
+  //   return setrentExcelData(item.january)
+  //   })
+
+
+  console.log(rentDueDataByBranchId,"rentDueDataByBranchId");
   return (
     <>
       <Modal
         show={props.show}
         close={props.close}
         fullscreen={props.fullscreen}
-        // aria-labelledby="contained-modal-title-vcenter"
         centered
         className="w-100"
       >
@@ -111,10 +121,6 @@ const RentDue = (props) => {
               className="d-flex m-3 "
               sx={{ fontSize: 15, fontWeight: 700 }}
             >
-              {/* <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Branch Name : {lesseeBranchName}
-              </Typography> */}
-
               <Grid
                 item
                 className="d-flex"
@@ -129,9 +135,6 @@ const RentDue = (props) => {
                 <Autocomplete
                   size="small"
                   sx={{
-                    // backgroundColor: "#FAFAFA",
-                    // background: "#C5EBF6 ", //#C5EBF6 #D5F7DC
-                    // borderRadius: "100px",
                     "& .MuiOutlinedInput-root:hover": {
                       "& > fieldset": {
                         borderColor: green[900],
@@ -153,7 +156,6 @@ const RentDue = (props) => {
                     },
                   }}
                   options={Array.isArray(branchFilter) ? branchFilter : []}
-                  // getOptionLabel={(option) => (option ? option.label : "")} // Handle null option
                   value={branchIDforDue}
                   onChange={handleBranchID}
                   renderInput={(params) => (
@@ -164,14 +166,6 @@ const RentDue = (props) => {
                     />
                   )}
                 />
-                {/* </Grid> */}
-                {/* <Grid item className="d-flex px-1 py-1" > */}
-                {/* <InputBoxComponent
-                  label="Branch Name"
-                  placeholder="Branch Name"
-                  sx={{ width: 200, ml: 1, mt: -1.5 }}
-                  value={lesseeBranchName}
-                /> */}
 
                 <DropDownComponent
                   label="ActivationStatus"
@@ -196,25 +190,24 @@ const RentDue = (props) => {
                   sx={{ width: 200, ml: 1, mt: 0 }}
                   value={lesseeBranchName}
                 />
-                {/* </Grid> */}
+               
               </Grid>
               <Grid
                 item
                 className="d-flex align-items-end justify-content-end"
-                sx={{ flexBasis: "100%", mt: -2 }}
+                sx={{
+                  flexBasis: "100%",
+                  mt: -2,
+                  mr: 2,
+                  width: 100,
+                  height: 40,
+                }}
               >
-                <ExcelExport
-                  excelData={dataToExcel}
+                <ExportToCSV
+                  // excelData={dataToExcel}
+                  // excelData={rentExcelData}
+                  excelData={rentDueDataByBranchId}
                   fileName={fileName}
-                  sx={{
-                    mr: 1,
-                    backgroundColor: deepOrange[600],
-                    width: 120,
-                    height: 40,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
                 />
               </Grid>
             </Grid>
@@ -222,14 +215,12 @@ const RentDue = (props) => {
               sm={12}
               xs={12}
               sx={{
-                background: "#232323",
-                // height: "90%",
                 width: "97%",
                 position: "fixed",
-                mt: 0,
+                mt: -1.4,
               }}
             >
-              {branchIDforDue && (
+              {/* {branchIDforDue && ( */}
                 <ReusableTable
                   data={rentDueDataByBranchId}
                   columns={rentDueData}
@@ -241,7 +232,7 @@ const RentDue = (props) => {
                   }}
                   showTotal={true}
                 />
-              )}
+              {/* )} */}
             </Box>
           </Box>
         </Modal.Body>

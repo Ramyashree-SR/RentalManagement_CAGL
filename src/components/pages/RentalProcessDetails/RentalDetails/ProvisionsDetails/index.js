@@ -76,12 +76,14 @@ const ProvisionsDetails = (props) => {
 
   const handleTypeChange = (value) => {
     // console.log(value, "value");
-    setTypeProvisionsData(value?.label);
+    let val = value?.label;
+    setTypeProvisionsData(val);
   };
 
   // Parse the provided rent end date
   // const endDateObject = new Date(rentEndDate);
   const endDateObject = new Date();
+  // const endDateObjectOfMonth = new Date();
 
   // Check if the provided rent end date is valid
   if (isNaN(endDateObject.getTime())) {
@@ -92,7 +94,7 @@ const ProvisionsDetails = (props) => {
 
   // Extract the year from the rent end date
   const currentYear = endDateObject?.getFullYear();
-  const currentMonths = months[endDateObject?.getMonth()];
+  // const currentMonths = months[endDateObjectOfMonth?.getMonth()];
 
   // const monthOptions = Array.from({ length: 101 }, (_, index) => ({
   //   value: currentYear, // currentYear
@@ -103,11 +105,6 @@ const ProvisionsDetails = (props) => {
   const yearOptions = Array.from({ length: 1 }, (_, index) => ({
     value: currentYear, // currentYear
     label: `${currentYear}`,
-  }));
-
-  const MonthOptions = Array.from({ length: 1 }, (_, index) => ({
-    value: currentMonths.label, // currentMonths
-    label: `${currentMonths.label}`,
   }));
 
   return (
@@ -129,34 +126,6 @@ const ProvisionsDetails = (props) => {
           <Container>
             <Row>
               <Col xs={12}>
-                {/* <Grid className="d-flex m-2">
-                  <InputBoxComponent
-                    label="Branch ID"
-                    placeholder=" Branch ID"
-                    sx={{ width: 200 }}
-                    value={branchIDforDue}
-                  />
-
-                  <InputBoxComponent
-                    label="Rent Start Date"
-                    placeholder="Rent Start Date"
-                    sx={{ width: 200 }}
-                    value={rentStartDate}
-                  />
-                  <InputBoxComponent
-                    label="Rent End Date"
-                    placeholder="Rent End Date"
-                    sx={{ width: 200 }}
-                    value={rentEndDate}
-                  />
-
-                  <InputBoxComponent
-                    label="Tenure Period"
-                    placeholder=" Tenure Period"
-                    sx={{ width: 200 }}
-                    value={agreementTenure}
-                  />
-                </Grid> */}
                 <Grid
                   className="d-flex flex-row m-2"
                   sx={{ fontSize: 15, fontWeight: 700 }}
@@ -231,7 +200,7 @@ const ProvisionsDetails = (props) => {
               </Col>
               <hr />
               <Col xs={12}>
-                <Grid className="d-flex m-2">
+                <Grid className="d-flex m-1 align-items-center justify-content-start">
                   <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
                     Provision for the month :
                   </Typography>
@@ -250,7 +219,7 @@ const ProvisionsDetails = (props) => {
 
                 {typeProvisionsData === "Make" ||
                 typeProvisionsData === "Reverse" ? (
-                  <Grid className="d-flex  ">
+                  <Grid className="d-flex  py-4 ">
                     <DropDownComponent
                       label="Year"
                       placeholder="Select "
@@ -267,7 +236,7 @@ const ProvisionsDetails = (props) => {
                       placeholder="Select "
                       sx={{ width: 200, ml: 0 }}
                       size="small"
-                      options={MonthOptions}
+                      options={months}
                       name="month"
                       value={addProvisions?.month}
                       onChange={(val) => {
@@ -279,7 +248,8 @@ const ProvisionsDetails = (props) => {
                       label="Provision Amount"
                       placeholder="Provision Amount"
                       sx={{ width: 200, ml: 0, mt: -1.3 }}
-                      value={monthlyRent}
+                      name="provisionAmount"
+                      value={addProvisions?.provisionAmount}
                       onChange={(e) => updateChange(e)}
                     />
                   </Grid>

@@ -88,9 +88,9 @@ export default function MenuComponent({
     setAnchorEl(null);
   };
 
-  // useEffect(() => {
-  //   getAllRentDueDetailsByUniqueID();
-  // }, []);
+  useEffect(() => {
+    getAllRentDueDetailsByUniqueID();
+  }, [uniqueID]);
 
   const getAllRentDueDetailsByUniqueID = async () => {
     const { data } = await getRentDueDetails(uniqueID);
@@ -98,21 +98,19 @@ export default function MenuComponent({
       if (data) {
         let getData = data?.data;
         setRentDueDetails(getData);
-      } else {
-        setRentDueDetails([]);
       }
     }
   };
 
   const AddProvisionFortheMonth = async () => {
     let payload = {
-      provisionID: addProvisions.provisionID,
+      // provisionID: addProvisions.provisionID,
       provisiontype: typeProvisionsData,
       contractID: uniqueID,
       branchID: branchIDforDue,
       year: addProvisions.year.label,
       month: addProvisions.month.label,
-      provisionAmount: monthlyRent,
+      provisionAmount: addProvisions.provisionAmount,
       remark: addProvisions.remark,
       dateTime: addProvisions.dateTime,
     };
@@ -131,6 +129,8 @@ export default function MenuComponent({
       });
     }
   };
+
+  // console.log(rentDueDetails,"rentDueDetails");
 
   return (
     <React.Fragment>
@@ -207,7 +207,7 @@ export default function MenuComponent({
         <MenuItem
           onClick={() => {
             handleRentDue();
-            getAllRentDueDetailsByUniqueID();
+            // getAllRentDueDetailsByUniqueID();
           }}
           sx={{ fontSize: 13, fontWeight: 600, color: blue[900] }}
         >

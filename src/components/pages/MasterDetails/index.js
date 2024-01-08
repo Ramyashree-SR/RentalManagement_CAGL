@@ -121,7 +121,7 @@ let errObj = {
   premesisBuildingType: "",
   agreementSignDate: null,
   agreementTenure: "",
-  agreementActivationStatus: "",
+  agreementActivationStatus: {},
   agreementStartDate: null,
   agreementEndDate: null,
   rentStartDate: null,
@@ -242,7 +242,7 @@ const MasterDetails = (props) => {
     premesisBuildingType: "",
     agreementSignDate: null,
     agreementTenure: "",
-    agreementActivationStatus: "",
+    agreementActivationStatus: {},
     agreementStartDate: null,
     agreementEndDate: null,
     rentStartDate: null,
@@ -376,7 +376,7 @@ const MasterDetails = (props) => {
       premesisBuildingType: "",
       agreementSignDate: null,
       agreementTenure: "",
-      agreementActivationStatus: "",
+      agreementActivationStatus: {},
       agreementStartDate: null,
       agreementEndDate: null,
       rentStartDate: null,
@@ -489,7 +489,7 @@ const MasterDetails = (props) => {
       premesisBuildingType: "",
       agreementSignDate: null,
       agreementTenure: "",
-      agreementActivationStatus: "",
+      agreementActivationStatus: {},
       agreementStartDate: null,
       agreementEndDate: null,
       rentStartDate: null,
@@ -1182,7 +1182,7 @@ const MasterDetails = (props) => {
         premesisBuildingType: "",
         agreementSignDate: null,
         agreementTenure: "",
-        agreementActivationStatus: "",
+        agreementActivationStatus: {},
         agreementStartDate: null,
         agreementEndDate: null,
         rentStartDate: null,
@@ -1313,7 +1313,8 @@ const MasterDetails = (props) => {
       // agreementSignDate: allNewContractDetails?.agreementSignDate,
       agreementTenure: allNewContractDetails?.agreementTenure,
       agreementActivationStatus:
-        allNewContractDetails?.agreementActivationStatus?.label,
+        allNewContractDetails?.agreementActivationStatus &&
+        allNewContractDetails?.agreementActivationStatus,
       agreementStartDate: formatDateToBackEndReqirement(
         allNewContractDetails?.agreementStartDate
       ),
@@ -1329,7 +1330,6 @@ const MasterDetails = (props) => {
       rentEndDate: formatDateToBackEndReqirement(
         allNewContractDetails?.rentEndDate
       ),
-      // rentEndDate: allNewContractDetails?.rentEndDate,
 
       maintaineneCharge: allNewContractDetails?.maintaineneCharge,
       waterCharge: allNewContractDetails?.waterCharge,
@@ -1338,8 +1338,6 @@ const MasterDetails = (props) => {
       securityDepositAmount: allNewContractDetails?.securityDepositAmount,
       securityDepositPaymentDate:
         allNewContractDetails?.securityDepositPaymentDate,
-      // securityDepositPaymentMode:
-      //   allNewContractDetails?.securityDepositPaymentMode,
       securityDepositUtr: allNewContractDetails?.securityDepositUtr,
       securityDepositLockinPeriod:
         allNewContractDetails?.securityDepositLockinPeriod,
@@ -1382,6 +1380,7 @@ const MasterDetails = (props) => {
         appearance: "success",
       });
       props.close();
+      window.location.reload();
     } else if (errRes) {
       addToast(errRes, { appearance: "error" });
       props.close();

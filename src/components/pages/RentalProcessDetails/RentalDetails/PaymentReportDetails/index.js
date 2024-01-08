@@ -52,22 +52,30 @@ const PaymentReportDetails = (props) => {
     getAllPaymentReportDetailsOfMonth();
   }, [uniqueID, selectedMonth, selectedYear]);
 
-  const endDateObject = new Date();
+  const startDateObject = new Date(rentStartDate);
+  const endDateObject = new Date(rentEndDate);
 
   // Check if the provided rent end date is valid
-  if (isNaN(endDateObject.getTime())) {
+  if (isNaN(startDateObject.getTime()) || isNaN(endDateObject.getTime())) {
     // Handle invalid date
     console.error("Invalid date format");
     return null;
   }
 
   // Extract the year from the rent end date
-  const currentYear = endDateObject?.getFullYear();
+  const startYear = startDateObject?.getFullYear();
+  const endYear = endDateObject?.getFullYear();
 
-  const yearOptions = Array.from({ length: 2 }, (_, index) => ({
-    id: currentYear - index, // currentYear
-    label: `${currentYear - index}`,
-  }));
+  // const yearOptions = Array.from({ length: 10 }, (_, index) => ({
+  //   id: currentYear - index, // currentYear
+  //   label: `${currentYear - index}`,
+  // }));
+  // Generate an array of years between the start and end dates
+  const yearOptions = Array.from({ length: endYear - startYear + 1 },(_, index) => ({
+      id: startYear + index,
+      label: `${startYear + index}`,
+    })
+  );
 
   const handleChange = (newValue) => {
     let value = newValue?.label;
@@ -81,7 +89,6 @@ const PaymentReportDetails = (props) => {
       selectedMonth,
       selectedYear
     );
-    // console.log(data?.data, "allData");
     if (data) {
       if (data) {
         let getData = data?.data;

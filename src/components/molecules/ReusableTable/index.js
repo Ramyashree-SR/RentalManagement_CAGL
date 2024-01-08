@@ -69,18 +69,18 @@ const useStyles = makeStyles({
     fontSize: "12px !important",
     borderBottom: "1px solid #70B3D1 !important",
     borderRight: "1px solid #70B3D1  !!!important",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    // display: "flex",
+    // alignItems: "center",
+    // justifyContent: "center",
   },
   tableRow: {
     border: "none !important",
     color: "#373737",
     fontWeight: "500",
     fontSize: "12px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    // display: "flex",
+    // alignItems: "center",
+    // justifyContent: "center",
   },
 });
 
@@ -160,20 +160,10 @@ const ReusableTable = ({ data, columns, sx, showTotal }) => {
                       ))}
                   </StyledTableRow>
                 ))}
-            {/* {showTotal && (
-            <StyledTableRow>
-              <StyledTableCell>Total</StyledTableCell>
-              {Object.keys(monthlyTotal).map((month) => (
-                <StyledTableCell key={month}>
-                  ₹{monthlyTotal[month]}
-                </StyledTableCell>
-              ))}
-            </StyledTableRow>
-          )} */}
 
             {showTotal && (
               <StyledTableRow>
-                <StyledTableCell>Total</StyledTableCell>
+                {/* <StyledTableCell>Total</StyledTableCell> */}
                 {columns &&
                   columns?.map((column) => {
                     if (
@@ -187,7 +177,7 @@ const ReusableTable = ({ data, columns, sx, showTotal }) => {
                     } else if (column.id in monthlyTotal) {
                       return (
                         <StyledTableCell key={column.id}>
-                          ₹ {monthlyTotal[column.id]}
+                          ₹{monthlyTotal[column.id]}
                         </StyledTableCell>
                       );
                     }
@@ -197,7 +187,6 @@ const ReusableTable = ({ data, columns, sx, showTotal }) => {
             )}
           </TableBody>
         </Table>
-      
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 15, 100]}
