@@ -367,6 +367,8 @@ const TableComponent = ({
                                       setAgreementTenure(row.agreementTenure);
                                       setRentStartDate(row.rentStartDate);
                                       setRentEndDate(row.rentEndDate);
+                                      setLessorName(row.lessorName);
+                                      setLesseeBranchName(row.lesseeBranchName);
                                     }}
                                     handleEditReport={() => {
                                       handlePaymentReport();

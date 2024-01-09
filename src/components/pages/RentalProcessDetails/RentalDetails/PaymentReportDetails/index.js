@@ -7,6 +7,8 @@ import { getRentPaymentReportDetails } from "../../../../services/PaymentReportA
 import { paymentColumn } from "../../../../../constants/PaymentReport";
 import { deepOrange, orange, red } from "@mui/material/colors";
 import PaymentTableComponent from "./../../../../molecules/PaymentTableComponent/index";
+import { ExportToCSV } from "../../../../ExportToCSV";
+import ExcelExport from "../../../../../ExcelExport";
 
 const PaymentReportDetails = (props) => {
   const {
@@ -71,7 +73,9 @@ const PaymentReportDetails = (props) => {
   //   label: `${currentYear - index}`,
   // }));
   // Generate an array of years between the start and end dates
-  const yearOptions = Array.from({ length: endYear - startYear + 1 },(_, index) => ({
+  const yearOptions = Array.from(
+    { length: endYear - startYear + 1 },
+    (_, index) => ({
       id: startYear + index,
       label: `${startYear + index}`,
     })
@@ -99,7 +103,31 @@ const PaymentReportDetails = (props) => {
     }
   };
 
-  //   console.log(getPaymentReport, "getPaymentReport");
+  // console.log(getPaymentReport, "getPaymentReport");.
+  // let Report = Object.values(getPaymentReport);
+
+  const getPaymentReportData = Object.values([getPaymentReport])?.map(
+    (item) => ({
+      ID: item.info?.uniqueID,
+      MonthYear: item.monthYear,
+      BranchID: item.info?.branchID,
+      BranchName: item.info?.lesseeBranchName,
+      AreaName: item.info?.lesseeAreaName,
+      Division: item.lesseeDivision,
+      Zone: item.info?.lesseeZone,
+      State: item.info?.lesseeState,
+      RentStartDate: item.info?.rentStartDate,
+      RentEndDate: item.info?.rentEndDate,
+      MonthlyRent: item.info?.monthlyRent,
+      Due: item.due,
+      Provision: item.provision,
+      Goss: item.gross,
+      Tds: item.tds,
+      net: item.net,
+    })
+  );
+
+  // console.log(Report, "Report");
   return (
     <>
       <Modal
@@ -212,27 +240,48 @@ const PaymentReportDetails = (props) => {
             </Grid>
           </Grid>
           <hr />
-          <Grid item className="d-flex mt-4">
-            <DropDownComponent
-              label="Year"
-              placeholder="Select "
-              sx={{ width: 200 }}
-              size="small"
-              options={yearOptions}
-              value={selectedYear}
-              onChange={handleChange}
-            />
-            <DropDownComponent
-              label="Month"
-              placeholder="Select "
-              sx={{ width: 200, ml: 0 }}
-              size="small"
-              options={months}
-              //   name="month"
-              value={selectedMonth}
-              onChange={handleMonthChange}
-            />
+          <Grid container className="d-flex flex-row px-0 py-1">
+            <Grid item className="d-flex" sx={{ flexBasis: "50%" }}>
+              <DropDownComponent
+                label="Year"
+                placeholder="Select "
+                sx={{ width: 200 }}
+                size="small"
+                options={yearOptions}
+                value={selectedYear}
+                onChange={handleChange}
+              />
+              <DropDownComponent
+                label="Month"
+                placeholder="Select "
+                sx={{ width: 200 }}
+                size="small"
+                options={months}
+                value={selectedMonth}
+                onChange={handleMonthChange}
+              />
+            </Grid>
+            <Grid
+              item
+              className="d-flex align-items-end justify-content-end"
+              sx={{
+                width: 120,
+                height: 40,
+                flexBasis: "50%",
+              }}
+            >
+              <ExcelExport
+                excelData={getPaymentReportData}
+                fileName={"Payment Report"}
+                sx={{ color: "#ffffff", backgroundColor: deepOrange[900] }}
+              />
+            </Grid>
+            {/* <ExportToCSV
+              excelData={getPaymentReportData}
+              fileName={"Payment Report"}
+            /> */}
           </Grid>
+
           {selectedMonth && (
             <PaymentTableComponent
               data={[getPaymentReport]}
@@ -248,7 +297,7 @@ const PaymentReportDetails = (props) => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={props.close}>Close</Button>
+          <Button onClick={props.close} variant="contained">Close</Button>
         </Modal.Footer>
       </Modal>
     </>

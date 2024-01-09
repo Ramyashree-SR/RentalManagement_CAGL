@@ -77,7 +77,7 @@ const PaymentReport = (props) => {
 
   const getAllPaymentReportDetailsOfMonth = async () => {
     const { data } = await getRentPaymentReportDetails(
-      "All",
+      "all",
       selectedMonth,
       selectedYear
     );
@@ -231,7 +231,6 @@ const PaymentReport = (props) => {
             data={[getPaymentReport]}
             columns={paymentColumn}
             sx={{
-              // height: "300px",
               width: "100%",
               overFlowX: "scroll",
               overFlowY: "scroll",

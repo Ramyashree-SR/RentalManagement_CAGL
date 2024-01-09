@@ -248,7 +248,8 @@ export default function MenuComponent({
         rentStartDate={rentStartDate}
         rentEndDate={rentEndDate}
         uniqueID={uniqueID}
-        agreementTenure={agreementTenure}
+        lessorName={lessorName}
+        lesseeBranchName={lesseeBranchName}
       />
       {activationStatusFilter === "Open" && (
         <ProvisionsDetails

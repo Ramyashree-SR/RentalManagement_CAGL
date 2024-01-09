@@ -94,12 +94,26 @@ const RentDue = (props) => {
   }, [branchIDforDue]);
 
   // const [rentExcelData, setrentExcelData] = useState([])
-  // const getRentExcelData=rentDueDataByBranchId?.map((item)=>{
-  //   return setrentExcelData(item.january)
-  //   })
+  const getRentExcelData = rentDueDataByBranchId?.map((item) => ({
+    ContractID: item.contractID,
+    Escalation: item.escalation,
+    Year: item.year,
+    Status: item.status,
+    January: item.january,
+    February: item.february,
+    March: item.march,
+    April: item.april,
+    May: item.may,
+    June: item.june,
+    July: item.july,
+    August: item.august,
+    September: item.september,
+    October: item.october,
+    November: item.november,
+    December: item.december,
+  }));
 
-
-  console.log(rentDueDataByBranchId,"rentDueDataByBranchId");
+  // console.log(rentDueDataByBranchId,"rentDueDataByBranchId");
   return (
     <>
       <Modal
@@ -190,7 +204,6 @@ const RentDue = (props) => {
                   sx={{ width: 200, ml: 1, mt: 0 }}
                   value={lesseeBranchName}
                 />
-               
               </Grid>
               <Grid
                 item
@@ -205,8 +218,8 @@ const RentDue = (props) => {
               >
                 <ExportToCSV
                   // excelData={dataToExcel}
-                  // excelData={rentExcelData}
-                  excelData={rentDueDataByBranchId}
+                  // excelData={rentDueDataByBranchId}
+                  excelData={getRentExcelData}
                   fileName={fileName}
                 />
               </Grid>
@@ -221,17 +234,17 @@ const RentDue = (props) => {
               }}
             >
               {/* {branchIDforDue && ( */}
-                <ReusableTable
-                  data={rentDueDataByBranchId}
-                  columns={rentDueData}
-                  sx={{
-                    height: 360,
-                    width: "100%",
-                    overFlowX: "scroll",
-                    overFlowY: "scroll",
-                  }}
-                  showTotal={true}
-                />
+              <ReusableTable
+                data={rentDueDataByBranchId}
+                columns={rentDueData}
+                sx={{
+                  height: 360,
+                  width: "100%",
+                  overFlowX: "scroll",
+                  overFlowY: "scroll",
+                }}
+                showTotal={true}
+              />
               {/* )} */}
             </Box>
           </Box>

@@ -147,7 +147,8 @@ const RentalDetails = (props) => {
   const [lessorName, setLessorName] = useState(null);
   const [lesseeBranchName, setLesseeBranchName] = useState(null);
   const [rentRenewContract, setRentRenewContract] = useState([]);
-
+  const [uniqueIDs, setUniqueIDs] = useState(rentContractDetails.uniqueID);
+  console.log(uniqueIDs,"uniqueIDs");
   const handleStateChange = (value) => {
     // console.log(value.target.outerText, "newValue");
     setFilterState({
@@ -249,6 +250,7 @@ const RentalDetails = (props) => {
       let getData = data?.data;
       setRentContractDetails(getData);
       setbranchIDforDue(getData);
+      setUniqueIDs(getData)
     }
   };
 
@@ -294,6 +296,7 @@ const RentalDetails = (props) => {
     if (data?.data) {
       let getData = data?.data;
       setRentContractDetails(getData);
+      setUniqueIDs(getData)
     }
   };
 
@@ -511,6 +514,9 @@ const RentalDetails = (props) => {
                 show={openRentActualModal}
                 close={() => setOpenRentActualModal(false)}
                 fullscreen={fullscreen}
+                uniqueIDs={uniqueIDs}
+                rentStartDate={rentStartDate}
+                rentEndDate={rentEndDate}
               />
               <RentDue
                 show={openRentDueDataModal}
@@ -786,6 +792,7 @@ const RentalDetails = (props) => {
           onClick={() => {
             handleClose();
             setOpenRentActualModal(true);
+
           }}
         >
           Rent Actual
