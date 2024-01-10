@@ -22,6 +22,15 @@ const RentDueDetails = (props) => {
 
   const getRentExcelData = rentDueDetails?.map((item) => ({
     ContractID: item.contractID,
+    BranchID: item.info?.branchID,
+    BranchName: item.info?.lesseeBranchName,
+    AreaName: item.info?.lesseeAreaName,
+    Division: item.lesseeDivision,
+    Zone: item.info?.lesseeZone,
+    State: item.info?.lesseeState,
+    BankName: item.info?.lessorBankName,
+    IFSCNumber: item.info?.lessorIfscNumber,
+    AccountNumber: item.info?.lessorAccountNumber,
     Escalation: item.escalation,
     Year: item.year,
     Status: item.status,
@@ -38,9 +47,6 @@ const RentDueDetails = (props) => {
     November: item.november,
     December: item.december,
   }));
-
-
-  
 
   return (
     <>

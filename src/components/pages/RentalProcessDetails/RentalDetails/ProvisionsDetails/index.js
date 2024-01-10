@@ -19,6 +19,7 @@ const ProvisionsDetails = (props) => {
     lesseeBranchName,
     typeProvisionsData,
     setTypeProvisionsData,
+    
   } = props;
   // console.log(props, "props");
 
@@ -127,7 +128,7 @@ const ProvisionsDetails = (props) => {
             <Row>
               <Col xs={12}>
                 <Grid
-                  className="d-flex flex-row m-2"
+                  className="d-flex flex-row m-1"
                   sx={{ fontSize: 15, fontWeight: 700 }}
                 >
                   <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
@@ -162,7 +163,7 @@ const ProvisionsDetails = (props) => {
                   </Grid>
                 </Grid>
                 <Grid
-                  className="d-flex flex-row m-2"
+                  className="d-flex flex-row m-1"
                   sx={{ fontSize: 15, fontWeight: 700 }}
                 >
                   <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
@@ -200,7 +201,7 @@ const ProvisionsDetails = (props) => {
               </Col>
               <hr />
               <Col xs={12}>
-                <Grid className="d-flex m-1 align-items-center justify-content-start">
+                <Grid className="d-flex align-items-center justify-content-start">
                   <Typography sx={{ fontSize: 16, fontWeight: 700 }}>
                     Provision for the month :
                   </Typography>
@@ -256,7 +257,7 @@ const ProvisionsDetails = (props) => {
                 ) : null}
                 {typeProvisionsData === "Make" ||
                 typeProvisionsData === "Reverse" ? (
-                  <Grid className="d-flex flex-row mt-2">
+                  <Grid className="d-flex flex-row ">
                     <InputBoxComponent
                       textLabel="Remarks :"
                       placeholder="Type here..."
@@ -269,7 +270,7 @@ const ProvisionsDetails = (props) => {
                     />
                   </Grid>
                 ) : null}
-                <Grid className="d-flex flex-row mt-4 ">
+                <Grid className="d-flex flex-row mt-1 ">
                   {typeProvisionsData === "Make" ? (
                     <Grid>
                       <Button

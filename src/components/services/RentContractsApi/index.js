@@ -23,7 +23,9 @@ const getAllRentContractDetailsByBranchID = (params) => {
       return { data };
     })
     .catch((err) => {
-      const errRes = err;
+      const errRes = (err && err.response && err.response.data) || {
+        message: "ERROR",
+      };
       return { errRes };
     });
 };
@@ -37,7 +39,9 @@ const getAllRentContractDetails = (district) => {
       return { data };
     })
     .catch((err) => {
-      const errRes = err;
+      const errRes = (err && err.response && err.response.data) || {
+        message: "ERROR",
+      };
       return { errRes };
     });
 };

@@ -106,6 +106,19 @@ const Provisions = (props) => {
     setInputValue(e.target.value);
   };
 
+  const getProvisionReport = provisionsList?.map((item) => ({
+    ContractID: item.contractID,
+    BranchID: item.info?.branchID,
+    BranchName: item.info?.lesseeBranchName,
+    AreaName: item.info?.lesseeAreaName,
+    Division: item.lesseeDivision,
+    Zone: item.info?.lesseeZone,
+    State: item.info?.lesseeState,
+    BankName: item.info?.lessorBankName,
+    IFSCNumber: item.info?.lessorIfscNumber,
+    AccountNumber: item.info?.lessorAccountNumber,
+  }));
+
   return (
     <>
       <Modal
@@ -178,7 +191,8 @@ const Provisions = (props) => {
                   }}
                 /> */}
                 <ExportToCSV
-                  excelData={provisionsList}
+                  // excelData={provisionsList}
+                  excelData={getProvisionReport}
                   fileName={"ProvisionsList"}
                 />
               </Grid>
@@ -218,32 +232,4 @@ const Provisions = (props) => {
 };
 
 export default Provisions;
-{
-  /* <InputBoxComponent
-                    label="Month"
-                    placeholder="Month"
-                    sx={{ width: 300, ml: 0, mt: -1.3 }}
-                    value={addProvisions?.month}
-                    onChange={(e) => updateChange(e)}
-                  /> */
-}
 
-{
-  /* <InputBoxComponent
-                    label="Year"
-                    placeholder="Year"
-                    sx={{ width: 300, ml: 0, mt: -1.3 }}
-                    value={addProvisions.year}
-                    onChange={(e) => updateChange(e)}
-                  /> */
-}
-
-{
-  /* <InputBoxComponent
-                    label="Contract ID"
-                    placeholder="Contract ID"
-                    sx={{ width: 200, mt: -1.3 }}
-                    value={uniqueID}
-                    onChange={(e) => updateChange(e)}
-                  /> */
-}

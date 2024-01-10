@@ -33,6 +33,7 @@ import PaymentReport from "./../../pages/RentalProcessDetails/RentalDetails/Paym
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import { getRentPaymentReportDetails } from "../../services/PaymentReportApi";
 import ProvisionsDetails from "../../pages/RentalProcessDetails/RentalDetails/ProvisionsDetails";
+import { useToasts } from "react-toast-notifications";
 
 const ColorIcon = styled(Icon)(({ theme }) => ({
   //   color: theme.palette?.getContrastText(pink[900]),
@@ -64,6 +65,7 @@ export default function MenuComponent({
   openPaymentReportData,
   setOpenPaymentReportData,
 }) {
+  const { addToast } = useToasts();
   const [fullscreen, setFullscreen] = useState(true);
   const [rentDueDetails, setRentDueDetails] = useState([]);
   const [addProvisions, setAddProvisions] = useState({
@@ -114,7 +116,10 @@ export default function MenuComponent({
       remark: addProvisions.remark,
       dateTime: addProvisions.dateTime,
     };
-    const { data } = await AddRentProvisionDetails(typeProvisionsData, payload);
+    const { data, errRes } = await AddRentProvisionDetails(
+      typeProvisionsData,
+      payload
+    );
     if (data) {
       setAddProvisions({
         provisionID: "",
@@ -127,6 +132,19 @@ export default function MenuComponent({
         remark: "",
         dateTime: "",
       });
+      if (typeProvisionsData === "Make") {
+        addToast("Provision Made Successfully", {
+          appearance: "success",
+        });
+        // close()
+      } else {
+        addToast("Provision Reversed Successfully", {
+          appearance: "success",
+        });
+      }
+    } else if (errRes) {
+      addToast(errRes, { appearance: "error" });
+      // close()
     }
   };
 

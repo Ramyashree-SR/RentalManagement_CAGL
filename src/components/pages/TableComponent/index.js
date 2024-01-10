@@ -405,6 +405,7 @@ const TableComponent = ({
                                     setOpenPaymentReportData={
                                       setOpenPaymentReportData
                                     }
+                                    
                                   />
                                 )}
 

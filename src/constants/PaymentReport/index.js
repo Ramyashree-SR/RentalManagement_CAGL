@@ -13,8 +13,9 @@ const paymentColumn = [
   },
   { id: "gross", label: "Gross", align: "center" },
   { id: "tds", label: "Tds", align: "center" },
-  { id: "gst", label: "Gst", align: "center" },
+
   { id: "net", label: "Net", align: "center" },
+  { id: "gst", label: "Gst", align: "center" },
 ];
 
 export { paymentColumn };

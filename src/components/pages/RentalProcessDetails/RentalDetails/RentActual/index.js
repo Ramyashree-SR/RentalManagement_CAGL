@@ -1,9 +1,17 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Snackbar,
+  Typography,
+} from "@mui/material";
 
 import React, { useEffect, useState } from "react";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import InputBoxComponent from "../../../../atoms/InputBoxComponent";
-import { deepOrange, green, pink, red } from "@mui/material/colors";
+import { deepOrange, green, pink, purple, red } from "@mui/material/colors";
 import DropDownComponent from "../../../../atoms/DropDownComponent";
 import ExcelExport from "../../../../../ExcelExport";
 import PaymentTableComponent from "../../../../molecules/PaymentTableComponent";
@@ -13,23 +21,21 @@ import {
   AddRentActualDetails,
   getAllRentContractDetailsByContractID,
 } from "../../../../services/RentActualApi";
+import { useToasts } from "react-toast-notifications";
+import RentActualDetails from "../RentActualDetails";
+import CloseIcon from "@mui/icons-material/Close";
 
 const RentActual = (props) => {
+  const { addToast } = useToasts();
   const [RentActualIDs, setRentActualIDs] = useState("");
+  const [fullscreen, setFullscreen] = useState(true);
   const [rentActualData, setRentActualData] = useState([]);
   const [getPaymentReport, setGetPaymentReport] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(null);
-  const [addRentActual, setAddRentActual] = useState({
-    contractID: "",
-    branchID: "",
-    year: "",
-    Amount: "",
-    month: "",
-    startDate: "",
-    endDate: "",
-  });
-
+  const [openActualDetailsModal, setOpenActualDetailsModal] = useState(false);
+  const [settlementAmt, setSettlementAmt] = useState([]);
+  // const [open, setOpen] = useState(false);
   const months = [
     { id: 1, label: "January" },
     { id: 2, label: "February" },
@@ -44,6 +50,36 @@ const RentActual = (props) => {
     { id: 11, label: "November" },
     { id: 12, label: "December" },
   ];
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+  const { vertical, horizontal, open } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ ...newState, open: true });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false });
+  };
+  const action = (
+    <React.Fragment>
+      {/* <Button color="warning" size="small" onClick={handleClose}>
+        UNDO
+      </Button> */}
+
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
   useEffect(() => {
     getAllRentActualDetailsByUniqueID();
   }, [RentActualIDs]);
@@ -61,8 +97,8 @@ const RentActual = (props) => {
   };
 
   const updatedChange = (e) => {
-    setAddRentActual({
-      ...addRentActual,
+    setSettlementAmt({
+      ...settlementAmt,
       [e.target.name]: e.target.value,
     });
   };
@@ -104,7 +140,7 @@ const RentActual = (props) => {
       selectedMonth,
       selectedYear
     );
-    console.log(data, "ReportData");
+    // console.log(data, "ReportData");
     if (data) {
       if (data) {
         let getData = data?.data;
@@ -125,31 +161,45 @@ const RentActual = (props) => {
       }
     }
   };
+  
+  {
+    /* <Alert severity="success"  variant="outined">Payment Settled</Alert> */
+  }
+  // const AddRentActualFortheMonth = async () => {
+  //   let payload = {
+  //     contractID: rentActualData.uniqueID,
+  //     branchID: rentActualData.branchID,
+  //     year: selectedYear,
+  //     Amount: addRentActual.Amount,
+  //     month: selectedMonth,
+  //     startDate: rentActualData.rentStartDate,
+  //     endDate: rentActualData.rentEndDate,
+  //   };
+  //   const { data, errRes } = await AddRentActualDetails(payload);
+  //   if (data) {
+  //     setAddRentActual({
+  //       contractID: "",
+  //       branchID: "",
+  //       year: "",
+  //       Amount: "",
+  //       month: "",
+  //       startDate: "",
+  //       endDate: "",
+  //     });
+  //     addToast("Rent Actual Payment Done Successfully", {
+  //       appearance: "success",
+  //     });
 
-  const AddRentActualFortheMonth = async () => {
-    let payload = {
-      contractID: rentActualData.uniqueID,
-      branchID: rentActualData.branchID,
-      year: selectedYear,
-      Amount: addRentActual.Amount,
-      month: selectedMonth,
-      startDate: rentActualData.rentStartDate,
-      endDate: rentActualData.rentEndDate,
-    };
-    const { data } = await AddRentActualDetails(payload);
-    if (data) {
-      setAddRentActual({
-        contractID: "",
-        branchID: "",
-        year: "",
-        Amount: "",
-        month: "",
-        startDate: "",
-        endDate: "",
-      });
-    }
+  //     props.close();
+  //   } else if (errRes) {
+  //     addToast(errRes, { appearance: "error" });
+  //     props.close();
+  //   }
+  // };
+
+  const handleActualClick = () => {
+    setOpenActualDetailsModal(true);
   };
-
   return (
     <>
       <Modal
@@ -172,8 +222,14 @@ const RentActual = (props) => {
               <Col xs={12}>
                 <Grid
                   container
-                  className="d-flex "
-                  sx={{ fontSize: 15, fontWeight: 700, mt: -2, ml: -6 }}
+                  className="d-flex"
+                  sx={{
+                    fontSize: 15,
+                    fontWeight: 700,
+                    mt: -2,
+                    ml: -6,
+                    flexBasis: "80%",
+                  }}
                 >
                   <Grid
                     item
@@ -190,19 +246,43 @@ const RentActual = (props) => {
                     <InputBoxComponent
                       label="Contract ID"
                       placeholder="Enter Contact ID"
-                      sx={{ width: 200, m2: 2, mt: 1 }}
+                      sx={{ width: 200, mr: 2, mt: 1 }}
                       name="RentActualIDs"
                       value={RentActualIDs}
                       onChange={(e) => updateChange(e)}
                     />
                   </Grid>
                 </Grid>
+                <Grid
+                  item
+                  className="d-flex align-item-end justify-content-end"
+                  sx={{
+                    fontSize: 15,
+                    fontWeight: 700,
+                    flexBasis: "20%",
+                    mt: 1.5,
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    onClick={() => handleActualClick()}
+                    sx={{ backgroundColor: pink[900] }}
+                  >
+                    Rent Actual Details
+                  </Button>
+                </Grid>
+
+                <RentActualDetails
+                  show={openActualDetailsModal}
+                  close={() => setOpenActualDetailsModal(false)}
+                  fullscreen={fullscreen}
+                />
 
                 {RentActualIDs && (
                   <Grid
                     container
-                    className="d-flex flex-row  px- py-1"
-                    sx={{ fontSize: 15, fontWeight: 700, mt: 10 }}
+                    className="d-flex flex-row py-1"
+                    sx={{ fontSize: 15, fontWeight: 700, mt: 3 }}
                   >
                     <Grid
                       item
@@ -320,22 +400,25 @@ const RentActual = (props) => {
                   <Grid item className="d-flex flex-row">
                     <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
                       Payment Report of the Branch-&nbsp;&nbsp;
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 15,
-                          fontWeight: 700,
-                          color: red[900],
-                        }}
-                      >
-                        {rentActualData?.lesseeBranchName}
-                      </Typography>
-                    
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: 15,
+                        fontWeight: 700,
+                        color: red[900],
+                      }}
+                    >
+                      {rentActualData?.lesseeBranchName}
+                    </Typography>
                   </Grid>
                 )}
                 {RentActualIDs && (
-                  <Grid container className="d-flex flex-row" sx={{ mt: 2 }}>
-                    <Grid item className="d-flex" sx={{ flexBasis: "50%" }}>
+                  <Grid container className="d-flex flex-row " sx={{ mt: 2 }}>
+                    <Grid
+                      item
+                      className="d-flex ml-2"
+                      sx={{ flexBasis: "50%" }}
+                    >
                       <DropDownComponent
                         label="Year"
                         placeholder="Select "
@@ -354,6 +437,24 @@ const RentActual = (props) => {
                         value={selectedMonth}
                         onChange={handleMonthChange}
                       />
+                    </Grid>
+                    <Grid
+                      item
+                      className="d-flex flex-row align-items-end justify-content-end "
+                      sx={{ flexBasis: "50%" }}
+                    >
+                      <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
+                        Rent Actual Amount :&nbsp;&nbsp;
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 15,
+                          fontWeight: 700,
+                          color: pink[900],
+                        }}
+                      >
+                        {getPaymentReport?.actualAmount}
+                      </Typography>
                     </Grid>
                   </Grid>
                 )}
@@ -386,14 +487,14 @@ const RentActual = (props) => {
                       sx={{ flexBasis: "100%", mt: 2 }}
                     >
                       <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                        Actual Amount For Payment:&nbsp;&nbsp;
+                        SD Settlements :&nbsp;&nbsp;
                       </Typography>
                       <Grid
                         item
                         className="d-flex flex-row"
                         sx={{ flexBasis: "100%", mt: 2 }}
                       >
-                        <InputBoxComponent
+                        {/* <InputBoxComponent
                           label="ID"
                           placeholder="Enter ID"
                           sx={{ width: 200, mt: -1 }}
@@ -402,14 +503,26 @@ const RentActual = (props) => {
                           onChange={(e) => {
                             updatedChange(e);
                           }}
+                        /> */}
+
+                        <InputBoxComponent
+                          label="Amount"
+                          placeholder="Enter Amount"
+                          sx={{ width: 200, mt: -1 }}
+                          // name="Amount"
+                          // value={Amount}
+                          onChange={(e) => {
+                            updatedChange(e);
+                          }}
                         />
                         <Button
                           className="d-flex"
                           variant="contained"
                           size="small"
-                          onClick={() => {
-                            AddRentActualFortheMonth();
-                          }}
+                          onClick={handleClick({
+                            vertical: "top",
+                            horizontal: "center",
+                          })}
                           sx={{
                             width: 150,
                             fontSize: 10,
@@ -418,9 +531,19 @@ const RentActual = (props) => {
                             backgroundColor: green[900],
                           }}
                         >
-                          Make Payment
+                          Made Settlement
                         </Button>
                       </Grid>
+                      {/* <Button onClick={handleClick}>
+                        Open simple snackbar
+                      </Button> */}
+                      <Snackbar
+                        open={open}
+                        autoHideDuration={6000}
+                        onClose={handleClose}
+                        message="Note: Please Change the Rent End Date for Tenure Close"
+                        action={action}
+                      />
                     </Grid>
                   )}
                 </Grid>

@@ -9,7 +9,9 @@ const getAllRentContractDetailsByContractID = (params) => {
       return { data };
     })
     .catch((err) => {
-      const errRes = err;
+      const errRes = (err && err.response && err.response.data) || {
+        message: "ERROR",
+      };
       return { errRes };
     });
 };

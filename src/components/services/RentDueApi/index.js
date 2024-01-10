@@ -9,7 +9,9 @@ const getRentDueDetails = (params) => {
       return { data };
     })
     .catch((err) => {
-      const errRes = err;
+      const errRes = (err && err.response && err.response.data) || {
+        message: "ERROR",
+      };
       return { errRes };
     });
 };
@@ -23,7 +25,9 @@ const getAllRentDueDetails = (params) => {
       return { data };
     })
     .catch((err) => {
-      const errRes = err;
+      const errRes = (err && err.response && err.response.data) || {
+        message: "ERROR",
+      };
       return { errRes };
     });
 };
@@ -37,7 +41,9 @@ const getRentDueExcelDetails = (params) => {
       return { data };
     })
     .catch((err) => {
-      const errRes = err;
+      const errRes = (err && err.response && err.response.data) || {
+        message: "ERROR",
+      };
       return { errRes };
     });
 };
