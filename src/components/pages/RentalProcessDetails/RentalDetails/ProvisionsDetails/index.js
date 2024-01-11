@@ -1,9 +1,17 @@
-import { Button, Grid, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  Grid,
+  IconButton,
+  Snackbar,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import InputBoxComponent from "../../../../atoms/InputBoxComponent";
 import DropDownComponent from "../../../../atoms/DropDownComponent";
 import { red } from "@mui/material/colors";
+import CloseIcon from "@mui/icons-material/Close";
 
 const ProvisionsDetails = (props) => {
   const {
@@ -14,19 +22,41 @@ const ProvisionsDetails = (props) => {
     AddProvisionFortheMonth,
     addProvisions,
     setAddProvisions,
-    monthlyRent,
     uniqueID,
     lesseeBranchName,
     typeProvisionsData,
     setTypeProvisionsData,
-    
   } = props;
-  // console.log(props, "props");
+  const [state, setState] = useState({
+    open: false,
+    vertical: "bottom",
+    horizontal: "center",
+  });
+  const { vertical, horizontal, open } = state;
 
-  //  const yearOptions = Array.from({ length: 101 }, (_, index) => ({
-  //   value: currentYear, // currentYear
-  //   label: `${currentYear}`,
-  // }));
+  const handleClick = (newState) => {
+    setState({ ...newState, open: true });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false });
+  };
+  const action = (
+    <React.Fragment>
+      {/* <Button color="warning" size="small" onClick={handleClose}>
+        UNDO
+      </Button> */}
+
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   const handleChange = (name, newValue) => {
     setAddProvisions({
@@ -77,14 +107,12 @@ const ProvisionsDetails = (props) => {
 
   const handleTypeChange = (value) => {
     // console.log(value, "value");
-    let val = value?.label;
+    let val = value.label;
     setTypeProvisionsData(val);
   };
 
   // Parse the provided rent end date
-  // const endDateObject = new Date(rentEndDate);
   const endDateObject = new Date();
-  // const endDateObjectOfMonth = new Date();
 
   // Check if the provided rent end date is valid
   if (isNaN(endDateObject.getTime())) {
@@ -95,12 +123,6 @@ const ProvisionsDetails = (props) => {
 
   // Extract the year from the rent end date
   const currentYear = endDateObject?.getFullYear();
-  // const currentMonths = months[endDateObjectOfMonth?.getMonth()];
-
-  // const monthOptions = Array.from({ length: 101 }, (_, index) => ({
-  //   value: currentYear, // currentYear
-  //   label: `${currentYear}`,
-  // }));
 
   // Generate an array of years, including the current MOnth
   const yearOptions = Array.from({ length: 1 }, (_, index) => ({
@@ -211,10 +233,10 @@ const ProvisionsDetails = (props) => {
                     placeholder="Select "
                     sx={{ width: 200, ml: 3 }}
                     size="small"
-                    options={typeProvision}
+                    options={Array.isArray(typeProvision) ? typeProvision : []}
                     name="provisiontype"
                     value={addProvisions?.provisiontype}
-                    onChange={handleTypeChange}
+                    onChange={(val) => handleTypeChange(val)}
                   />
                 </Grid>
 
@@ -276,7 +298,10 @@ const ProvisionsDetails = (props) => {
                       <Button
                         onClick={() => {
                           AddProvisionFortheMonth();
-                          // handleClose();
+                          handleClick({
+                            vertical: "bottom",
+                            horizontal: "center",
+                          });
                         }}
                         variant="contained"
                         sx={{ m: 1, background: "#238520" }}
@@ -290,7 +315,10 @@ const ProvisionsDetails = (props) => {
                       <Button
                         onClick={() => {
                           AddProvisionFortheMonth();
-                          // handleClose();
+                          handleClick({
+                            vertical: "bottom",
+                            horizontal: "center",
+                          });
                         }}
                         variant="contained"
                         sx={{ m: 1, background: "#238520" }}
@@ -301,6 +329,21 @@ const ProvisionsDetails = (props) => {
                   ) : null}
                 </Grid>
               </Col>
+
+              <Snackbar
+                open={open}
+                anchorOrigin={{ vertical, horizontal }}
+                autoHideDuration={1000}
+                onClose={handleClose}
+                message={
+                  typeProvisionsData === "Make"
+                    ? "Provision Made Successfully"
+                    : "Provision Reversed Successfully"
+                }
+                action={action}
+                key={vertical + horizontal}
+                variant="success"
+              />
             </Row>
           </Container>
         </Modal.Body>

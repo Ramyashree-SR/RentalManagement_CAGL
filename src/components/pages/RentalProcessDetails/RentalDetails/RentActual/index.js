@@ -52,7 +52,7 @@ const RentActual = (props) => {
   ];
   const [state, setState] = useState({
     open: false,
-    vertical: "top",
+    vertical: "bottom",
     horizontal: "center",
   });
   const { vertical, horizontal, open } = state;
@@ -119,7 +119,7 @@ const RentActual = (props) => {
 
   const handleMonthChange = (newValue) => {
     const value = newValue?.label;
-    console.log(value, "value");
+    // console.log(value, "value");
     if (value) {
       // Access value.month here
       setSelectedMonth(value);
@@ -161,7 +161,7 @@ const RentActual = (props) => {
       }
     }
   };
-  
+
   {
     /* <Alert severity="success"  variant="outined">Payment Settled</Alert> */
   }
@@ -520,7 +520,7 @@ const RentActual = (props) => {
                           variant="contained"
                           size="small"
                           onClick={handleClick({
-                            vertical: "top",
+                            vertical: "bottom",
                             horizontal: "center",
                           })}
                           sx={{
@@ -533,17 +533,26 @@ const RentActual = (props) => {
                         >
                           Made Settlement
                         </Button>
+
+                        <Snackbar
+                          open={open}
+                          anchorOrigin={{ vertical, horizontal }}
+                          autoHideDuration={6000}
+                          onClose={handleClose}
+                          // message="Note: Please Change the Rent End Date for Tenure Close"
+                          action={action}
+                          key={vertical + horizontal}
+                        >
+                          <Alert
+                            onClose={handleClose}
+                            severity="warning"
+                            sx={{ width: "100%" }}
+                          >
+                            Note: Please Change the Rent End Date for Contract
+                            Close!
+                          </Alert>
+                        </Snackbar>
                       </Grid>
-                      {/* <Button onClick={handleClick}>
-                        Open simple snackbar
-                      </Button> */}
-                      <Snackbar
-                        open={open}
-                        autoHideDuration={6000}
-                        onClose={handleClose}
-                        message="Note: Please Change the Rent End Date for Tenure Close"
-                        action={action}
-                      />
                     </Grid>
                   )}
                 </Grid>

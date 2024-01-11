@@ -3,12 +3,13 @@ import React, { useEffect, useState } from "react";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import InputBoxComponent from "../../../../atoms/InputBoxComponent";
 import DropDownComponent from "../../../../atoms/DropDownComponent";
-import { red } from "@mui/material/colors";
+import { deepOrange, red } from "@mui/material/colors";
 import { getBranchWiseProvisionsList } from "../../../../services/ProvisionsListApi";
 import ReusableTable from "../../../../molecules/ReusableTable";
 import { ProvisionsColumns } from "../../../../../constants/ProvisionList";
 import PaymentTableComponent from "../../../../molecules/PaymentTableComponent";
 import { ExportToCSV } from "../../../../ExportToCSV";
+import ExcelExport from "./../../../../../ExcelExport/index";
 
 const Provisions = (props) => {
   const {
@@ -28,6 +29,32 @@ const Provisions = (props) => {
   const [inputValue, setInputValue] = useState("");
   const [provisionsList, setProvisionsList] = useState([]);
   const [selectedYear, setSelectedYear] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(null);
+
+  const months = [
+    { id: 1, label: "January" },
+    { id: 2, label: "February" },
+    { id: 3, label: "March" },
+    { id: 4, label: "April" },
+    { id: 5, label: "May" },
+    { id: 6, label: "June" },
+    { id: 7, label: "July" },
+    { id: 8, label: "August" },
+    { id: 9, label: "September" },
+    { id: 10, label: "October" },
+    { id: 11, label: "November" },
+    { id: 12, label: "December" },
+  ];
+
+  const handleMonthChange = (newValue) => {
+    const value = newValue?.label;
+    if (value) {
+      // Access value.month here
+      setSelectedMonth(value);
+    } else {
+      console.error("value or value.month is undefined");
+    }
+  };
 
   let flag = [{ id: "All", label: "All" }];
 
@@ -65,33 +92,16 @@ const Provisions = (props) => {
     label: `${currentYear - index}`,
   }));
 
-  // const getProvisionListDetails = async () => {
-  //   // let params = id ? id : "All";
-  //   const { data } = await getBranchWiseProvisionsList(
-  //     dataSelect,
-  //     selectedYear
-  //   );
-  //   // console.log(data?.data?.data, "Provisionsdata");
-  //   if (data) {
-  //     if (data) {
-  //       let getData = data?.data;
-  //       setProvisionsList(getData);
-  //     } else {
-  //       setProvisionsList([]);
-  //     }
-  //   }
-  // };
   const getProvisionListDetails = async () => {
-    // let params = id ? id : "All";
     const { data } = await getBranchWiseProvisionsList(
       inputValue,
       selectedYear
     );
-    // console.log(data?.data?.data, "Provisionsdata");
     if (data) {
       if (data) {
         let getData = data?.data;
         setProvisionsList(getData);
+        props.close();
       } else {
         setProvisionsList([]);
       }
@@ -99,15 +109,15 @@ const Provisions = (props) => {
   };
 
   const handleBranchIDChange = (e) => {
-    // setProvisionsList({
-    //   ...provisionsList,
-    //   [e.target.name]: e.target.value,
-    // });
     setInputValue(e.target.value);
   };
 
+  console.log(provisionsList, "provisionsList");
+
   const getProvisionReport = provisionsList?.map((item) => ({
     ContractID: item.contractID,
+    Month: item.month,
+    Year: item.year,
     BranchID: item.info?.branchID,
     BranchName: item.info?.lesseeBranchName,
     AreaName: item.info?.lesseeAreaName,
@@ -117,6 +127,9 @@ const Provisions = (props) => {
     BankName: item.info?.lessorBankName,
     IFSCNumber: item.info?.lessorIfscNumber,
     AccountNumber: item.info?.lessorAccountNumber,
+    ProvisionAmount: item.provisionAmount,
+    Provisiontype: item.provisiontype,
+    Remark: item.remark,
   }));
 
   return (
@@ -166,7 +179,16 @@ const Provisions = (props) => {
                 value={selectedYear}
                 onChange={handleChange}
               />
-
+              <DropDownComponent
+                label="Month"
+                placeholder="Select "
+                sx={{ width: 200, mt: 0.5 }}
+                size="small"
+                options={months}
+                //   name="month"
+                value={selectedMonth}
+                onChange={handleMonthChange}
+              />
               <Grid
                 item
                 className="d-flex flex-row align-items-end justify-content-end"
@@ -177,9 +199,9 @@ const Provisions = (props) => {
                   height: 40,
                 }}
               >
-                {/* <ExcelExport
-                  excelData={dataToExcel}
-                  fileName={fileName}
+                <ExcelExport
+                  excelData={getProvisionReport}
+                  fileName={"ProvisionsList"}
                   sx={{
                     mr: 1,
                     backgroundColor: deepOrange[600],
@@ -189,12 +211,12 @@ const Provisions = (props) => {
                     alignItems: "center",
                     justifyContent: "center",
                   }}
-                /> */}
-                <ExportToCSV
+                />
+                {/* <ExportToCSV
                   // excelData={provisionsList}
                   excelData={getProvisionReport}
                   fileName={"ProvisionsList"}
-                />
+                /> */}
               </Grid>
             </Grid>
           </Grid>
@@ -205,11 +227,11 @@ const Provisions = (props) => {
               marginLeft: "1px auto auto 1px",
             }}
           >
-            {selectedYear && (
+            {selectedYear && ( //selectedYear  ,selectedMonth
               <ReusableTable
                 data={provisionsList}
                 columns={ProvisionsColumns}
-                sx={{ height: 320, mt: 10 }}
+                sx={{ height: 310, mt: 10 }} // height: 320
               />
             )}
           </Box>
@@ -232,4 +254,3 @@ const Provisions = (props) => {
 };
 
 export default Provisions;
-

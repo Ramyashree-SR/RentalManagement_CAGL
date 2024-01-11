@@ -13,7 +13,7 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
 import { styled } from "@mui/styles";
-import { Button, Icon, TextField } from "@mui/material";
+import { Alert, Button, Icon, TextField } from "@mui/material";
 import { blue, deepOrange, green, pink, red } from "@mui/material/colors";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import PanToolIcon from "@mui/icons-material/PanTool";
@@ -64,6 +64,7 @@ export default function MenuComponent({
   lesseeBranchName,
   openPaymentReportData,
   setOpenPaymentReportData,
+  setStateValue,
 }) {
   const { addToast } = useToasts();
   const [fullscreen, setFullscreen] = useState(true);
@@ -106,8 +107,7 @@ export default function MenuComponent({
 
   const AddProvisionFortheMonth = async () => {
     let payload = {
-      // provisionID: addProvisions.provisionID,
-      provisiontype: typeProvisionsData,
+      provisiontype: addProvisions.provisiontype,
       contractID: uniqueID,
       branchID: branchIDforDue,
       year: addProvisions.year.label,
@@ -120,7 +120,7 @@ export default function MenuComponent({
       typeProvisionsData,
       payload
     );
-    if (data) {
+    if (data.error) {
       setAddProvisions({
         provisionID: "",
         provisiontype: "",
@@ -132,23 +132,28 @@ export default function MenuComponent({
         remark: "",
         dateTime: "",
       });
+
       if (typeProvisionsData === "Make") {
         addToast("Provision Made Successfully", {
           appearance: "success",
         });
-        // close()
       } else {
         addToast("Provision Reversed Successfully", {
           appearance: "success",
         });
       }
-    } else if (errRes) {
-      addToast(errRes, { appearance: "error" });
-      // close()
+    } 
+    else if (!data.error) {
+      if( typeProvisionsData === "Make"){
+      addToast("Provision Already Made...", { appearance: "error" });
+    } 
+    else if( typeProvisionsData === "Reverse"){
+      addToast("Provision Already Reversed...", {
+        appearance: "error",
+      });
     }
   };
-
-  // console.log(rentDueDetails,"rentDueDetails");
+}
 
   return (
     <React.Fragment>
