@@ -70,7 +70,7 @@ const Provisions = (props) => {
 
   useEffect(() => {
     getProvisionListDetails();
-  }, [inputValue, selectedYear]);
+  }, [selectedYear]);
 
   // Parse the provided rent end date
   // const endDateObject = new Date(rentEndDate);
@@ -101,7 +101,7 @@ const Provisions = (props) => {
       if (data) {
         let getData = data?.data;
         setProvisionsList(getData);
-        props.close();
+        // props.close();
       } else {
         setProvisionsList([]);
       }
@@ -179,7 +179,7 @@ const Provisions = (props) => {
                 value={selectedYear}
                 onChange={handleChange}
               />
-              <DropDownComponent
+              {/* <DropDownComponent
                 label="Month"
                 placeholder="Select "
                 sx={{ width: 200, mt: 0.5 }}
@@ -188,7 +188,7 @@ const Provisions = (props) => {
                 //   name="month"
                 value={selectedMonth}
                 onChange={handleMonthChange}
-              />
+              /> */}
               <Grid
                 item
                 className="d-flex flex-row align-items-end justify-content-end"

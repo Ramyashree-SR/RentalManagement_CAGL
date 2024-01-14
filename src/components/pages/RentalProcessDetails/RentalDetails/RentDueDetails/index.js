@@ -64,27 +64,6 @@ const RentDueDetails = (props) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* <Box>
-            <Grid
-              className="d-flex flex-column m-2"
-              sx={{ fontSize: 15, fontWeight: 700 }}
-            >
-              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Contract ID : {uniqueID}
-              </Typography>
-              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Branch ID : {branchIDforDue}
-              </Typography>
-              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Rent Start Date : {rentStartDate}
-              </Typography>
-              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Rent End Date : {rentEndDate}
-              </Typography>
-              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Tenure : {agreementTenure}
-              </Typography>
-            </Grid> */}
           <Container>
             <Row>
               <Col xs={12}>
@@ -199,8 +178,6 @@ const RentDueDetails = (props) => {
                 }}
               >
                 <ExcelExport
-                  // excelData={dataToExcel}
-                  // excelData={rentDueDataByBranchId}
                   excelData={getRentExcelData}
                   fileName={"Rent Due Report"}
                   sx={{ backgrounfCOlor: blue[900] }}
@@ -216,8 +193,6 @@ const RentDueDetails = (props) => {
                 sm={12}
                 xs={12}
                 sx={{
-                  // width: "97%",
-                  // position: "fixed",
                   mt: 4,
                 }}
               >

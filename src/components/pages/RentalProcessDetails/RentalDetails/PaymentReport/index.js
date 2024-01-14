@@ -7,6 +7,7 @@ import { getRentPaymentReportDetails } from "../../../../services/PaymentReportA
 import { paymentColumn } from "../../../../../constants/PaymentReport";
 import { deepOrange, orange, red } from "@mui/material/colors";
 import PaymentTableComponent from "./../../../../molecules/PaymentTableComponent/index";
+import { AllPaymentColumns } from "../../../../../constants/AllPaymentReport";
 
 const PaymentReport = (props) => {
   const {
@@ -50,7 +51,7 @@ const PaymentReport = (props) => {
 
   useEffect(() => {
     getAllPaymentReportDetailsOfMonth();
-  }, [uniqueID, selectedMonth, selectedYear]);
+  }, [selectedMonth]);
 
   const endDateObject = new Date();
 
@@ -92,6 +93,32 @@ const PaymentReport = (props) => {
     }
   };
 
+  const getPaymentReportData = Object.values([getPaymentReport])?.map(
+    (item) => ({
+      ID: item.info?.uniqueID,
+      MonthYear: item.monthYear,
+      LessorName: item.info?.lessorName,
+      BranchID: item.info?.branchID,
+      BranchName: item.info?.lesseeBranchName,
+      AreaName: item.info?.lesseeAreaName,
+      Division: item.lesseeDivision,
+      Zone: item.info?.lesseeZone,
+      State: item.info?.lesseeState,
+      BankName: item.info?.lessorBankName,
+      IFSCNumber: item.info?.lessorIfscNumber,
+      AccountNumber: item.info?.lessorAccountNumber,
+      RentStartDate: item.info?.rentStartDate,
+      RentEndDate: item.info?.rentEndDate,
+      MonthlyRent: item.info?.monthlyRent,
+      Due: item.due,
+      Provision: item.provision,
+      Gross: item.gross,
+      Tds: item.tds,
+      net: item.net,
+      gst: item.gst,
+    })
+  );
+
   //   console.log(getPaymentReport, "getPaymentReport");
   return (
     <>
@@ -114,98 +141,7 @@ const PaymentReport = (props) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* <Grid
-            container
-            sx={{ position: "fixed" }}
-            className="d-flex flex-row m-1"
-          >
-            <Grid item className="d-flex flex-row">
-              <Typography
-                sx={{ fontSize: 15, fontWeight: 700 }}
-                className="d-flex"
-              >
-                BranchID :&nbsp;&nbsp;
-                <Typography
-                  className="d-flex"
-                  sx={{ fontSize: 15, fontWeight: 700, color: deepOrange[900] }}
-                >
-                  {branchIDforDue}
-                </Typography>
-              </Typography>
-            </Grid> */}
-          {/* <Grid
-            className="d-flex flex-row m-2"
-            sx={{ fontSize: 15, fontWeight: 700 }}
-          >
-            <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
-              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Contract ID :&nbsp;&nbsp;
-              </Typography>
-              <Typography
-                sx={{ fontSize: 15, fontWeight: 700, color: orange[900] }}
-              >
-                {uniqueID}
-              </Typography>
-            </Grid>
-            <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
-              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Branch ID :&nbsp;&nbsp;
-              </Typography>
-              <Typography
-                sx={{ fontSize: 15, fontWeight: 700, color: orange[900] }}
-              >
-                {branchIDforDue}
-              </Typography>
-            </Grid>
-            <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
-              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Branch Name :&nbsp;&nbsp;
-              </Typography>
-              <Typography
-                sx={{ fontSize: 15, fontWeight: 700, color: orange[900] }}
-              >
-                {lesseeBranchName}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid
-            className="d-flex flex-row m-2"
-            sx={{ fontSize: 15, fontWeight: 700 }}
-          >
-            <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
-              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Rent Start Date :&nbsp;&nbsp;
-              </Typography>
-              <Typography
-                sx={{ fontSize: 15, fontWeight: 700, color: orange[900] }}
-              >
-                {rentStartDate}
-              </Typography>
-            </Grid>
-            <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
-              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Rent End Date :&nbsp;&nbsp;
-              </Typography>
-              <Typography
-                sx={{ fontSize: 15, fontWeight: 700, color: orange[900] }}
-              >
-                {rentEndDate}
-              </Typography>
-            </Grid>
-            <Grid className="d-flex flex-row" sx={{ flexBasis: "35%" }}>
-              <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                Lessor Name :&nbsp;&nbsp;
-              </Typography>
-              <Typography
-                sx={{ fontSize: 15, fontWeight: 700, color: orange[900] }}
-              >
-                {" "}
-                {lessorName}
-              </Typography>
-            </Grid>
-          </Grid>
-          <hr /> */}
-          <Grid item className="d-flex mt-4">
+          <Grid item className="d-flex mt-4" sx={{ position: "fixed" }}>
             <DropDownComponent
               label="Year"
               placeholder="Select "
@@ -226,17 +162,18 @@ const PaymentReport = (props) => {
               onChange={handleMonthChange}
             />
           </Grid>
-
-          <PaymentTableComponent
-            data={[getPaymentReport]}
-            columns={paymentColumn}
-            sx={{
-              width: "100%",
-              overFlowX: "scroll",
-              overFlowY: "scroll",
-              mt: 4,
-            }}
-          />
+          <Grid sx={{ mt: 10 }}>
+            <PaymentTableComponent
+              data={getPaymentReport}
+              columns={AllPaymentColumns}
+              sx={{
+                width: "100%",
+                overFlowX: "scroll",
+                overFlowY: "scroll",
+                mt: 5,
+              }}
+            />
+          </Grid>
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={props.close}>Close</Button>

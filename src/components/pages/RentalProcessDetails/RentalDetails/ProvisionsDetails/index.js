@@ -107,7 +107,7 @@ const ProvisionsDetails = (props) => {
 
   const handleTypeChange = (value) => {
     // console.log(value, "value");
-    let val = value.label;
+    let val = value?.label;
     setTypeProvisionsData(val);
   };
 
@@ -236,7 +236,7 @@ const ProvisionsDetails = (props) => {
                     options={Array.isArray(typeProvision) ? typeProvision : []}
                     name="provisiontype"
                     value={addProvisions?.provisiontype}
-                    onChange={(val) => handleTypeChange(val)}
+                    onChange={handleTypeChange}
                   />
                 </Grid>
 

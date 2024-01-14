@@ -20,6 +20,7 @@ import { getRentPaymentReportDetails } from "../../../../services/PaymentReportA
 import {
   AddRentActualDetails,
   getAllRentContractDetailsByContractID,
+  getSDSettlementDetails,
 } from "../../../../services/RentActualApi";
 import { useToasts } from "react-toast-notifications";
 import RentActualDetails from "../RentActualDetails";
@@ -35,7 +36,7 @@ const RentActual = (props) => {
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [openActualDetailsModal, setOpenActualDetailsModal] = useState(false);
   const [settlementAmt, setSettlementAmt] = useState([]);
-  // const [open, setOpen] = useState(false);
+  const [getSdAmt, setGetSdAmt] = useState([]);
   const months = [
     { id: 1, label: "January" },
     { id: 2, label: "February" },
@@ -162,40 +163,14 @@ const RentActual = (props) => {
     }
   };
 
-  {
-    /* <Alert severity="success"  variant="outined">Payment Settled</Alert> */
-  }
-  // const AddRentActualFortheMonth = async () => {
-  //   let payload = {
-  //     contractID: rentActualData.uniqueID,
-  //     branchID: rentActualData.branchID,
-  //     year: selectedYear,
-  //     Amount: addRentActual.Amount,
-  //     month: selectedMonth,
-  //     startDate: rentActualData.rentStartDate,
-  //     endDate: rentActualData.rentEndDate,
-  //   };
-  //   const { data, errRes } = await AddRentActualDetails(payload);
-  //   if (data) {
-  //     setAddRentActual({
-  //       contractID: "",
-  //       branchID: "",
-  //       year: "",
-  //       Amount: "",
-  //       month: "",
-  //       startDate: "",
-  //       endDate: "",
-  //     });
-  //     addToast("Rent Actual Payment Done Successfully", {
-  //       appearance: "success",
-  //     });
-
-  //     props.close();
-  //   } else if (errRes) {
-  //     addToast(errRes, { appearance: "error" });
-  //     props.close();
-  //   }
-  // };
+  const getSDSettlement = async () => {
+    const { data, errRes } = await getSDSettlementDetails();
+    console.log(data, "data");
+    if (data) {
+      setGetSdAmt(data);
+      props.close();
+    }
+  };
 
   const handleActualClick = () => {
     setOpenActualDetailsModal(true);
@@ -271,13 +246,11 @@ const RentActual = (props) => {
                     Rent Actual Details
                   </Button>
                 </Grid>
-
                 <RentActualDetails
                   show={openActualDetailsModal}
                   close={() => setOpenActualDetailsModal(false)}
                   fullscreen={fullscreen}
                 />
-
                 {RentActualIDs && (
                   <Grid
                     container
@@ -395,7 +368,6 @@ const RentActual = (props) => {
                   )}
                   {RentActualIDs && <hr />}
                 </Col>
-
                 {RentActualIDs && (
                   <Grid item className="d-flex flex-row">
                     <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
@@ -440,21 +412,38 @@ const RentActual = (props) => {
                     </Grid>
                     <Grid
                       item
-                      className="d-flex flex-row align-items-end justify-content-end "
+                      className="d-flex  align-items-end justify-content-end"
                       sx={{ flexBasis: "50%" }}
                     >
-                      <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
-                        Rent Actual Amount :&nbsp;&nbsp;
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 15,
-                          fontWeight: 700,
-                          color: pink[900],
-                        }}
-                      >
-                        {getPaymentReport?.actualAmount}
-                      </Typography>
+                      <Grid className="d-flex flex-column  ">
+                        <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
+                          Actual Amount:
+                        </Typography>
+                        <Typography
+                          sx={{
+                            fontSize: 15,
+                            fontWeight: 700,
+                            color: pink[900],
+                          }}
+                        >
+                          {getPaymentReport?.actualAmount}
+                        </Typography>
+
+                        <Grid className="d-flex">
+                          <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
+                            SD Amount :
+                          </Typography>
+                          <Typography
+                            sx={{
+                              fontSize: 15,
+                              fontWeight: 700,
+                              color: pink[900],
+                            }}
+                          >
+                            {getPaymentReport?.sdAmount}
+                          </Typography>
+                        </Grid>
+                      </Grid>
                     </Grid>
                   </Grid>
                 )}
@@ -468,7 +457,7 @@ const RentActual = (props) => {
                       width: "100%",
                       overFlowX: "scroll",
                       overFlowY: "scroll",
-                      mt: 4,
+                      mt: 3,
                     }}
                   />
                 )}
@@ -476,15 +465,15 @@ const RentActual = (props) => {
 
               <Col>
                 <Grid
-                  item
+                  container
                   className="d-flex flex-column "
-                  sx={{ flexBasis: "100%", mt: 2 }}
+                  sx={{ flexBasis: "100%", mt: -4 }}
                 >
                   {selectedMonth && (
                     <Grid
                       item
                       className="d-flex flex-column "
-                      sx={{ flexBasis: "100%", mt: 2 }}
+                      sx={{ flexBasis: "100%" }}
                     >
                       <Typography sx={{ fontSize: 15, fontWeight: 700 }}>
                         SD Settlements :&nbsp;&nbsp;
@@ -492,25 +481,14 @@ const RentActual = (props) => {
                       <Grid
                         item
                         className="d-flex flex-row"
-                        sx={{ flexBasis: "100%", mt: 2 }}
+                        sx={{ flexBasis: "100%" }}
                       >
-                        {/* <InputBoxComponent
-                          label="ID"
-                          placeholder="Enter ID"
-                          sx={{ width: 200, mt: -1 }}
-                          name="Amount"
-                          value={addRentActual.Amount}
-                          onChange={(e) => {
-                            updatedChange(e);
-                          }}
-                        /> */}
-
                         <InputBoxComponent
                           label="Amount"
                           placeholder="Enter Amount"
-                          sx={{ width: 200, mt: -1 }}
-                          // name="Amount"
-                          // value={Amount}
+                          sx={{ width: 200 }}
+                          name="due"
+                          value={getPaymentReport?.due}
                           onChange={(e) => {
                             updatedChange(e);
                           }}
@@ -519,15 +497,18 @@ const RentActual = (props) => {
                           className="d-flex"
                           variant="contained"
                           size="small"
-                          onClick={handleClick({
-                            vertical: "bottom",
-                            horizontal: "center",
-                          })}
+                          onClick={() => {
+                            getSDSettlement();
+                            handleClick({
+                              vertical: "bottom",
+                              horizontal: "center",
+                            });
+                          }}
                           sx={{
                             width: 150,
                             fontSize: 10,
                             height: 30,
-                            mt: 1,
+                            mt: 2,
                             backgroundColor: green[900],
                           }}
                         >

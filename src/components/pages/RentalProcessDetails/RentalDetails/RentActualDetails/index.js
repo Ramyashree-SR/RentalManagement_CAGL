@@ -1,5 +1,6 @@
 import {
   Autocomplete,
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -9,16 +10,21 @@ import {
   Typography,
 } from "@mui/material";
 import { green } from "@mui/material/colors";
-import React, { useState } from "react";
-import { Modal } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Col, Container, Modal, Row } from "react-bootstrap";
 import DropDownComponent from "../../../../atoms/DropDownComponent";
 import { useToasts } from "react-toast-notifications";
 import ReusableTable from "./../../../../molecules/ReusableTable/index";
 import { RentActualColumn } from "../../../../../constants/RentActual";
 import { AddRentActualDetails } from "../../../../services/RentActualApi";
+import { getRentPaymentReportDetails } from "../../../../services/PaymentReportApi";
+
+import { AllPaymentColumns } from "../../../../../constants/AllPaymentReport";
+import RentActualPaymentTable from "../../../../molecules/RentActualPaymentTable";
 
 const RentActualDetails = (props) => {
   const { addToast } = useToasts();
+  const [getActualPaymentReport, setGetAcualPaymentReport] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [rentActualData, setRentActualData] = useState([]);
@@ -31,6 +37,7 @@ const RentActualDetails = (props) => {
     startDate: "",
     endDate: "",
   });
+  const [selectedRows, setSelectedRows] = useState([]);
   const [open, setOpen] = useState(false);
   const [confirmSubmit, setconfirmSubmit] = useState(false);
   const months = [
@@ -47,6 +54,10 @@ const RentActualDetails = (props) => {
     { id: 11, label: "November" },
     { id: 12, label: "December" },
   ];
+  useEffect(() => {
+    getAllActualPaymentReportDetailsOfMonth();
+  }, [selectedMonth]);
+
   const handleDialogClose = () => {
     setOpen(false);
   };
@@ -73,6 +84,12 @@ const RentActualDetails = (props) => {
     label: `${currentYear}`,
   }));
 
+  const handleChange = (newValue) => {
+    let value = newValue?.label;
+    setSelectedYear(value);
+    // getAllPaymentReportDetailsOfMonth(value);
+  };
+
   const handleMonthChange = (newValue) => {
     const value = newValue?.label;
     console.log(value, "value");
@@ -82,24 +99,50 @@ const RentActualDetails = (props) => {
     } else {
       console.error("value or value.month is undefined");
     }
-    // getAllPaymentReportDetailsOfMonth(value);
+    getAllActualPaymentReportDetailsOfMonth(value);
   };
-  const handleChange = (newValue) => {
-    let value = newValue?.label;
-    setSelectedYear(value);
-    // getAllPaymentReportDetailsOfMonth(value);
+
+  const getAllActualPaymentReportDetailsOfMonth = async () => {
+    const { data } = await getRentPaymentReportDetails(
+      "all",
+      selectedMonth,
+      selectedYear
+    );
+    // console.log(data?.data, "allData");
+    if (data) {
+      if (data) {
+        let getData = data?.data;
+        setGetAcualPaymentReport(getData);
+        setRentActualData(getData);
+      } else {
+        setGetAcualPaymentReport([]);
+        setRentActualData([]);
+      }
+    }
+  };
+
+  const handleSaveSelectedRows = () => {
+    return getSelectedRowDetails();
+  };
+  // Function to get the details of the selected rows
+  const getSelectedRowDetails = () => {
+    return selectedRows.map((rowId) =>
+      getActualPaymentReport?.find((row) => row.info.uniqueID === rowId)
+    );
   };
 
   const AddRentActualFortheMonth = async () => {
-    let payload = {
-      contractID: rentActualData.uniqueID,
-      branchID: rentActualData.branchID,
+    let selectedRowsData = handleSaveSelectedRows();
+    // Assuming selectedRowsData is an array of objects
+    const payload = selectedRowsData.map((selectedRow) => ({
+      contractID: selectedRow.info.uniqueID,
+      branchID: selectedRow.info?.branchID,
       year: selectedYear,
-      Amount: addRentActual.Amount,
+      Amount: selectedRow.actualAmount,
       month: selectedMonth,
-      startDate: rentActualData.rentStartDate,
-      endDate: rentActualData.rentEndDate,
-  };
+      startDate: selectedRow.info.rentStartDate,
+      endDate: selectedRow.info.rentEndDate,
+    }));
     const { data, errRes } = await AddRentActualDetails(payload);
     if (data) {
       setAddRentActual({
@@ -114,13 +157,15 @@ const RentActualDetails = (props) => {
       addToast("Rent Actual Payment Done Successfully", {
         appearance: "success",
       });
-
       props.close();
     } else if (errRes) {
       addToast(errRes, { appearance: "error" });
       props.close();
     }
   };
+
+  
+
   return (
     <>
       <Modal
@@ -136,119 +181,102 @@ const RentActualDetails = (props) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* <Grid
-            container
-            className="d-flex m-3 "
-            sx={{ fontSize: 15, fontWeight: 700 }}
-          >
-            <Grid
-              item
-              className="d-flex"
-              sx={{
-                fontSize: 15,
-                fontWeight: 700,
-                position: "fixed",
-                mt: -2,
-                flexBasis: "80%",
-              }}
-            >
-              <Autocomplete
-                size="small"
-                sx={{
-                  "& .MuiOutlinedInput-root:hover": {
-                    "& > fieldset": {
-                      borderColor: green[900],
-                      borderWidth: "1px",
-                    },
-                  },
-                  "& .MuiOutlinedInput-root:focus": {
-                    "& > fieldset": {
-                      borderColor: "#E4E7EB",
-                      borderWidth: "1px",
-                    },
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& > fieldset": {
-                      borderColor: "#E4E7EB",
-                      borderWidth: "1px",
-                    },
-                    width: 200,
-                  },
-                }}
-                // options={Array.isArray(branchFilter) ? branchFilter : []}
-                // value={branchIDforDue}
-                // onChange={handleBranchID}
-                renderInput={(params) => (
-                  <TextField {...params} label="Branch ID" variant="outlined" />
+          <Container>
+            <Row>
+              <Col xs={12}>
+                <Grid
+                  container
+                  className="d-flex flex-row "
+                  sx={{ position: "relative", top: 2, width: "100%" }}
+                >
+                  <Grid
+                    item
+                    className="d-flex ml-2"
+                    sx={{ flexBasis: "50%", mt: 0 }}
+                  >
+                    <DropDownComponent
+                      label="Year"
+                      placeholder="Select "
+                      sx={{ width: 200 }}
+                      size="small"
+                      options={yearOptions}
+                      value={selectedYear}
+                      onChange={handleChange}
+                    />
+                    <DropDownComponent
+                      label="Month"
+                      placeholder="Select "
+                      sx={{ width: 200 }}
+                      size="small"
+                      options={months}
+                      value={selectedMonth}
+                      onChange={handleMonthChange}
+                    />
+                  </Grid>
+                </Grid>
+              </Col>
+              <Box sm={12} xs={12}>
+                {selectedMonth && (
+                  <RentActualPaymentTable
+                    data={getActualPaymentReport}
+                    sx={{ mt: 2 }}
+                    selectedRows={selectedRows}
+                    setSelectedRows={setSelectedRows}
+                    getSelectedRowDetails={getSelectedRowDetails}
+                  />
                 )}
-              />
-            </Grid>
-          </Grid> */}
-
-          <Grid container className="d-flex flex-row " sx={{ mt: 1 }}>
-            <Grid item className="d-flex ml-2" sx={{ flexBasis: "50%" }}>
-              <DropDownComponent
-                label="Year"
-                placeholder="Select "
-                sx={{ width: 200 }}
-                size="small"
-                options={yearOptions}
-                value={selectedYear}
-                onChange={handleChange}
-              />
-              <DropDownComponent
-                label="Month"
-                placeholder="Select "
-                sx={{ width: 200 }}
-                size="small"
-                options={months}
-                value={selectedMonth}
-                onChange={handleMonthChange}
-              />
-            </Grid>
+              </Box>
+            </Row>
+          </Container>
+        </Modal.Body>
+        <Modal.Footer>
+          <Grid
+            item
+            className="d-flex align-item-end justify-content-end"
+            sx={{
+              fontSize: 15,
+              fontWeight: 700,
+              // flexBasis: "0%",
+              mt: 0,
+              mr: 2,
+            }}
+          >
             {selectedMonth && (
-              <ReusableTable
-                data={rentActualData}
-                columns={RentActualColumn}
-                sx={{ mt: 1.5 }}
-              />
-            )}
-            <Grid
-              item
-              className="d-flex align-item-end justify-content-end"
-              sx={{
-                fontSize: 15,
-                fontWeight: 700,
-                flexBasis: "20%",
-                mt: 1.5,
-              }}
-            >
               <Button
                 variant="contained"
                 onClick={() => {
                   setOpen(true);
-                //   setconfirmDeleteVal(value);
+                  //   setconfirmDeleteVal(value);
                 }}
                 sx={{ backgroundColor: green[900] }}
-              > Confirm Payment</Button>
-              <Dialog
-                open={open}
-                onClose={handleDialogClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
               >
-                <DialogContent>
-                  <Typography>Are you sure you want to submit?</Typography>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleDialogClose} variant="contained">Back</Button>
-                  <Button onClick={handleConfirmSubmit} variant="contained" sx={{backgroundColor:green[900]}}>Make Payment</Button>
-                </DialogActions>
-              </Dialog>
-            </Grid>
+                {" "}
+                Confirm Payment
+              </Button>
+            )}
+            <Dialog
+              open={open}
+              onClose={handleDialogClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogContent>
+                <Typography>Are you sure you want to submit?</Typography>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleDialogClose} variant="contained">
+                  Back
+                </Button>
+                <Button
+                  onClick={handleConfirmSubmit}
+                  variant="contained"
+                  sx={{ backgroundColor: green[900] }}
+                >
+                  Make Payment
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Grid>
-        </Modal.Body>
-        <Modal.Footer>
           <Button onClick={props.close} variant="contained">
             Close
           </Button>

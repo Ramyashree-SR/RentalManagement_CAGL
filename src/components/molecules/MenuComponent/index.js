@@ -120,7 +120,7 @@ export default function MenuComponent({
       typeProvisionsData,
       payload
     );
-    if (data.error) {
+    if (data?.error) {
       setAddProvisions({
         provisionID: "",
         provisiontype: "",
@@ -142,18 +142,16 @@ export default function MenuComponent({
           appearance: "success",
         });
       }
-    } 
-    else if (!data.error) {
-      if( typeProvisionsData === "Make"){
-      addToast("Provision Already Made...", { appearance: "error" });
-    } 
-    else if( typeProvisionsData === "Reverse"){
-      addToast("Provision Already Reversed...", {
-        appearance: "error",
-      });
+    } else if (!data?.error) {
+      if (typeProvisionsData === "Make") {
+        addToast("Provision Already Made...", { appearance: "error" });
+      } else if (typeProvisionsData === "Reverse") {
+        addToast("Provision Already Reversed...", {
+          appearance: "error",
+        });
+      }
     }
   };
-}
 
   return (
     <React.Fragment>

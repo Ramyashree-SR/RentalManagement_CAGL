@@ -163,7 +163,7 @@ const ReusableTable = ({ data, columns, sx, showTotal }) => {
 
             {showTotal && (
               <StyledTableRow>
-                {/* <StyledTableCell>Total</StyledTableCell> */}
+                
                 {columns &&
                   columns?.map((column) => {
                     if (

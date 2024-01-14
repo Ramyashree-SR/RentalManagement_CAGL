@@ -110,6 +110,7 @@ const PaymentReportDetails = (props) => {
     (item) => ({
       ID: item.info?.uniqueID,
       MonthYear: item.monthYear,
+      LessorName: item.info?.lessorName,
       BranchID: item.info?.branchID,
       BranchName: item.info?.lesseeBranchName,
       AreaName: item.info?.lesseeAreaName,
@@ -153,25 +154,7 @@ const PaymentReportDetails = (props) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* <Grid
-            container
-            sx={{ position: "fixed" }}
-            className="d-flex flex-row m-1"
-          >
-            <Grid item className="d-flex flex-row">
-              <Typography
-                sx={{ fontSize: 15, fontWeight: 700 }}
-                className="d-flex"
-              >
-                BranchID :&nbsp;&nbsp;
-                <Typography
-                  className="d-flex"
-                  sx={{ fontSize: 15, fontWeight: 700, color: deepOrange[900] }}
-                >
-                  {branchIDforDue}
-                </Typography>
-              </Typography>
-            </Grid> */}
+        
           <Grid
             className="d-flex flex-row m-2"
             sx={{ fontSize: 15, fontWeight: 700 }}
