@@ -2,6 +2,7 @@ const paymentColumn = [
   { id: "uniqueID", label: "ID", align: "center" },
   { id: "monthYear", label: "Month/Year", align: "center" },
   { id: "branchID", label: "Branch ID", align: "center" },
+  { id: "lesseeBranchName", label: "Branch Name", align: "center" },
   { id: "rentStartDate", label: "Rent Start Date", align: "center" },
   { id: "rentEndDate", label: "Rent  End Date", align: "center" },
   { id: "monthlyRent", label: "Monthly Rent", align: "center" },

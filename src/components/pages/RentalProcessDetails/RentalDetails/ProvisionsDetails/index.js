@@ -235,7 +235,7 @@ const ProvisionsDetails = (props) => {
                     size="small"
                     options={Array.isArray(typeProvision) ? typeProvision : []}
                     name="provisiontype"
-                    value={addProvisions?.provisiontype}
+                    value={typeProvisionsData}
                     onChange={handleTypeChange}
                   />
                 </Grid>

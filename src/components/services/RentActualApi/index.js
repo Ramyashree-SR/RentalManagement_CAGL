@@ -32,9 +32,9 @@ const AddRentActualDetails = (payload) => {
     });
 };
 
-const getSDSettlementDetails = (params) => {
+const addSDSettlementDetails = (payload) => {
   return serviceUtil
-    .get(`setsd`)
+    .post(`setsd`,payload)
     .then((res) => {
       console.log(res, "SDres");
       const data = res.data;
@@ -51,5 +51,5 @@ const getSDSettlementDetails = (params) => {
 export {
   getAllRentContractDetailsByContractID,
   AddRentActualDetails,
-  getSDSettlementDetails,
+  addSDSettlementDetails,
 };

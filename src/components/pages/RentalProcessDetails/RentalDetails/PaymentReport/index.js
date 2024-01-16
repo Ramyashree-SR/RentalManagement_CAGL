@@ -1,4 +1,10 @@
-import { Button, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  Grid,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import DropDownComponent from "../../../../atoms/DropDownComponent";
@@ -8,6 +14,9 @@ import { paymentColumn } from "../../../../../constants/PaymentReport";
 import { deepOrange, orange, red } from "@mui/material/colors";
 import PaymentTableComponent from "./../../../../molecules/PaymentTableComponent/index";
 import { AllPaymentColumns } from "../../../../../constants/AllPaymentReport";
+import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
+import ExcelExport from "../../../../../ExcelExport";
 
 const PaymentReport = (props) => {
   const {
@@ -22,7 +31,8 @@ const PaymentReport = (props) => {
   const [getPaymentReport, setGetPaymentReport] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(null);
-
+  const [showClearIcon, setShowClearIcon] = useState("none");
+  const [searchText, setSearchText] = useState("");
   const months = [
     { id: 1, label: "January" },
     { id: 2, label: "February" },
@@ -93,31 +103,29 @@ const PaymentReport = (props) => {
     }
   };
 
-  const getPaymentReportData = Object.values([getPaymentReport])?.map(
-    (item) => ({
-      ID: item.info?.uniqueID,
-      MonthYear: item.monthYear,
-      LessorName: item.info?.lessorName,
-      BranchID: item.info?.branchID,
-      BranchName: item.info?.lesseeBranchName,
-      AreaName: item.info?.lesseeAreaName,
-      Division: item.lesseeDivision,
-      Zone: item.info?.lesseeZone,
-      State: item.info?.lesseeState,
-      BankName: item.info?.lessorBankName,
-      IFSCNumber: item.info?.lessorIfscNumber,
-      AccountNumber: item.info?.lessorAccountNumber,
-      RentStartDate: item.info?.rentStartDate,
-      RentEndDate: item.info?.rentEndDate,
-      MonthlyRent: item.info?.monthlyRent,
-      Due: item.due,
-      Provision: item.provision,
-      Gross: item.gross,
-      Tds: item.tds,
-      net: item.net,
-      gst: item.gst,
-    })
-  );
+  const getPaymentReportData = Object.values(getPaymentReport)?.map((item) => ({
+    ID: item.info?.uniqueID,
+    MonthYear: item.monthYear,
+    LessorName: item.info?.lessorName,
+    BranchID: item.info?.branchID,
+    BranchName: item.info?.lesseeBranchName,
+    AreaName: item.info?.lesseeAreaName,
+    Division: item.lesseeDivision,
+    Zone: item.info?.lesseeZone,
+    State: item.info?.lesseeState,
+    BankName: item.info?.lessorBankName,
+    IFSCNumber: item.info?.lessorIfscNumber,
+    AccountNumber: item.info?.lessorAccountNumber,
+    RentStartDate: item.info?.rentStartDate,
+    RentEndDate: item.info?.rentEndDate,
+    MonthlyRent: item.info?.monthlyRent,
+    Due: item.due,
+    Provision: item.provision,
+    Gross: item.gross,
+    Tds: item.tds,
+    net: item.net,
+    gst: item.gst,
+  }));
 
   //   console.log(getPaymentReport, "getPaymentReport");
   return (
@@ -161,22 +169,101 @@ const PaymentReport = (props) => {
               value={selectedMonth}
               onChange={handleMonthChange}
             />
-          </Grid>
-          <Grid sx={{ mt: 10 }}>
-            <PaymentTableComponent
-              data={getPaymentReport}
-              columns={AllPaymentColumns}
+            <Grid className="d-flex flex-row align-items-center justify-content-around">
+              <TextField
+                id="outlined-size-small"
+                placeholder="Search"
+                InputProps={{
+                  "aria-label": "Without label",
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      style={{ display: showClearIcon }}
+                      onClick={(event) => {
+                        setShowClearIcon(event.target.value);
+                      }}
+                    >
+                      <ClearIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                size="small"
+                value={searchText}
+                onChange={(e, value) => {
+                  setSearchText(e.target.value);
+                }}
+                sx={{
+                  // backgroundColor: "#FAFAFA",
+                  borderRadius: "100px",
+                  "& .MuiOutlinedInput-root:hover": {
+                    "& > fieldset": {
+                      borderColor: "#A6A6A6",
+                    },
+                  },
+                  "& .MuiOutlinedInput-root:focus": {
+                    "& > fieldset": {
+                      outline: "none",
+                      borderColor: "#ECECEC",
+                    },
+                  },
+                  "& .MuiOutlinedInput-root": {
+                    "& > fieldset": {
+                      borderColor: "#c4c4c4",
+                      borderRadius: "100px",
+                    },
+                    width: 350,
+                    ml: 3,
+                  },
+                }}
+              />
+            </Grid>
+
+            <Grid
+              item
+              className="d-flex align-items-end justify-content-end"
               sx={{
-                width: "100%",
-                overFlowX: "scroll",
-                overFlowY: "scroll",
-                mt: 5,
+                width: 120,
+                height: 40,
+                flexBasis: "50%",
               }}
-            />
+            >
+              <ExcelExport
+                excelData={getPaymentReportData}
+                fileName={"Payment Report"}
+                sx={{ color: "#ffffff", backgroundColor: deepOrange[900] }}
+              />
+            </Grid>
+            {/* <ExportToCSV
+              excelData={getPaymentReportData}
+              fileName={"Payment Report"}
+            /> */}
+          </Grid>
+
+          <Grid sx={{ mt: 10 }}>
+            {selectedMonth && (
+              <PaymentTableComponent
+                data={getPaymentReport}
+                columns={AllPaymentColumns}
+                searchText={searchText}
+                sx={{
+                  width: "100%",
+                  overFlowX: "scroll",
+                  overFlowY: "scroll",
+                  mt: 5,
+                }}
+              />
+            )}
           </Grid>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={props.close}>Close</Button>
+          <Button onClick={props.close} variant="contained">
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

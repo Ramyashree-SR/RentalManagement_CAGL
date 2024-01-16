@@ -43,7 +43,8 @@ const LesseeInformation = ({
 }) => {
   const [address, setAddress] = useState("");
   const [branchData, setBranchData] = useState([]);
-  console.log(type, "type");
+  // console.log(type, "type");
+  const [showBranchID, setShowBranchID] = useState(false)
   const [selectedBranchType, setSelectedBranchType] = useState("");
 
   const updateChange = (e) => {
@@ -175,7 +176,7 @@ const LesseeInformation = ({
       ...branchDetails,
       branchID: value,
     }));
-
+setShowBranchID(true)
     getBranchIdDetails(value);
   };
 
@@ -212,6 +213,7 @@ const LesseeInformation = ({
     if (data) {
       setBranchData(data || []);
     } else {
+      setShowBranchID(true)
       setBranchData([]);
     }
   };
@@ -301,15 +303,22 @@ const LesseeInformation = ({
                       variant="outlined"
                     />
                   )}
+                  // noOptionsText={
+                  // showBranchID ? (
+                  //     <Box>
+                  //       <Box
+                  //         // onClick={() => addButtonClick()}
+                  //         className="d-flex border rounded p-1 border-secondary justify-content-around align-items-center cursor-pointer bg-secondary text-white"
+                  //       >
+                  //         {/* <AddIcon className="color-blue" /> */}
+                  //         <Typography className="fs-14">Add Model</Typography>
+                  //       </Box>
+                  //     </Box>
+                  //   ) : (
+                  //     <Typography>No Options Available</Typography>
+                  //   )
+                  // }
                 />
-                {/* <DropDownComponent
-                  size="small"
-                  sx={{ width: 300, ml: 1, borderRadius: 10 }}
-                  options={branchData}
-                  name="branchID"
-                  value={allNewContractDetails?.branchID || ""}
-                  onChange={(val) => handleBranchID("branchID", val)}
-                /> */}
               </Grid>
 
               <Grid item className="d-flex m-2" lg={12}>

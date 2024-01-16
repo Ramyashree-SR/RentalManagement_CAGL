@@ -54,9 +54,12 @@ const RentActualPaymentTable = ({
   selectedRows,
   setSelectedRows,
   getSelectedRowDetails,
+  tableData,
+  setTableData,
+  editedData,
+  setEditedData,
 }) => {
-  const [tableData, setTableData] = useState([]);
-
+  // Track the edited data for saving
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -68,11 +71,20 @@ const RentActualPaymentTable = ({
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
   const handleEdit = (id, field, value) => {
     const updatedData = data?.map((item) =>
       item.info?.uniqueID === id ? { ...item, [field]: value } : item
     );
     setTableData(updatedData);
+    // Update editedData state with edited values
+    setEditedData((prevEditedData) => ({
+      ...prevEditedData,
+      [id]: {
+        ...prevEditedData[id],
+        [field]: value,
+      },
+    }));
   };
 
   const handleCheckboxChange = (id) => {
@@ -86,6 +98,7 @@ const RentActualPaymentTable = ({
   return (
     <Box sx={{ position: "relative" }} className="d-flex flex-column">
       <Box className="d-flex align-items-center justify-content-center">
+        {/* {editedData && ( */}
         <TableContainer component={Paper} sx={{ ...sx }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
@@ -167,6 +180,7 @@ const RentActualPaymentTable = ({
             className="d-flex align-items-end justify-content-end"
           />
         </TableContainer>
+        {/* )} */}
       </Box>
       <Box className="d-flex mt-5 align-items-start justify-content-start flex-column">
         {/* {selectedRows.length > 0 && (
@@ -216,10 +230,15 @@ const RentActualPaymentTable = ({
                       <StyledTableCell>{row?.monthlyRent}</StyledTableCell>
                       <StyledTableCell>{row?.due}</StyledTableCell>
                       <StyledTableCell>{row?.provision}</StyledTableCell>
-                      <StyledTableCell>{row?.tds}</StyledTableCell>
+                      <StyledTableCell>
+                        {editedData?.[row?.info?.uniqueID]?.tds || row?.tds}
+                      </StyledTableCell>
                       <StyledTableCell>{row?.net}</StyledTableCell>
                       <StyledTableCell>{row?.gstamt}</StyledTableCell>
-                      <StyledTableCell>{row?.actualAmount}</StyledTableCell>
+                      <StyledTableCell>
+                        {editedData?.[row?.info?.uniqueID]?.actualAmount ||
+                          row?.actualAmount}
+                      </StyledTableCell>
                     </TableRow>
                   ))}
                 </TableBody>

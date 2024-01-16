@@ -242,7 +242,7 @@ const RentDue = (props) => {
                 mt: -1.4,
               }}
             >
-              {/* {branchIDforDue && ( */}
+              {branchIDforDue && (
               <ReusableTable
                 data={rentDueDataByBranchId}
                 columns={rentDueData}
@@ -254,7 +254,7 @@ const RentDue = (props) => {
                 }}
                 showTotal={true}
               />
-              {/* )} */}
+               )} 
             </Box>
           </Box>
         </Modal.Body>

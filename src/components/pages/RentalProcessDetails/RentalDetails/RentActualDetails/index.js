@@ -39,6 +39,8 @@ const RentActualDetails = (props) => {
   });
   const [selectedRows, setSelectedRows] = useState([]);
   const [open, setOpen] = useState(false);
+  const [tableData, setTableData] = useState([]);
+  const [editedData, setEditedData] = useState({});
   const [confirmSubmit, setconfirmSubmit] = useState(false);
   const months = [
     { id: 1, label: "January" },
@@ -92,7 +94,7 @@ const RentActualDetails = (props) => {
 
   const handleMonthChange = (newValue) => {
     const value = newValue?.label;
-    console.log(value, "value");
+    // console.log(value, "value");
     if (value) {
       // Access value.month here
       setSelectedMonth(value);
@@ -120,52 +122,109 @@ const RentActualDetails = (props) => {
       }
     }
   };
+  // const handleSaveSelectedRows = () => {
+  //   // Save edited data in the main table
+  //   if (editedData) {
+  //     const updatedData = getActualPaymentReport?.map((item) =>
+  //       item.info?.uniqueID === editedData.id
+  //         ? { ...item, [editedData?.field]: editedData?.value }
+  //         : item
+  //     );
+  //     setTableData(updatedData);
+  //     setEditedData(null);
+  //   }
+
+  //   // Save selected rows data with consideration of edited data
+  //   if (selectedRows?.length > 0) {
+  //     const selectedRowsData = getSelectedRowDetails()?.map((row) => {
+  //       // Check if the row has edited data, use it if available
+  //       const editedDataRow =
+  //         editedData && row.info?.uniqueID === editedData?.id
+  //           ? { ...row, [editedData.field]: editedData?.value }
+  //           : row;
+
+  //       return editedDataRow;
+  //     });
+  //     return selectedRowsData;
+  //   }
+  //   // If no selected rows, return the original data
+  //   return getActualPaymentReport;
+  // };
+  
 
   const handleSaveSelectedRows = () => {
-    return getSelectedRowDetails();
+    // Save edited data in the main table
+    if (editedData) {
+      const updatedData = getActualPaymentReport?.map((item) =>
+        item.info?.uniqueID === editedData.id
+          ? { ...item, [editedData?.field]: editedData?.value }
+          : item
+      );
+      setTableData(updatedData);
+      
+    }
+    // setEditedData();
+    // Save selected rows data with consideration of edited data
+    if (selectedRows?.length > 0) {
+      const selectedRowsData = getSelectedRowDetails()?.map((row) => {
+        // Check if the row has edited data, use it if available
+        const editedDataRow =
+          editedData && row.info?.uniqueID === editedData?.id
+            ? { ...row, [editedData.field]: editedData?.value }
+            : row;
+
+        return editedDataRow;
+      });
+
+      // Remove rows after making a payment
+      const updatedDataAfterPayment = getActualPaymentReport?.filter(
+        (item) => !selectedRows.includes(item.info?.uniqueID)
+      );
+
+      setTableData(updatedDataAfterPayment);
+
+      return selectedRowsData;
+    }
+    // If no selected rows, return the original data
+    return getActualPaymentReport;
   };
   // Function to get the details of the selected rows
   const getSelectedRowDetails = () => {
-    return selectedRows.map((rowId) =>
-      getActualPaymentReport?.find((row) => row.info.uniqueID === rowId)
+    return selectedRows?.map((rowId) =>
+      getActualPaymentReport?.find((row) => row?.info?.uniqueID === rowId)
     );
   };
 
+  // console.log(editedData, "editedData");
   const AddRentActualFortheMonth = async () => {
-    let selectedRowsData = handleSaveSelectedRows();
+    let selectedRowsDatas = handleSaveSelectedRows();
     // Assuming selectedRowsData is an array of objects
-    const payload = selectedRowsData.map((selectedRow) => ({
-      contractID: selectedRow.info.uniqueID,
-      branchID: selectedRow.info?.branchID,
+    const payload = selectedRowsDatas?.map((selectRow) => ({
+      contractID: selectRow?.info?.uniqueID,
+      branchID: selectRow?.info?.branchID,
       year: selectedYear,
-      Amount: selectedRow.actualAmount,
+      Amount:
+        editedData?.[selectRow?.info?.uniqueID]?.actualAmount ||
+        selectRow?.actualAmount,
       month: selectedMonth,
-      startDate: selectedRow.info.rentStartDate,
-      endDate: selectedRow.info.rentEndDate,
+      startDate: selectRow?.info?.rentStartDate,
+      endDate: selectRow?.info?.rentEndDate,
     }));
     const { data, errRes } = await AddRentActualDetails(payload);
+    // console.log(data, "dataRes");
     if (data) {
-      setAddRentActual({
-        contractID: "",
-        branchID: "",
-        year: "",
-        Amount: "",
-        month: "",
-        startDate: "",
-        endDate: "",
-      });
+      setAddRentActual(data?.data);
+      props.close();
       addToast("Rent Actual Payment Done Successfully", {
         appearance: "success",
       });
-      props.close();
+      
     } else if (errRes) {
       addToast(errRes, { appearance: "error" });
       props.close();
     }
   };
-
-  
-
+  //  console.log(addRentActual,"addRentActual");
   return (
     <>
       <Modal
@@ -223,6 +282,10 @@ const RentActualDetails = (props) => {
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
                     getSelectedRowDetails={getSelectedRowDetails}
+                    tableData={tableData}
+                    setTableData={setTableData}
+                    editedData={editedData}
+                    setEditedData={setEditedData}
                   />
                 )}
               </Box>

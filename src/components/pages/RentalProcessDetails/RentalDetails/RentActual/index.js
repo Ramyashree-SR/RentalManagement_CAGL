@@ -19,6 +19,7 @@ import { paymentColumn } from "../../../../../constants/PaymentReport";
 import { getRentPaymentReportDetails } from "../../../../services/PaymentReportApi";
 import {
   AddRentActualDetails,
+  addSDSettlementDetails,
   getAllRentContractDetailsByContractID,
   getSDSettlementDetails,
 } from "../../../../services/RentActualApi";
@@ -151,7 +152,7 @@ const RentActual = (props) => {
       }
     }
   };
-
+  console.log(getPaymentReport, "getPaymentReport");
   const getAllRentActualDetailsByUniqueID = async () => {
     const { data } = await getAllRentContractDetailsByContractID(RentActualIDs);
     // console.log(uniqueID, "ActualId");
@@ -163,11 +164,18 @@ const RentActual = (props) => {
     }
   };
 
-  const getSDSettlement = async () => {
-    const { data, errRes } = await getSDSettlementDetails();
+  const addSDSettlement = async () => {
+    let payload = {
+      contractID: getPaymentReport.info.uniqueID,
+      year: selectedYear,
+      month: selectedMonth,
+      sdAmount: settlementAmt.sdAmount,
+      remark: "Amount Settled",
+    };
+    const { data, errRes } = await addSDSettlementDetails(payload);
     console.log(data, "data");
     if (data) {
-      setGetSdAmt(data);
+      setSettlementAmt(data);
       props.close();
     }
   };
@@ -487,8 +495,8 @@ const RentActual = (props) => {
                           label="Amount"
                           placeholder="Enter Amount"
                           sx={{ width: 200 }}
-                          name="due"
-                          value={getPaymentReport?.due}
+                          name="sdAmount"
+                          value={settlementAmt.sdAmount}
                           onChange={(e) => {
                             updatedChange(e);
                           }}
@@ -498,7 +506,7 @@ const RentActual = (props) => {
                           variant="contained"
                           size="small"
                           onClick={() => {
-                            getSDSettlement();
+                            addSDSettlement();
                             handleClick({
                               vertical: "bottom",
                               horizontal: "center",

@@ -107,7 +107,7 @@ export default function MenuComponent({
 
   const AddProvisionFortheMonth = async () => {
     let payload = {
-      provisiontype: addProvisions.provisiontype,
+      provisiontype: typeProvisionsData,
       contractID: uniqueID,
       branchID: branchIDforDue,
       year: addProvisions.year.label,

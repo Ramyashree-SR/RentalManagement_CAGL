@@ -84,6 +84,7 @@ const PaymentTableComponent = ({
   data,
   columns,
   sx,
+  searchText,
   showTotal,
   withCheckbox,
 }) => {
@@ -158,23 +159,32 @@ const PaymentTableComponent = ({
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {data &&
+            {Array.isArray(data) &&
               data?.length &&
               data
+                ?.filter((value) => {
+                  if (searchText === "") {
+                    return value;
+                  } else if (
+                    value.info.lesseeBranchName
+                      ?.toString()
+                      .toLowerCase()
+                      ?.includes?.(searchText) ||
+                    value.info.uniqueID
+                      ?.toString()
+                      .toLowerCase()
+                      ?.includes?.(searchText) ||
+                    value.info.branchID
+                      ?.toString()
+                      .toLowerCase()
+                      ?.includes?.(searchText)
+                  ) {
+                    return value;
+                  }
+                })
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 ?.map((row, index) => (
                   <StyledTableRow key={index}>
-                    {/* {withCheckbox && (
-                      <StyledTableCell
-                        key={`${index}-checkbox`}
-                        classes={{ root: classes.tableHeader }}
-                      >
-                        <Checkbox
-                          checked={selectedRows.indexOf(index) !== -1}
-                          onChange={() => handleRowSelection(index)}
-                        />
-                      </StyledTableCell>
-                    )} */}
                     {columns &&
                       columns?.map((column) => (
                         <StyledTableCell
