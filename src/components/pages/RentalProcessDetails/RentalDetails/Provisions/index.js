@@ -59,7 +59,7 @@ const Provisions = (props) => {
   let flag = [{ id: "All", label: "All" }];
 
   const handleChange = (newValue) => {
-    console.log(newValue, "newValue");
+    // console.log(newValue, "newValue");
     setSelectedYear(newValue.label);
   };
 
@@ -87,7 +87,7 @@ const Provisions = (props) => {
   const currentYear = endDateObject?.getFullYear();
 
   // Generate an array of years, including the current MOnth
-  const yearOptions = Array.from({ length: 10 }, (_, index) => ({
+  const yearOptions = Array?.from({ length: 10 }, (_, index) => ({
     value: currentYear - index, // currentYear
     label: `${currentYear - index}`,
   }));
@@ -112,9 +112,8 @@ const Provisions = (props) => {
     setInputValue(e.target.value);
   };
 
-  console.log(provisionsList, "provisionsList");
 
-  const getProvisionReport = provisionsList?.map((item) => ({
+  const getProvisionReport = Object.values(provisionsList)?.map((item) => ({
     ContractID: item.contractID,
     Month: item.month,
     Year: item.year,

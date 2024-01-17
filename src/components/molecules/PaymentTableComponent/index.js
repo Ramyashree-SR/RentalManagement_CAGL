@@ -26,7 +26,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 12,
     fontWeight: 650,
     // fontFamily:"san-serif",
-    padding: "3px",
+    // padding: "3px",
     fontFamily: "sans-serif",
   },
   [`&.${tableCellClasses.body}`]: {
@@ -84,7 +84,6 @@ const PaymentTableComponent = ({
   data,
   columns,
   sx,
-  searchText,
   showTotal,
   withCheckbox,
 }) => {
@@ -159,32 +158,23 @@ const PaymentTableComponent = ({
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {Array.isArray(data) &&
+            {data &&
               data?.length &&
               data
-                ?.filter((value) => {
-                  if (searchText === "") {
-                    return value;
-                  } else if (
-                    value.info.lesseeBranchName
-                      ?.toString()
-                      .toLowerCase()
-                      ?.includes?.(searchText) ||
-                    value.info.uniqueID
-                      ?.toString()
-                      .toLowerCase()
-                      ?.includes?.(searchText) ||
-                    value.info.branchID
-                      ?.toString()
-                      .toLowerCase()
-                      ?.includes?.(searchText)
-                  ) {
-                    return value;
-                  }
-                })
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 ?.map((row, index) => (
                   <StyledTableRow key={index}>
+                    {/* {withCheckbox && (
+                      <StyledTableCell
+                        key={`${index}-checkbox`}
+                        classes={{ root: classes.tableHeader }}
+                      >
+                        <Checkbox
+                          checked={selectedRows.indexOf(index) !== -1}
+                          onChange={() => handleRowSelection(index)}
+                        />
+                      </StyledTableCell>
+                    )} */}
                     {columns &&
                       columns?.map((column) => (
                         <StyledTableCell

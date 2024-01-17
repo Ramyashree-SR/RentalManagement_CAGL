@@ -6,7 +6,7 @@ const getRentPaymentReportDetails = (params1, params2, params3) => {
       `generatePaymentReport?contractID=${params1}&month=${params2}&year=${params3}`
     )
     .then((res) => {
-        console.log(res, "Paymentres"); 
+        // console.log(res, "Paymentres"); 
       const data = res.data;
       return { data };
     })

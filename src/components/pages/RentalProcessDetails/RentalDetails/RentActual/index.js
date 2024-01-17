@@ -15,7 +15,7 @@ import { deepOrange, green, pink, purple, red } from "@mui/material/colors";
 import DropDownComponent from "../../../../atoms/DropDownComponent";
 import ExcelExport from "../../../../../ExcelExport";
 import PaymentTableComponent from "../../../../molecules/PaymentTableComponent";
-import { paymentColumn } from "../../../../../constants/PaymentReport";
+
 import { getRentPaymentReportDetails } from "../../../../services/PaymentReportApi";
 import {
   AddRentActualDetails,
@@ -26,6 +26,8 @@ import {
 import { useToasts } from "react-toast-notifications";
 import RentActualDetails from "../RentActualDetails";
 import CloseIcon from "@mui/icons-material/Close";
+import { AllPaymentColumns } from "../../../../../constants/AllPaymentReport";
+import { paymentColumn } from "../../../../../constants/PaymentReport";
 
 const RentActual = (props) => {
   const { addToast } = useToasts();
@@ -128,7 +130,7 @@ const RentActual = (props) => {
     } else {
       console.error("value or value.month is undefined");
     }
-    // getAllPaymentReportDetailsOfMonth(value);
+    getAllPaymentReportDetailsOfMonth(value);
   };
   const handleChange = (newValue) => {
     let value = newValue?.label;
@@ -153,6 +155,7 @@ const RentActual = (props) => {
     }
   };
   console.log(getPaymentReport, "getPaymentReport");
+
   const getAllRentActualDetailsByUniqueID = async () => {
     const { data } = await getAllRentContractDetailsByContractID(RentActualIDs);
     // console.log(uniqueID, "ActualId");
@@ -459,10 +462,8 @@ const RentActual = (props) => {
                 {selectedMonth && (
                   <PaymentTableComponent
                     data={[getPaymentReport]}
-                    columns={paymentColumn}
+                    columns={AllPaymentColumns}
                     sx={{
-                      // height: "300px",
-                      width: "100%",
                       overFlowX: "scroll",
                       overFlowY: "scroll",
                       mt: 3,

@@ -34,7 +34,7 @@ const AddRentActualDetails = (payload) => {
 
 const addSDSettlementDetails = (payload) => {
   return serviceUtil
-    .post(`setsd`,payload)
+    .post(`setsd`, payload)
     .then((res) => {
       console.log(res, "SDres");
       const data = res.data;

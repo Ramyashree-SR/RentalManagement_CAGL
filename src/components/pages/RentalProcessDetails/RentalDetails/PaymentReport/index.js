@@ -8,26 +8,16 @@ import {
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import DropDownComponent from "../../../../atoms/DropDownComponent";
-import ReusableTable from "../../../../molecules/ReusableTable";
 import { getRentPaymentReportDetails } from "../../../../services/PaymentReportApi";
 import { paymentColumn } from "../../../../../constants/PaymentReport";
 import { deepOrange, orange, red } from "@mui/material/colors";
 import PaymentTableComponent from "./../../../../molecules/PaymentTableComponent/index";
-import { AllPaymentColumns } from "../../../../../constants/AllPaymentReport";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 import ExcelExport from "../../../../../ExcelExport";
+import { AllPaymentColumns } from "../../../../../constants/AllPaymentReport";
 
 const PaymentReport = (props) => {
-  const {
-    uniqueID,
-    branchIDforDue,
-    rentStartDate,
-    rentEndDate,
-    lesseeBranchName,
-    lessorName,
-  } = props;
-
   const [getPaymentReport, setGetPaymentReport] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(null);
@@ -47,6 +37,9 @@ const PaymentReport = (props) => {
     { id: 11, label: "November" },
     { id: 12, label: "December" },
   ];
+  useEffect(() => {
+    getAllPaymentReportDetailsOfMonth();
+  }, [selectedMonth]);
 
   const handleMonthChange = (newValue) => {
     const value = newValue?.label;
@@ -56,12 +49,8 @@ const PaymentReport = (props) => {
     } else {
       console.error("value or value.month is undefined");
     }
-    getAllPaymentReportDetailsOfMonth(value);
+    // getAllPaymentReportDetailsOfMonth(value);
   };
-
-  useEffect(() => {
-    getAllPaymentReportDetailsOfMonth();
-  }, [selectedMonth]);
 
   const endDateObject = new Date();
 
@@ -83,7 +72,7 @@ const PaymentReport = (props) => {
   const handleChange = (newValue) => {
     let value = newValue?.label;
     setSelectedYear(value);
-    getAllPaymentReportDetailsOfMonth(value);
+    // getAllPaymentReportDetailsOfMonth(value);
   };
 
   const getAllPaymentReportDetailsOfMonth = async () => {
@@ -103,29 +92,31 @@ const PaymentReport = (props) => {
     }
   };
 
-  const getPaymentReportData = Object.values(getPaymentReport)?.map((item) => ({
-    ID: item.info?.uniqueID,
-    MonthYear: item.monthYear,
-    LessorName: item.info?.lessorName,
-    BranchID: item.info?.branchID,
-    BranchName: item.info?.lesseeBranchName,
-    AreaName: item.info?.lesseeAreaName,
-    Division: item.lesseeDivision,
-    Zone: item.info?.lesseeZone,
-    State: item.info?.lesseeState,
-    BankName: item.info?.lessorBankName,
-    IFSCNumber: item.info?.lessorIfscNumber,
-    AccountNumber: item.info?.lessorAccountNumber,
-    RentStartDate: item.info?.rentStartDate,
-    RentEndDate: item.info?.rentEndDate,
-    MonthlyRent: item.info?.monthlyRent,
-    Due: item.due,
-    Provision: item.provision,
-    Gross: item.gross,
-    Tds: item.tds,
-    net: item.net,
-    gst: item.gst,
-  }));
+  const getPaymentReportData = Object.values([getPaymentReport])?.map(
+    (item) => ({
+      ID: item.info?.uniqueID,
+      MonthYear: item.monthYear,
+      LessorName: item.info?.lessorName,
+      BranchID: item.info?.branchID,
+      BranchName: item.info?.lesseeBranchName,
+      AreaName: item.info?.lesseeAreaName,
+      Division: item.lesseeDivision,
+      Zone: item.info?.lesseeZone,
+      State: item.info?.lesseeState,
+      BankName: item.info?.lessorBankName,
+      IFSCNumber: item.info?.lessorIfscNumber,
+      AccountNumber: item.info?.lessorAccountNumber,
+      RentStartDate: item.info?.rentStartDate,
+      RentEndDate: item.info?.rentEndDate,
+      MonthlyRent: item.info?.monthlyRent,
+      Due: item.due,
+      Provision: item.provision,
+      Gross: item.gross,
+      Tds: item.tds,
+      net: item.net,
+      gst: item.gst,
+    })
+  );
 
   //   console.log(getPaymentReport, "getPaymentReport");
   return (
@@ -252,8 +243,6 @@ const PaymentReport = (props) => {
                 searchText={searchText}
                 sx={{
                   width: "100%",
-                  overFlowX: "scroll",
-                  overFlowY: "scroll",
                   mt: 5,
                 }}
               />

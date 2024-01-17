@@ -101,7 +101,7 @@ const RentActualDetails = (props) => {
     } else {
       console.error("value or value.month is undefined");
     }
-    getAllActualPaymentReportDetailsOfMonth(value);
+    // getAllActualPaymentReportDetailsOfMonth(value);
   };
 
   const getAllActualPaymentReportDetailsOfMonth = async () => {

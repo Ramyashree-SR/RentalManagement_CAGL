@@ -2,13 +2,13 @@ import { Button, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import DropDownComponent from "../../../../atoms/DropDownComponent";
-import ReusableTable from "../../../../molecules/ReusableTable";
+
 import { getRentPaymentReportDetails } from "../../../../services/PaymentReportApi";
 import { paymentColumn } from "../../../../../constants/PaymentReport";
 import { deepOrange, orange, red } from "@mui/material/colors";
-import PaymentTableComponent from "./../../../../molecules/PaymentTableComponent/index";
-import { ExportToCSV } from "../../../../ExportToCSV";
+
 import ExcelExport from "../../../../../ExcelExport";
+import PaymentReportTable from "../../../../molecules/PaymentReportTable";
 
 const PaymentReportDetails = (props) => {
   const {
@@ -39,6 +39,10 @@ const PaymentReportDetails = (props) => {
     { id: 12, label: "December" },
   ];
 
+  useEffect(() => {
+    getAllPaymentReportDetailsOfMonth();
+  }, [selectedMonth]);
+
   const handleMonthChange = (newValue) => {
     const value = newValue?.label;
     if (value) {
@@ -47,12 +51,8 @@ const PaymentReportDetails = (props) => {
     } else {
       console.error("value or value.month is undefined");
     }
-    getAllPaymentReportDetailsOfMonth(value);
+    // getAllPaymentReportDetailsOfMonth(value);
   };
-
-  useEffect(() => {
-    getAllPaymentReportDetailsOfMonth();
-  }, [uniqueID, selectedMonth, selectedYear]);
 
   const startDateObject = new Date(rentStartDate);
   const endDateObject = new Date(rentEndDate);
@@ -68,10 +68,6 @@ const PaymentReportDetails = (props) => {
   const startYear = startDateObject?.getFullYear();
   const endYear = endDateObject?.getFullYear();
 
-  // const yearOptions = Array.from({ length: 10 }, (_, index) => ({
-  //   id: currentYear - index, // currentYear
-  //   label: `${currentYear - index}`,
-  // }));
   // Generate an array of years between the start and end dates
   const yearOptions = Array.from(
     { length: endYear - startYear + 1 },
@@ -84,7 +80,7 @@ const PaymentReportDetails = (props) => {
   const handleChange = (newValue) => {
     let value = newValue?.label;
     setSelectedYear(value);
-    getAllPaymentReportDetailsOfMonth(value);
+    // getAllPaymentReportDetailsOfMonth(value);
   };
 
   const getAllPaymentReportDetailsOfMonth = async () => {
@@ -102,9 +98,6 @@ const PaymentReportDetails = (props) => {
       }
     }
   };
-
-  // console.log(getPaymentReport, "getPaymentReport");.
-  // let Report = Object.values(getPaymentReport);
 
   const getPaymentReportData = Object.values([getPaymentReport])?.map(
     (item) => ({
@@ -154,7 +147,6 @@ const PaymentReportDetails = (props) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        
           <Grid
             className="d-flex flex-row m-2"
             sx={{ fontSize: 15, fontWeight: 700 }}
@@ -263,25 +255,20 @@ const PaymentReportDetails = (props) => {
                 sx={{ color: "#ffffff", backgroundColor: deepOrange[900] }}
               />
             </Grid>
-            {/* <ExportToCSV
-              excelData={getPaymentReportData}
-              fileName={"Payment Report"}
-            /> */}
           </Grid>
 
-          {selectedMonth && (
-            <PaymentTableComponent
+          {/* {selectedMonth && ( */}
+            <PaymentReportTable
               data={[getPaymentReport]}
               columns={paymentColumn}
               sx={{
-                // height: "300px",
                 width: "100%",
                 overFlowX: "scroll",
                 overFlowY: "scroll",
                 mt: 4,
               }}
             />
-          )}
+          {/* )} */}
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={props.close} variant="contained">

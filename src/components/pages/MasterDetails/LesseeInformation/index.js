@@ -15,6 +15,7 @@ import {
 } from "../../../services/BranchDetails";
 import ReusableTable from "../../../molecules/ReusableTable";
 import { columns } from "../../../../constants/ScheduleTable";
+import AddIcon from "@mui/icons-material/Add";
 
 // const lesseeInformation = {
 //   branchid:"",
@@ -44,9 +45,10 @@ const LesseeInformation = ({
   const [address, setAddress] = useState("");
   const [branchData, setBranchData] = useState([]);
   // console.log(type, "type");
-  const [showBranchID, setShowBranchID] = useState(false)
+  const [showBranchID, setShowBranchID] = useState(false);
   const [selectedBranchType, setSelectedBranchType] = useState("");
-
+  // console.log(selectedBranchType,"selectedBranchType");
+  const [showInputComponent, setShowInputComponent] = useState(false);
   const updateChange = (e) => {
     // console.log(e,"e");
     setAllNewContractDetails({
@@ -54,6 +56,17 @@ const LesseeInformation = ({
       [e.target.name]: e.target.value,
     });
   };
+
+  let ApproverRenew = [
+    { id: "DM", label: "DM" },
+    { id: "ZM", label: "ZM" },
+  ];
+
+  let ApproverRelocate = [
+    { id: "SH", label: "SH" },
+    { id: "CBO", label: "CBO" },
+    { id: "MD/CEO", label: "MD/CEO" },
+  ];
 
   const handleApproverRelocate = (name, value) => {
     setAllNewContractDetails(() => ({
@@ -92,17 +105,6 @@ const LesseeInformation = ({
       label: "Training Center-Maintainence",
     },
     { id: "Others", label: "Others" },
-  ];
-
-  let ApproverRenew = [
-    { id: "DM", label: "DM" },
-    { id: "ZM", label: "ZM" },
-  ];
-
-  let ApproverRelocate = [
-    { id: "SH", label: "SH" },
-    { id: "CBO", label: "CBO" },
-    { id: "MD/CEO", label: "MD/CEO" },
   ];
 
   let EntityDetails = [
@@ -152,15 +154,9 @@ const LesseeInformation = ({
   const joinAddress = () => {
     // Combine the address components into a single string with proper formatting.
     const joinedAddress = `${allNewContractDetails.premesisDoorNumber}, ${allNewContractDetails.premesisFloorNumber}, ${allNewContractDetails.premesisLandMark}, ${allNewContractDetails.premesisStreet},${allNewContractDetails.premesisWardNo},
-    ${allNewContractDetails.premesisCity},${allNewContractDetails.premesisPinCode},${allNewContractDetails.premesisTaluka},${allNewContractDetails.premesisDistrict},${allNewContractDetails.premesisState}`;
+    ${allNewContractDetails.premesisCity},${allNewContractDetails.premesisPinCode},${allNewContractDetails.premesisTaluka},${allNewContractDetails.premesisDistrict},${allNewContractDetails.lessorState}`;
     setAddress(joinedAddress);
   };
-
-  // useEffect(() => {
-  //   // Update the URL whenever lesseeBranchType or branchID changes
-  //   const url = constructURL();
-  //   console.log("Generated URL:", url);
-  // }, [allNewContractDetails.lesseeBranchType, branchDetails.branchID]);
 
   const handleBranchType = (name, value) => {
     setAllNewContractDetails((prev) => ({ ...prev, [name]: value }));
@@ -176,33 +172,9 @@ const LesseeInformation = ({
       ...branchDetails,
       branchID: value,
     }));
-setShowBranchID(true)
+    setShowBranchID(true);
     getBranchIdDetails(value);
   };
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       if (allNewContractDetails?.lesseeBranchType) {
-  //         await getAllBranchID(allNewContractDetails?.lesseeBranchType);
-  //         await getBranchIdDetails(branchDetails?.branchID);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [allNewContractDetails?.lesseeBranchType, branchDetails?.branchID]);
-
-  // const constructURL = () => {
-  //   const baseURL = "http://localhost:9888/getbranchdetails";
-  //   const queryParams = `?lesseeBranchType=${encodeURIComponent(
-  //     selectedBranchType
-  //   )}&branchID=${encodeURIComponent(branchDetails.branchID)}`;
-  //   const typeParam = "&type=undefined"; // Update this based on your requirements
-  //   return baseURL + queryParams + typeParam;
-  // };
 
   useEffect(() => {
     getAllBranchID();
@@ -213,7 +185,7 @@ setShowBranchID(true)
     if (data) {
       setBranchData(data || []);
     } else {
-      setShowBranchID(true)
+      setShowBranchID(true);
       setBranchData([]);
     }
   };
@@ -228,6 +200,7 @@ setShowBranchID(true)
     if (data) {
       if (data) {
         setAllNewContractDetails(data?.data || {});
+        setShowBranchID(true);
       }
     }
   };
@@ -247,6 +220,10 @@ setShowBranchID(true)
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const addButtonClick = () => {
+    setShowInputComponent(true);
   };
 
   return (
@@ -281,44 +258,65 @@ setShowBranchID(true)
           type === "edit" ? (
             <Grid container spacing={2} className="px-2 py-2 mt-1">
               <Grid item className="d-flex m-2" lg={12}>
-                <Autocomplete
-                  size="small"
-                  sx={{ width: 300, ml: 1, borderRadius: 10 }}
-                  // defaultValue={null}
-                  options={branchData}
-                  getOptionLabel={(option) =>
-                    option?.label ? option?.label : option || ""
-                  }
-                  isOptionEqualToValue={(option, value) =>
-                    value === undefined ||
-                    value === "" ||
-                    option?.label === value?.label
-                  }
-                  value={allNewContractDetails?.branchID}
-                  onChange={handleBranchID}
-                  renderInput={(params) => (
+                {showInputComponent ? (
+                  <Box>
                     <TextField
-                      {...params}
+                      id="outlined-basic"
                       label="Branch ID"
                       variant="outlined"
+                      size="small"
+                      sx={{ m: 1, width: 300 }}
+                      name="branchID"
+                      value={allNewContractDetails?.branchID}
+                      onChange={(e) => updateChange(e)}
                     />
-                  )}
-                  // noOptionsText={
-                  // showBranchID ? (
-                  //     <Box>
-                  //       <Box
-                  //         // onClick={() => addButtonClick()}
-                  //         className="d-flex border rounded p-1 border-secondary justify-content-around align-items-center cursor-pointer bg-secondary text-white"
-                  //       >
-                  //         {/* <AddIcon className="color-blue" /> */}
-                  //         <Typography className="fs-14">Add Model</Typography>
-                  //       </Box>
-                  //     </Box>
-                  //   ) : (
-                  //     <Typography>No Options Available</Typography>
-                  //   )
-                  // }
-                />
+                  </Box>
+                ) : (
+                  <Autocomplete
+                    size="small"
+                    sx={{ width: 300, ml: 1, borderRadius: 10 }}
+                    // defaultValue={null}
+                    options={branchData}
+                    getOptionLabel={(option) =>
+                      option?.label ? option?.label : option || ""
+                    }
+                    isOptionEqualToValue={(option, value) =>
+                      value === undefined ||
+                      value === "" ||
+                      option?.label === value?.label
+                    }
+                    value={
+                      type === "edit" && contractStatus === "Renewal"
+                        ? allNewContractDetails?.branchID
+                        : allNewContractDetails?.branchID || ""
+                    }
+                    onChange={handleBranchID}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Branch ID"
+                        variant="outlined"
+                      />
+                    )}
+                    noOptionsText={
+                      showBranchID ? (
+                        <Box>
+                          <Box
+                            onClick={() => addButtonClick()}
+                            className="d-flex "
+                          >
+                            <AddIcon className="color-blue" />
+                            <Typography className="fs-14">
+                              Add Branch
+                            </Typography>
+                          </Box>
+                        </Box>
+                      ) : (
+                        <Typography>No Options Available</Typography>
+                      )
+                    }
+                  />
+                )}
               </Grid>
 
               <Grid item className="d-flex m-2" lg={12}>
@@ -326,16 +324,16 @@ setShowBranchID(true)
                   label="Branch Name"
                   placeholder="Enter Branch Name."
                   sx={{ width: 300 }}
-                  name="lesseeBranchName"
+                  name="branchName"
                   value={
-                    type === "edit"
-                      ? allNewContractDetails?.lesseeBranchName ||
+                    type === "edit" && contractStatus === "Renewal"
+                      ? allNewContractDetails?.branchName ||
                         allNewContractDetails?.branchName
                       : allNewContractDetails?.branchName
                   }
                   onChange={(e) => updateChange(e)}
                   errorText={allNewContractDetailsErr?.lesseeBranchName || ""}
-                  readOnly
+                  // readOnly
                 />
                 <InputBoxComponent
                   label="Area Name"
@@ -343,14 +341,14 @@ setShowBranchID(true)
                   sx={{ width: 300 }}
                   name="areaName"
                   value={
-                    type === "edit"
-                      ? allNewContractDetails?.lesseeAreaName ||
+                    type === "edit" && contractStatus === "Renewal"
+                      ? allNewContractDetails?.areaName ||
                         allNewContractDetails?.areaName
                       : allNewContractDetails?.areaName || ""
                   }
                   onChange={(e) => updateChange(e)}
                   errorText={allNewContractDetailsErr?.areaName || ""}
-                  readOnly
+                  // readOnly
                 />
                 <InputBoxComponent
                   label="Division/Region"
@@ -358,14 +356,14 @@ setShowBranchID(true)
                   sx={{ width: 300 }}
                   name="region"
                   value={
-                    type === "edit"
-                      ? allNewContractDetails?.lesseeDivision ||
+                    type === "edit" && contractStatus === "Renewal"
+                      ? allNewContractDetails?.region ||
                         allNewContractDetails?.region
                       : allNewContractDetails?.region || ""
                   }
                   onChange={(e) => updateChange(e)}
                   errorText={allNewContractDetailsErr?.region || ""}
-                  readOnly
+                  // readOnly
                 />
               </Grid>
               <Grid item className="d-flex m-2" lg={12}>
@@ -375,14 +373,14 @@ setShowBranchID(true)
                   sx={{ width: 300 }}
                   name="zone"
                   value={
-                    type === "edit"
-                      ? allNewContractDetails?.lesseeZone ||
+                    type === "edit" && contractStatus === "Renewal"
+                      ? allNewContractDetails?.zone ||
                         allNewContractDetails?.zone
                       : allNewContractDetails?.zone || ""
                   }
                   onChange={(e) => updateChange(e)}
                   errorText={allNewContractDetailsErr?.zone || ""}
-                  readOnly
+                  // readOnly
                 />
                 <InputBoxComponent
                   label="State"
@@ -390,8 +388,8 @@ setShowBranchID(true)
                   sx={{ width: 300 }}
                   name="state"
                   value={
-                    type === "edit"
-                      ? allNewContractDetails?.lesseeState ||
+                    type === "edit" && contractStatus === "Renewal"
+                      ? allNewContractDetails?.state ||
                         allNewContractDetails?.state
                       : allNewContractDetails?.state || ""
                   }
@@ -443,8 +441,8 @@ setShowBranchID(true)
                   name="lesseeEntityDetails"
                   value={
                     type === "edit"
-                      ? allNewContractDetails.lesseeEntityDetails
-                      : allNewContractDetails.lesseeEntityDetails || ""
+                      ? allNewContractDetails?.lesseeEntityDetails
+                      : allNewContractDetails?.lesseeEntityDetails || ""
                   }
                   // onSelect={handleEntityDetails}
                   onChange={(val) =>
@@ -459,8 +457,8 @@ setShowBranchID(true)
                   // onSelect={handleLocationChange}
                   value={
                     type === "edit"
-                      ? allNewContractDetails.premesisLocation
-                      : allNewContractDetails.premesisLocation
+                      ? allNewContractDetails?.premesisLocation
+                      : allNewContractDetails?.premesisLocation
                   }
                   onChange={(val) =>
                     handleLocationChange("premesisLocation", val)
@@ -473,8 +471,8 @@ setShowBranchID(true)
                   name="premesisBuildingType"
                   value={
                     type === "edit"
-                      ? allNewContractDetails.premesisBuildingType
-                      : allNewContractDetails.premesisBuildingType
+                      ? allNewContractDetails?.premesisBuildingType
+                      : allNewContractDetails?.premesisBuildingType
                   }
                   // onSelect={handleBulidingType}
                   onChange={(val) =>
@@ -582,10 +580,10 @@ setShowBranchID(true)
                     label="State "
                     sx={{ width: 300 }}
                     placeholder="Enter State"
-                    name="premesisState"
-                    value={allNewContractDetails?.premesisState}
+                    name="lessorState"
+                    value={allNewContractDetails?.lessorState}
                     onChange={(e) => updateChange(e)}
-                    errorText={allNewContractDetailsErr?.premesisState}
+                    errorText={allNewContractDetailsErr?.lessorState}
                   />
                 </Grid>
 

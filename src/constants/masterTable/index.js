@@ -73,7 +73,7 @@ const columns = [
     align: "center",
   },
   {
-    id: "monthlyRent",
+    id: "lessorRentAmount",
     label: "Monthly Rent (Rs.)",
     minWidth: 70,
     align: "center",

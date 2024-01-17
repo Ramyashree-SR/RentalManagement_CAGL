@@ -45,6 +45,7 @@ const AgreementDetails = ({
   setBankAndBranch,
   recipientCount,
   setRecipientCount,
+  contractStatus,
 }) => {
   const [checked, setChecked] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -54,7 +55,7 @@ const AgreementDetails = ({
   const [tenure, setTenure] = useState(allNewContractDetails.renewalTenure);
 
   const [currentRent, setCurrentRent] = useState(
-    allNewContractDetails?.monthlyRent
+    allNewContractDetails?.lessorRentAmount
   );
 
   // const [ifscCodes, setIFSCCodes] = useState(Array(recipientCount).fill(""));
@@ -191,7 +192,7 @@ const AgreementDetails = ({
     // Assuming e.target.name is 'tdsRate' for setTdsRate
     if (name === "tds") {
       // If currentRent is greater than 20000, update tdsRate and other details
-      if (parseInt(allNewContractDetails?.monthlyRent) > 20000) {
+      if (parseInt(allNewContractDetails?.lessorRentAmount) > 20000) {
         setAllNewContractDetails((prevDetails) => ({
           ...prevDetails,
           tds: value,
@@ -278,7 +279,7 @@ const AgreementDetails = ({
   const escalationRate = 0.05; // 5% annual escalation
   const calculateCurrentRent = (year) => {
     const rent =
-      allNewContractDetails?.monthlyRent *
+      allNewContractDetails?.lessorRentAmount *
       Math.pow(1 + escalationRate, year - 1);
     return rent.toFixed(2);
   };
@@ -401,10 +402,11 @@ const AgreementDetails = ({
 
   const calculateSplitAmount = () => {
     if (recipientCount > 1) {
-      const splitAmount = allNewContractDetails?.monthlyRent / recipientCount;
+      const splitAmount =
+        allNewContractDetails?.lessorRentAmount / recipientCount;
       return splitAmount.toFixed(2); // Round to 2 decimal places
     }
-    return allNewContractDetails?.monthlyRent;
+    return allNewContractDetails?.lessorRentAmount;
   };
 
   useEffect(() => {
@@ -480,14 +482,28 @@ const AgreementDetails = ({
       branch: value,
     };
   };
-  const calculateTenureInMonths = (startDate, endDate) => {
-    // Calculate the difference in months
-    const monthsDifference =
-      (endDate?.getFullYear() - startDate?.getFullYear()) * 12 +
-      (endDate?.getMonth() - startDate?.getMonth());
+  // const calculateTenureInMonths = (startDate, endDate) => {
+  //   // Calculate the difference in months
+  //   const monthsDifference =
+  //     (endDate?.getFullYear() - startDate?.getFullYear()) * 12 +
+  //     (endDate?.getDays() - startDate?.getDays());
+  //   // You can adjust this calculation based on your specific logic
+  //   return monthsDifference;
+  // };
+  const calculateTenureInMonths = () => {
+    const start = new Date(allNewContractDetails?.agreementStartDate);
+    const end = allNewContractDetails?.agreementEndDate
+      ? new Date(allNewContractDetails?.agreementEndDate)
+      : new Date(); // If no end date is provided, use the current date
 
-    // You can adjust this calculation based on your specific logic
-    return monthsDifference;
+    const diffInMilliseconds = end - start;
+    const diffInYears = diffInMilliseconds / (1000 * 60 * 60 * 24 * 365.25);
+
+    // You can further format the tenure as needed (e.g., months, days, etc.)
+    const years = Math.floor(diffInYears);
+    const remainingMonths = Math.floor((diffInYears - years) * 12);
+
+    return remainingMonths;
   };
 
   const handleAgreementEndDate = (val) => {
@@ -555,13 +571,10 @@ const AgreementDetails = ({
 
   const handleNext = () => {
     const ValidateError = handleAddRentContractInformationError();
-    // console.log("ValidateError", ValidateError);
-    // Check for empty fields
     const isEmptyField = Object.values(allNewContractDetails).some(
       (value) => value === ""
     );
     if (!ValidateError && !isEmptyField) {
-      // console.log("ValidateError", ValidateError);
       onSave(allNewContractDetails, type);
     }
   };
@@ -859,10 +872,10 @@ const AgreementDetails = ({
                 label="Monthly Rent"
                 placeholder="Enter Monthly Rent"
                 sx={{ width: 300, my: -1.3 }}
-                name="monthlyRent"
-                value={allNewContractDetails?.monthlyRent}
+                name="lessorRentAmount"
+                value={allNewContractDetails?.lessorRentAmount}
                 onChange={(e) => updateChange(e)}
-                errorText={allNewContractDetailsErr?.monthlyRent}
+                errorText={allNewContractDetailsErr?.lessorRentAmount}
               />
               <DatePickerComponent
                 placeholder="Select Start From"
@@ -929,7 +942,7 @@ const AgreementDetails = ({
               <Typography className="fs-20 fw-500 pt-4 px-3 py-4">
                 Rent Term Details
               </Typography>
-              {type === "add" && (
+              {type === "add" && ( //|| contractStatus==="Renewal"
                 <Grid
                   container
                   spacing={2}
@@ -1126,8 +1139,10 @@ const AgreementDetails = ({
                               value={
                                 type === "edit"
                                   ? allNewContractDetails?.recipiants?.[index]
+                                      ?.lessorAccountNumber &&
+                                    allNewContractDetails?.recipiants?.[index]
                                       ?.lessorAccountNumber
-                                  : reEnteredData?.[index] || ""
+                                  : reEnteredData?.[index]  && reEnteredData?.[index]|| ""
                               }
                               onChange={(e) =>
                                 handleReEnteredDataChange(e, index)
@@ -1320,8 +1335,8 @@ const AgreementDetails = ({
                 <InputBoxComponent
                   label="Enter Current Rent"
                   // type="number"
-                  name="monthlyRent"
-                  value={allNewContractDetails?.monthlyRent}
+                  name="lessorRentAmount"
+                  value={allNewContractDetails?.lessorRentAmount}
                   onChange={(e) => updateChange(e)}
                   sx={{ width: 300 }}
                 />
@@ -1345,12 +1360,12 @@ const AgreementDetails = ({
                   // checked={isChecked}
                   checked={
                     isChecked ||
-                    parseInt(allNewContractDetails?.monthlyRent) > 20000
+                    parseInt(allNewContractDetails?.lessorRentAmount) > 20000
                   }
                   onChange={handleSwitchChange}
                 />
-                {/* parseInt(allNewContractDetails?.monthlyRent) > 20000 ? */}
-                {parseInt(allNewContractDetails?.monthlyRent) > 20000 && (
+                {/* parseInt(allNewContractDetails?.lessorRentAmount) > 20000 ? */}
+                {parseInt(allNewContractDetails?.lessorRentAmount) > 20000 && (
                   <InputBoxComponent
                     label="TDS (%)"
                     type="number"
@@ -1367,7 +1382,7 @@ const AgreementDetails = ({
 
                 <Typography>GST Applicable?</Typography>
                 <SwitchComponent
-                  // checked={parseInt(allNewContractDetails?.monthlyRent) > 20000}
+                  // checked={parseInt(allNewContractDetails?.lessorRentAmount) > 20000}
                   checked={checked}
                   onChange={(isChecked) => handleSwitchGSTChange(isChecked)}
                 />
@@ -1383,15 +1398,14 @@ const AgreementDetails = ({
                 )}
               </Grid>
 
-              <Grid className="d-flex mt-2 flex-column align-items-start justify-content-center">
+              {/* <Grid className="d-flex mt-2 flex-column align-items-start justify-content-center">
                 {allNewContractDetails?.agreementTenure > 2 ? (
                   <Grid container spacing={2} className=" py-2 mt-1 ">
                     {startEndDatesList &&
                       startEndDatesList?.length > 0 &&
                       startEndDatesList?.map((period, index) => {
                         if (!period) {
-                          // Handle the case where period is undefined
-                          // You can return a default component or just skip rendering
+                         
                           return (
                             <div key={index}>Period is undefined or null</div>
                           );
@@ -1444,14 +1458,7 @@ const AgreementDetails = ({
                                 sx={{ width: 150, mt: -1 }}
                               />
 
-                              {/* <InputBoxComponent
-                            label="Tds Applicability"
-                            value={
-                              tds > 20000 ? ` ₹ ${tds}` : "Not Applicable"
-                              //tds > 0 ? `10% (TDS: ₹ ${tds})` : "Not Applicable"
-                            }
-                            sx={{ widh: 200 }}
-                          /> */}
+                            
                               <span>*</span>
                               <InputBoxComponent
                                 label="GST Amount"
@@ -1475,7 +1482,7 @@ const AgreementDetails = ({
                       })}
                   </Grid>
                 ) : null}
-              </Grid>
+              </Grid> */}
             </Grid>
           </Box>
         </Box>
@@ -1594,7 +1601,7 @@ export default AgreementDetails;
 // const [escalations, setEscalations] = useState(new Array(5).fill(0));
 
 // const [currentRent, setCurrentRent] = useState(
-//   allNewContractDetails.monthlyRent
+//   allNewContractDetails.lessorRentAmount
 // );
 // const handleCurrentRentChange = (e) => {
 //   setCurrentRent(parseFloat(e.target.value));

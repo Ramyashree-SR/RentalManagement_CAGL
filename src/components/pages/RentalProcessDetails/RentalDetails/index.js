@@ -254,12 +254,6 @@ const RentalDetails = (props) => {
     }
   };
 
-  // const filteredData =
-  //   branchFilter === ""
-  //     ? rentContractDetails
-  //     : rentContractDetails?.filter(
-  //         (item) => branchFilter === "" || item.branchID === branchFilter
-  //       );
 
   useEffect(() => {
     getBranchId();
@@ -337,10 +331,6 @@ const RentalDetails = (props) => {
     // Also, update the state for the activation status filter
     setActivationStatusFilterDue(value);
   };
-
-  // useEffect(() => {
-  //   getAllRentDueDetailsByBranchID();
-  // }, [branchIDforDue]);
 
   const getAllRentDueDetailsByBranchID = async (branchID) => {
     const { data } = await getAllRentDueDetails(branchID);

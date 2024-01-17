@@ -14,22 +14,25 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { deepOrange, green, pink } from "@mui/material/colors";
+import Checkbox from "@mui/material/Checkbox";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.root}`]: {
-    padding: "7px",
+    padding: "5px",
   },
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme?.palette?.success.dark,
+    backgroundColor: theme?.palette?.info.dark,
     color: theme.palette?.common?.white,
     fontSize: 12,
     fontWeight: 650,
-    padding: "5px",
+    // fontFamily:"san-serif",
+    // padding: "3px",
+    fontFamily: "sans-serif",
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 12,
     fontWeight: 700,
-    backgroundColor: "#D5F7DC", //#CFE8F7, #C5EBF6 ,#D5F7DC
+    backgroundColor: " #C5EBF6", //#CFE8F7, #C5EBF6 ,#D5F7DC
     fontFamily: "sans-serif",
   },
 }));
@@ -69,26 +72,19 @@ const useStyles = makeStyles({
     fontSize: "12px !important",
     borderBottom: "1px solid #70B3D1 !important",
     borderRight: "1px solid #70B3D1  !!!important",
-    // display: "flex",
-    // alignItems: "center",
-    // justifyContent: "center",
   },
   tableRow: {
     border: "none !important",
     color: "#373737",
     fontWeight: "500",
     fontSize: "12px",
-    // display: "flex",
-    // alignItems: "center",
-    // justifyContent: "center",
   },
 });
-
-const ReusableTable = ({ data, columns, sx, showTotal }) => {
+const PaymentReportTable = ({ data, columns, sx }) => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [monthlyTotal, setMonthlyTotal] = useState({});
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -98,29 +94,6 @@ const ReusableTable = ({ data, columns, sx, showTotal }) => {
     setPage(0);
   };
 
-  // Calculate monthly totals
-  useEffect(() => {
-    const total = {};
-    data &&
-      data?.lenght?.map((entry) => {
-        return Object?.keys(entry).forEach((month) => {
-          if (
-            month !== "rentDueID" &&
-            month !== "contractID" &&
-            month !== "year" &&
-            month !== "escalation" &&
-            month !== "status"
-          ) {
-            total[month] = (total[month] || 0) + entry[month];
-          }
-        });
-      });
-    setMonthlyTotal(total);
-  }, [data]);
-
-  const calculateTotal = (row) => {
-    return Object.values(row).reduce((acc, value) => acc + value, 0);
-  };
   return (
     <>
       <TableContainer
@@ -132,14 +105,15 @@ const ReusableTable = ({ data, columns, sx, showTotal }) => {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <StyledTableRow>
-              {columns?.map((column) => (
-                <StyledTableCell
-                  key={column.id}
-                  classes={{ root: classes.tableHeader }}
-                >
-                  {column.label}
-                </StyledTableCell>
-              ))}
+              {columns &&
+                columns?.map((column) => (
+                  <StyledTableCell
+                    key={column.id}
+                    classes={{ root: classes.tableHeader }}
+                  >
+                    {column?.label}
+                  </StyledTableCell>
+                ))}
             </StyledTableRow>
           </TableHead>
           <TableBody>
@@ -156,35 +130,12 @@ const ReusableTable = ({ data, columns, sx, showTotal }) => {
                           sx={{ sx }}
                           classes={{ root: classes.tableHeader }}
                         >
-                          {row[column.id]}
+                          {row[column.id] ||
+                            (row.info?.[column.id] && row.info?.[column.id])}
                         </StyledTableCell>
                       ))}
                   </StyledTableRow>
                 ))}
-
-            {showTotal && (
-              <StyledTableRow>
-                {columns &&
-                  columns?.map((column) => {
-                    if (
-                      ["contractID", "escalation", "year", "status"].includes(
-                        column.id
-                      )
-                    ) {
-                      return (
-                        <StyledTableCell key={column.id}>-</StyledTableCell>
-                      );
-                    } else if (column.id in monthlyTotal) {
-                      return (
-                        <StyledTableCell key={column.id}>
-                          ₹{monthlyTotal[column.id]}
-                        </StyledTableCell>
-                      );
-                    }
-                    return null;
-                  })}
-              </StyledTableRow>
-            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -201,4 +152,4 @@ const ReusableTable = ({ data, columns, sx, showTotal }) => {
   );
 };
 
-export default ReusableTable;
+export default PaymentReportTable;

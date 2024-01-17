@@ -21,8 +21,8 @@ const EditRentRenewContractDetails = (params, payload) => {
   return serviceUtil
     .get(`renewalDetails?BranchID=${params}`)
     .then((res) => {
-      console.log(params, "params");
-      console.log(res, "RenewEditres");
+      // console.log(params, "params");
+      // console.log(res, "RenewEditres");
       const data = res && res.data;
       return { data };
     })
